@@ -1,0 +1,111 @@
+"use client";
+import * as React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import NinstaLogo from '../../public/Ninsta Logo.png'
+
+import Link from "next/link"
+import { Formik, Field, Form, ErrorMessage } from 'formik';
+import Image from "next/image"
+import { LoginValidationSchema } from "@/lib/validation"
+import { userLogin } from "@/lib/functions/user/route";
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from 'jwt-decode'
+import { googleUser } from "@/type/users";
+
+interface LoginFormValues {
+    email: string;
+    password: string;
+}
+
+export function LoginForm() {
+
+    const [Error,setError] = React.useState('')
+    const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+        try {
+            const user = await userLogin(values);
+            console.log('Login successful', user);
+            if (user) {
+                location.href = "/"
+            }
+            setError(user.userDetails.messages)
+        } catch (error) {
+            console.error('Login failed', error);
+        } finally {
+            setSubmitting(false);
+        } 
+    }
+
+    const googleSuccess = async (response: any) => {
+        console.log(response.credential);
+        if (response.credential) {
+            const usersResult = JSON.parse(JSON.stringify(jwtDecode(response.credential)))
+            let data={email:usersResult?.email,password:usersResult?.sub}
+            console.log(usersResult,"ddddd");
+            const UserResult = await userLogin(data)
+            if(UserResult){
+                location.href = '/';
+            }
+            
+        }
+        
+
+    }
+
+    const errorGoogle = () => {
+        console.log()
+        alert('eda mone error ada')
+    }
+
+    return (
+        <div className="w-full max-w-xs ">
+            <Formik
+                initialValues={{
+                    email: '',
+                    password: '',
+                }}
+                validationSchema={LoginValidationSchema}
+                onSubmit={handleSubmit}
+            >
+                {({ isSubmitting }) => (
+                    <Form className="sm:w-380 flex-col ">
+                        <Image src={NinstaLogo} height={70} className="ml-20" alt="Logo" />
+                        <p className="pb-2 pl-10">Log in and enjoy with friends</p>
+                        <span className="text-red-600">{Error}</span>
+                        <div className="flex flex-col w-full mt-4 gap-5">
+                            <div>
+                                <Field type="email" id="email" name="email" placeholder="sample@gmail.com" as={Input} />
+                                <ErrorMessage name="email" component="div" className="text-red-500" />
+                            </div>
+                            <div>
+                                <Field type="password" id="password" name="password" placeholder="Password" as={Input} />
+                                <ErrorMessage name="password" component="div" className="text-red-500" />
+                            </div>
+                            <Button type="submit" disabled={isSubmitting}>Login</Button>
+                        </div>
+                        <p className="text-small-regular text-light-2 text-center mt-2">
+                            Don't have an account?
+                            <Link href="/signup" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Sign up</Link>
+                        </p>
+                        <p className="text-small-regular text-light-2 text-center mt-3">
+                            Forgot Password?
+                            <Link href="#" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Click here</Link>
+                        </p>
+                    </Form>
+                )}
+            </Formik>
+            <GoogleLogin
+                        onSuccess={googleSuccess}
+                        onError={errorGoogle}
+                        size='large'
+                        theme='filled_black'
+                        logo_alignment='center'
+                        ux_mode='popup'
+                        text="signin_with"
+                    // onError={(err: any) => console.log(err)}
+                    />
+        </div>
+
+    )
+}
