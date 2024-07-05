@@ -5,6 +5,7 @@ import { User } from '@/type/users';
 
 
 interface UserState {
+  email(user: UserState, email: any): unknown;
   user: User | null;
   isLoading: boolean;
   error: string | null;
@@ -14,6 +15,9 @@ const initialState: UserState = {
   user: null,
   isLoading: false,
   error: null,
+  email: function (user: UserState, email: any): unknown {
+    throw new Error('Function not implemented.');
+  }
 };
 
 export const createUserAsync = createAsyncThunk(
@@ -41,7 +45,7 @@ export const checkingUserAsync = createAsyncThunk(
   }
 );
 
-const userSlice = createSlice({
+export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
@@ -89,9 +93,8 @@ const userSlice = createSlice({
 });
 
 export const { setUser, clearUser, clearUserState } = userSlice.actions;
-export const selectUser = (state: RootState) => state.user.user;
-export const selectUserLoading = (state: RootState) => state.user.isLoading;
-export const selectUserError = (state: RootState) => state.user.error;
+export const selectUser = (state: RootState) => state.auth.user;
+export const selectUserLoading = (state: RootState) => state.auth.isLoading;
+export const selectUserError = (state: RootState) => state.auth.error;
 
-export default userSlice.reducer;
 

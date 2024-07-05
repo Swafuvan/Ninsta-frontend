@@ -17,13 +17,22 @@ export interface User {
     password: String,
     isAdmin: boolean,
     image: String,
-    bio: String
+    bio: String,
+    isBlocked:boolean,
+    Gender:string
   } 
 
-  export interface googleUser{
+export interface googleUser{
     email:string,
     password:string,
     username:string,
     fullName:string,
     image:string
+}
+
+export interface forgotPassword{
+    email: string,
+    password: string,
+    confirmPassword: string
+    
 }

@@ -11,45 +11,48 @@ import Image from "next/image"
 import { LoginValidationSchema } from "@/lib/validation"
 import { userLogin } from "@/lib/functions/user/route";
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie'
 import { googleUser } from "@/type/users";
+import { redirect } from "next/navigation";
 
 interface LoginFormValues {
-    email: string;
+    email: string; 
     password: string;
 }
 
 export function LoginForm() {
 
-    const [Error,setError] = React.useState('')
+    const [Error, setError] = React.useState('')
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
             const user = await userLogin(values);
-            console.log('Login successful', user);
-            if (user) {
-                location.href = "/"
+            console.log('Login successful', user.data);
+            if (user?.data?.status === 200) {
+                Cookies.set('userToken',user.data.JWTtoken)
+                redirect('/')
+            }else{
+                setError(user.data.messages)
             }
-            setError(user.userDetails.messages)
         } catch (error) {
             console.error('Login failed', error);
         } finally {
             setSubmitting(false);
-        } 
+        }
     }
 
     const googleSuccess = async (response: any) => {
         console.log(response.credential);
         if (response.credential) {
             const usersResult = JSON.parse(JSON.stringify(jwtDecode(response.credential)))
-            let data={email:usersResult?.email,password:usersResult?.sub}
-            console.log(usersResult,"ddddd");
+            let data = { email: usersResult?.email, password: usersResult?.sub }
             const UserResult = await userLogin(data)
-            if(UserResult){
+            if (UserResult) {
                 location.href = '/';
             }
-            
+
         }
-        
+
 
     }
 
@@ -87,24 +90,28 @@ export function LoginForm() {
                         <p className="text-small-regular text-light-2 text-center mt-2">
                             Don't have an account?
                             <Link href="/signup" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Sign up</Link>
-                        </p>
+                        </p>                 
                         <p className="text-small-regular text-light-2 text-center mt-3">
                             Forgot Password?
-                            <Link href="#" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Click here</Link>
+                            <Link href="/forgot-password" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Click here</Link>
                         </p>
                     </Form>
                 )}
             </Formik>
-            <GoogleLogin
-                        onSuccess={googleSuccess}
-                        onError={errorGoogle}
-                        size='large'
-                        theme='filled_black'
-                        logo_alignment='center'
-                        ux_mode='popup'
-                        text="signin_with"
-                    // onError={(err: any) => console.log(err)}
-                    />
+            <div className="ml-16 mt-4">
+                <GoogleLogin
+                    onSuccess={googleSuccess}
+                    onError={errorGoogle}
+                    size='large'
+                    theme='filled_black'
+                    logo_alignment='center'
+                    ux_mode='popup'
+                    text="signin_with"
+                    shape="circle"
+                // onError={(err: any) => console.log(err)}
+                />
+            </div>
+
         </div>
 
     )

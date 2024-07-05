@@ -19,12 +19,21 @@ import Logout from '@mui/icons-material/Logout';
 
 import Image from 'next/image';
 import LogoImg from '../../public/Ninsta Logo.png';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { logout } from '@/lib/functions/user/route';
 
 export default function TemporaryDrawer() {
-
+    const router = useRouter();
     const handleLogout = () => {
-        location.href = '/Login'
+        localStorage.removeItem('authToken')
+        logout();
+        router.push('/Login')
     };
+
+    const handleClick = () =>{
+        window.location.href='/create'
+    }
 
     const iconMapping: { [key: string]: React.ReactElement } = {
         Home: <HomeIcon />,
@@ -40,12 +49,12 @@ export default function TemporaryDrawer() {
     };
 
     return (
-        <div className='md:block h-screen p-2 mr-56'>
+        <div className=' md:block h-screen p-2 mr-56'>
             <div className='fixed top-8 left-8'>
                 <Box sx={{ width: 208 }} role="presentation" >
                     <Image src={LogoImg} width={120} alt='logoImage' />
                     <List>
-                        {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text, index) => (
+                        {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Profile', 'More'].map((text, index) => (
                             <ListItem key={text} disablePadding>
                                 <ListItemButton>
                                     <ListItemIcon>
@@ -55,6 +64,16 @@ export default function TemporaryDrawer() {
                                 </ListItemButton>
                             </ListItem>
                         ))}
+                        <Link href='#'>
+                            <ListItem key="Create" disablePadding>
+                                <ListItemButton onClick={handleClick}>
+                                    <ListItemIcon>
+                                        {iconMapping['Create']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Create" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
                         <ListItem key="Logout" disablePadding>
                             <ListItemButton onClick={handleLogout}>
                                 <ListItemIcon>

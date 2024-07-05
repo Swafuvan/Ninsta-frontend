@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google"
 import { cn } from "@/lib/utils"
-
 import "./globals.css";
-import { SessionProvider } from "next-auth/react"
+import { Toaster } from "react-hot-toast";
+import { store } from "@/redux/store";
+import ClientProvider from "@/components/Provider/clientProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -19,19 +20,21 @@ export default function RootLayout({ children, }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-        <body className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable
-        )}>
-
-          <div className="flex h-screen">
-            <main className="flex-grow">
+    <html lang="en">
+      <body className={cn(
+        "min-h-screen bg-background font-sans antialiased",
+        fontSans.variable
+      )}>
+        <div className="flex h-screen">
+          <main className="flex-grow">
+            <Toaster position="top-center" />
+            <ClientProvider>
               {children}
-            </main>
-          </div>
-        </body>
-      </html>
+            </ClientProvider>
+          </main>
+        </div>
+      </body>
+    </html>
 
   );
 }

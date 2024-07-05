@@ -1,50 +1,108 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { User } from '@/type/users';
+import { EditIcon } from 'lucide-react';
+import { SingleUserDetails, UserBlocked, getUsers } from '@/lib/functions/admin/route';
+import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import EditUserDetails from './EditUserDetails';
+import { Button } from '@mui/material';
+import UserModal from './EditUserDetails';
 
-function AdminUserManagement({columns,data}:any) {
-
-    function handleBlockToggle(data:any){
-        alert('hello')
-    }
-
-  return (
-    <div>
-            <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <tr>
-                        {columns.map((column: any, index: any) => (
-                            <th key={index} className="py-3 px-6 text-left">
-                                {column}
-                            </th>
-                        ))}
-                        <th className="py-3 px-6 text-left">Status (blocked)</th>
-                    </tr>
-                </thead>
-                <tbody className="text-gray-600 text-sm font-light">
-                    {data.map((item:any, i:any) => (
-                        <tr key={i} className="border-b border-gray-200 hover:bg-gray-100">
-                            {columns.map((column:any, index:any) => (
-                                <td key={index} className="py-3 px-6 text-left">
-                                    {item[column]}
-                                </td>
-                            ))}
-                            <td className="py-3 px-6 text-left">
-                                <div className="form-check form-switch">
-                                    <input
-                                        className="form-check-input h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                        type="checkbox"
-                                        role="switch"
-                                        id={`flexSwitchCheckDefault${i}`}
-                                        checked={item.isBlocked}
-                                        onChange={() => handleBlockToggle(i)}
-                                    />
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>    
-        </div>
-  )
+interface AdminUserManagementProps {
+    columns: string[];
+    data: User[];
 }
- 
-export default AdminUserManagement
+
+function AdminUserManagement({ columns, data }: AdminUserManagementProps) {
+
+    const [user, setUser] = useState(null);
+    // const [isEdit, setIsEdit] = useState(false);
+
+    async function onBlockToggle({email,isBlock}:any) {
+       
+        
+        const UserBlock = await UserBlocked(email,isBlock)
+        // console.log(UsersData);
+        console.log(UserBlock)
+        
+    };
+
+    // function CloseModal(){
+    //     setIsEdit(false);
+    // }
+
+    async function onEditUser(Userdata: any) {
+        alert('vannu')
+        // await setIsEdit(true);
+        console.log(Userdata)
+        const UserDataSending = await SingleUserDetails(Userdata)
+        await setUser(Userdata)
+        if (UserDataSending) {
+            console.log(UserDataSending);
+        }
+    
+    }
+    return (
+        <div className='p-4'>
+            {/* {isEdit === false ? ( */}
+                <>
+                    <h1 className='text-4xl font-bold flex justify-center mb-10'>User Management</h1><table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                        <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal ">
+                            <tr>
+                                <th className='py-3 px-6 text-left'>SlNo</th>
+                                {columns.map((column, index) => (
+                                    <th key={index} className="py-3 text-left">
+                                        {column}
+                                    </th>
+                                ))}
+                                <th className="py-3 px-6 text-left">Status</th>
+                                {/* <th className="py-3 px-6 text-left">Edit</th> */}
+                            </tr>
+                        </thead>
+                        <tbody className="text-gray-600 text-sm font-light">
+                            {data.length > 0 && data.map((item, index) => (
+                                <tr key={index} className="border-b border-gray-200 hover:bg-gray-100">
+                                    <td className='py-3 px-6 text-left'>
+                                        {index + 1}
+                                    </td>
+                                    <td className='py-3 px-6 text-left'>
+                                        {item?.username}
+                                    </td>
+                                    <td className="py-3 px-6 text-left">
+                                        {item?.email}
+                                    </td>
+                                    <td className="py-3 px-6 text-left">
+                                        {item?.Gender}
+                                    </td>
+
+                                    <td className="py-3 px-6 text-left">
+                                        <div className="form-check">
+                                            <button
+                                                className='bg-slate-300 p-2 rounded-md font-bold'
+                                                onClick={() => onBlockToggle({ email: item?.email, isBlock: item?.isBlocked })}
+                                            >
+                                                {item?.isBlocked === true ? "Unblock" : "Block"}
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    {/* <td className="py-3 px-6 text-left">
+                                        <div className="form-check">
+                                            <EditIcon
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={() => onEditUser(item)} />
+                                        </div>
+                                    </td> */}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </>
+            {/* ) : (
+               <UserModal user={user} isOpen={isEdit} onClose={CloseModal}/>
+            )} */}
+        </div>
+    );
+}
+
+export default AdminUserManagement;

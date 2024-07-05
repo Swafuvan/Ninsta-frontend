@@ -2,8 +2,8 @@ import React from 'react'
 
 function NotFoundPage() {
   return (
-    <div>
-      Not Found 
+    <div className='flex justify-center text-gray-400 font-bold'>
+      Not Found :(
     </div>
   )
 }

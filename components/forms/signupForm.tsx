@@ -10,10 +10,10 @@ import Image from "next/image";
 import { SignupValidationSchema } from "@/lib/validation";
 import { ResendOtp, createUserAccount, googleSignup, verifyOtp } from "@/lib/functions/user/route";
 import OtpInput from 'react-otp-input';
-import { signIn } from 'next-auth/react';
 import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode'
+import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { googleUser } from '@/type/users';
+import Cookies from 'js-cookie'
 
 
 
@@ -54,9 +54,11 @@ export function SignupRoute() {
 
     const handleSubmit = async (values: SignupFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
+            console.log("vannno")
             const response = await createUserAccount(values);
             console.log(response);
             if (response) {
+                console.log("kerrri")
                 setSignupData(values);
                 setIsOtpSent(true);
                 setResendEnabled(false);
@@ -72,8 +74,11 @@ export function SignupRoute() {
     const handleOtpSubmit = async () => {
         setIsSubmitting(true);
         try {
+            console.log(signupData)
             const response = await verifyOtp(signupData?.email!, Number(otp));
+            console.log(response)
             if (response) {
+                Cookies.set('userToken',response.JWTtoken)
                 location.href = '/';
             } else {
                 console.error('OTP verification failed');
@@ -89,7 +94,7 @@ export function SignupRoute() {
         try {
             if (signupData?.email) {
                 await ResendOtp(signupData.email);
-                setIsOtpSent(true); // Restart the timer
+                setIsOtpSent(true); 
                 setResendEnabled(false);
                 setTimer(60);
             }
@@ -101,15 +106,28 @@ export function SignupRoute() {
     const googleSuccess = async (response: any) => {
         console.log(response.credential);
         if (response.credential) {
-            const usersResult = jwtDecode(response.credential)
-            console.log(usersResult,"ddddd");
-            const UserResult = await googleSignup(usersResult as googleUser)
-            if(UserResult){
+            const {email,given_name,name,picture,sub} = jwtDecode(response.credential) as JwtPayload & {
+                email: string;
+                name: string;
+                sub: string;
+                given_name:string;
+                picture:string;
+            }
+            const data:googleUser = {
+                email:email,
+                fullName:name,
+                image:picture,
+                username:given_name,
+                password:sub,
+            } 
+            console.log(data)
+            const UserResult = await googleSignup(data)
+            if (UserResult) {
                 location.href = '/';
             }
-            
+
         }
-        
+
 
     }
 
@@ -117,6 +135,21 @@ export function SignupRoute() {
         console.log()
         alert('eda mone error ada')
     }
+
+    // const handleGoogleSignIn = async () => {
+    //     const auth = getAuth();
+    //     const provider = new GoogleAuthProvider();
+
+    //     try {
+    //         const result = await signInWithPopup(auth, provider);
+    //         const user = result.user;
+    //         console.log('Google user:', user);
+    //         // location.href = '/';
+    //     } catch (error) {
+    //         console.error('Google Sign-In error:', error);
+    //         alert('Google Sign-In failed');
+    //     }
+    // };
 
 
     return (
@@ -172,16 +205,19 @@ export function SignupRoute() {
                             <span>Sign up with Google</span>
                         </button>
                     </div> */}
-                    <GoogleLogin
-                        onSuccess={googleSuccess}
-                        onError={errorGoogle}
-                        size='large'
-                        theme='filled_black'
-                        logo_alignment='center'
-                        ux_mode='popup'
-                        text='signup_with'
-                    // onError={(err: any) => console.log(err)}
-                    />
+                    <div className='ml-16 mt-4'>
+                        <GoogleLogin
+                            onSuccess={googleSuccess}
+                            onError={errorGoogle}
+                            size='large'
+                            theme='filled_black'
+                            logo_alignment='center'
+                            ux_mode='popup'
+                            text='signup_with'
+                            shape='circle'
+                        />
+                    </div>
+
                 </div>
             ) : (
                 <div className="flex flex-col items-center mb-40 mt-52">
@@ -202,8 +238,8 @@ export function SignupRoute() {
                             height: '40px',
                             textAlign: 'center',
                             fontSize: '16px',
-                            appearance: 'textfield', // This line
-                            MozAppearance: 'textfield', // This line
+                            appearance: 'textfield',
+                            MozAppearance: 'textfield',
                         }}
                         value={otp}
                         inputType='number'

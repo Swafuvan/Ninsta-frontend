@@ -3,7 +3,7 @@ import React from 'react'
 
 function error() {
   return (
-    <div>
+    <div className='flex justify-center text-2xl font-bold'>
       error
     </div>
   )

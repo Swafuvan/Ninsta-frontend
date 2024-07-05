@@ -21,12 +21,13 @@ function AdminLoginpage() {
         try {
             
             const Admin = await AdminLogin(values)
-            console.log(Admin);
+            // console.log(Admin.data);
             if (Admin) {
                 location.href = "/admin/Dashboard"
             }
         } catch (error) {
             console.log(error);
+            
         } finally {
             setSubmitting(false);
         }
@@ -47,6 +48,7 @@ function AdminLoginpage() {
                 {({ isSubmitting }) => (
                     <Form className="sm:w-380 flex-col border p-5">
                         <Image src={NinstaLogo} height={70} className="ml-20" alt="Logo" />
+                        <span>{}</span>
                         <h2 className='font-bold text-2xl pl-14 pb-3'>Admin Login</h2>
                         <p className="pb-2 pl-6">Only Autherised Users can Enter</p>
                         <div className="flex flex-col w-full mt-4 gap-5">

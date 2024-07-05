@@ -1,13 +1,15 @@
 "use client"
 
-import AdminDashboard from "@/pages/admin/AdminDashboard"
+ import AdminHome from "@/pages/admin/AdminHome"
 
 
 function Dashboardpage() {
 
 
   return (
-    <AdminDashboard/>
+    <>
+      <AdminHome />
+    </>
   )
 }
 
