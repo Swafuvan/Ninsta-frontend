@@ -14,7 +14,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie'
 import { googleUser } from "@/type/users";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { UseSelector,useDispatch} from "react-redux";
+import { setUser } from "@/redux/userSlice";
 
 interface LoginFormValues {
     email: string; 
@@ -23,18 +25,27 @@ interface LoginFormValues {
 
 export function LoginForm() {
 
+    const router = useRouter()
+    const dispatch = useDispatch()
+    
     const [Error, setError] = React.useState('')
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
             const user = await userLogin(values);
             console.log('Login successful', user.data);
-            if (user?.data?.status === 200) {
+            
+            if (user.status !== 400) {                
                 Cookies.set('userToken',user.data.JWTtoken)
-                redirect('/')
+                console.log('enghott poyi');
+                dispatch(setUser(user.data.userDetails))
+                router.push('/')
+                
             }else{
+                console.log('poyitta')
                 setError(user.data.messages)
             }
         } catch (error) {
+            console.log('err anutta')
             console.error('Login failed', error);
         } finally {
             setSubmitting(false);

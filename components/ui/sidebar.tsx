@@ -26,13 +26,12 @@ import { logout } from '@/lib/functions/user/route';
 export default function TemporaryDrawer() {
     const router = useRouter();
     const handleLogout = () => {
-        localStorage.removeItem('authToken')
         logout();
         router.push('/Login')
     };
 
     const handleClick = () =>{
-        window.location.href='/create'
+        // window.location.href='/create'
     }
 
     const iconMapping: { [key: string]: React.ReactElement } = {
@@ -54,23 +53,93 @@ export default function TemporaryDrawer() {
                 <Box sx={{ width: 208 }} role="presentation" >
                     <Image src={LogoImg} width={120} alt='logoImage' />
                     <List>
-                        {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Profile', 'More'].map((text, index) => (
-                            <ListItem key={text} disablePadding>
-                                <ListItemButton>
+                        <Link href='#'>
+                            <ListItem key="Home" disablePadding>
+                                <ListItemButton >
                                     <ListItemIcon>
-                                        {iconMapping[text]}
+                                        {iconMapping['Home']}
                                     </ListItemIcon>
-                                    <ListItemText primary={text} />
+                                    <ListItemText primary="Home" />
                                 </ListItemButton>
                             </ListItem>
-                        ))}
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Search" disablePadding>
+                                <ListItemButton >
+                                    <ListItemIcon>
+                                        {iconMapping['Search']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Search" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Explore" disablePadding>
+                                <ListItemButton >
+                                    <ListItemIcon>
+                                        {iconMapping['Explore']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Explore" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Reel" disablePadding>
+                                <ListItemButton >
+                                    <ListItemIcon>
+                                        {iconMapping['Reel']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Reel" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Messages" disablePadding>
+                                <ListItemButton >
+                                    <ListItemIcon>
+                                        {iconMapping['Messages']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Messages" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Notifications" disablePadding>
+                                <ListItemButton >
+                                    <ListItemIcon>
+                                        {iconMapping['Notifications']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Notifications" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
                         <Link href='#'>
                             <ListItem key="Create" disablePadding>
-                                <ListItemButton onClick={handleClick}>
+                                <ListItemButton >
                                     <ListItemIcon>
                                         {iconMapping['Create']}
                                     </ListItemIcon>
                                     <ListItemText primary="Create" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="Profile" disablePadding>
+                                <ListItemButton onClick={handleClick}>
+                                    <ListItemIcon>
+                                        {iconMapping['Profile']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="Profile" />
+                                </ListItemButton>
+                            </ListItem>
+                        </Link>
+                        <Link href='#'>
+                            <ListItem key="More" disablePadding>
+                                <ListItemButton onClick={handleClick}>
+                                    <ListItemIcon>
+                                        {iconMapping['More']}
+                                    </ListItemIcon>
+                                    <ListItemText primary="More" />
                                 </ListItemButton>
                             </ListItem>
                         </Link>

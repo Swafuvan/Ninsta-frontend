@@ -1,86 +1,27 @@
-
+'use client'
 import React from 'react'
-import Box from '@mui/material/Box';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Image from 'next/image';
 import LogoImg from '../../public/Ninsta Logo.png'
-
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import PeopleIcon from '@mui/icons-material/People';
-import ReportIcon from '@mui/icons-material/Report';
-import Logout from '@mui/icons-material/Logout';
+import { useRouter } from 'next/navigation'
 import Link from 'next/link';
-import { getUsers } from '@/lib/functions/admin/route';
+import Cookies from 'js-cookie'
 
-async function AdminSidebar() {
-    const iconMapping: { [key: string]: React.ReactElement } = {
-        Dashboard: <DashboardIcon />,
-        Users: <PeopleIcon />,
-        Reports: <ReportIcon />,
-        Logout: <Logout />
-    };
+function AdminSidebar() {
+    
+    const router = useRouter()
 
-    const UserCount = await getUsers()
-
+    const goToLogin = () => router.push('/admin/login');
+    
+    const adminLogout = () => { Cookies.remove('adminToken') }
     return (
 
-        <div >
-            {/* <Box sx={{ width: 200 }} role="presentation" >
-                <Image src={LogoImg} width={120} alt='logoImage' />
-                <List>
-                    <ListItem key="Dashboard" disablePadding>
-                        <Link href='/admin/Dashboard'>
-                        <ListItemButton >
-                            <ListItemIcon>
-                                {iconMapping['Dashboard']}
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboard" />
-                        </ListItemButton>
-                        </Link>
-                    </ListItem>
-                    <ListItem key="Reports" disablePadding>
-                        <Link href='#'>
-                        <ListItemButton >
-                            <ListItemIcon>
-                                {iconMapping['Reports']}
-                            </ListItemIcon>
-                            <ListItemText primary="Reports" />
-                        </ListItemButton>
-                        </Link>
-                    </ListItem>
-                    <ListItem key="Users" disablePadding>
-                        <Link href='/admin/usermanagement'>
-                            <ListItemButton >
-                                <ListItemIcon>
-                                    {iconMapping['Users']}
-                                </ListItemIcon>
-                                <ListItemText primary="Users" />
-                            </ListItemButton>
-                        </Link>
-                    </ListItem>
-                    <ListItem key="Logout" disablePadding>
-                        <Link href='/admin/login'>
-                            <ListItemButton >
-                                <ListItemIcon>
-                                    {iconMapping['Logout']}
-                                </ListItemIcon>
-                                <ListItemText primary="Logout" />
-                            </ListItemButton>
-                        </Link>
-                    </ListItem>
-                </List>
-
-            </Box> */}
+         <div >
 
             {/* <!-- component --> */}
             {/* <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800"> */}
             <div className="fixed flex flex-col top-0 left-0 w-64 bg-white h-full border-r">
 
-                <div className="overflow-y-auto overflow-x-hidden flex-grow">
+                <div className="overflow-y-auto overflow-x-hidden flex-grow" >
                     <ul className="flex flex-col py-4 space-y-1">
                         <li className="px-5">
                             <Image src={LogoImg} width={120} alt='logoImage' />
@@ -167,20 +108,8 @@ async function AdminSidebar() {
                                 </p>
                             </Link>
                         </li>
-                        {/* 
-                            <li>
-                                <p href="#" className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
-                                    <span className="inline-flex justify-center items-center ml-4">
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                        </svg>
-                                    </span>
-                                    <span className="ml-2 text-sm tracking-wide truncate">Settings</span>
-                                </p> 
-                            </li>
-                                */}
-                        <Link href='/admin/login'>
+                       
+                        <Link href='/admin/login' onClick={adminLogout}>
                             <li>
                                 <p  className="relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6">
                                     <span className="inline-flex justify-center items-center ml-4">
@@ -193,8 +122,7 @@ async function AdminSidebar() {
                     </ul>
                 </div>
             </div>
-        </div>
-        // </div>
+        </div> 
     )
 }
 

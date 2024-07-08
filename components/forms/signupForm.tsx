@@ -54,11 +54,9 @@ export function SignupRoute() {
 
     const handleSubmit = async (values: SignupFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
-            console.log("vannno")
             const response = await createUserAccount(values);
             console.log(response);
             if (response) {
-                console.log("kerrri")
                 setSignupData(values);
                 setIsOtpSent(true);
                 setResendEnabled(false);

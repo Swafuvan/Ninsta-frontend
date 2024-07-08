@@ -1,29 +1,30 @@
 'use client'
 import { userHome } from '@/lib/functions/user/route';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import Cookies from 'js-cookie'
 import { setUser } from '@/redux/userSlice';
 import { RootState } from '@/redux/store';
-// import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
+import { Users } from 'lucide-react';
+import { User } from '@/type/users';
 
 function HomePage() {
-  // const router = useRouter();
+
+  const router = useRouter();
   const dispatch = useDispatch()
   const user = useSelector((state: RootState) => state.auth);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log(user, user?.email)
-        const { users } = await userHome(user?.email)
-        console.log(users)
-        dispatch(setUser(users));
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
+  useEffect(()=>{
+    if(Cookies.get('userToken')){
+      console.log(user)
+      
+      // dispatch(setUser(user))
+    } else {
+      router.push('/Login')
     }
-    fetchUserData()
-  }, [dispatch])
+  })
+
   return (
     <div className='grid grid-cols-2 justify-center'>
       {/* Left side (Stories and Posts) */}

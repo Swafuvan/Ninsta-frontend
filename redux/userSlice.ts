@@ -34,7 +34,7 @@ export const createUserAsync = createAsyncThunk(
 
 // Async thunk for user login
 export const checkingUserAsync = createAsyncThunk(
-  'user/login',
+  'user/Login',
   async (values: { email: string; password: string }) => {
     try {
       const userDetail: User = await userLogin(values);

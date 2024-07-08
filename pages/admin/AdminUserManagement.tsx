@@ -11,42 +11,49 @@ import UserModal from './EditUserDetails';
 interface AdminUserManagementProps {
     columns: string[];
     data: User[];
+    setData:any
 }
 
-function AdminUserManagement({ columns, data }: AdminUserManagementProps) {
+function AdminUserManagement({ columns, data,setData }: AdminUserManagementProps) {
 
-    const [user, setUser] = useState(null);
+    
     // const [isEdit, setIsEdit] = useState(false);
 
     async function onBlockToggle({email,isBlock}:any) {
-       
-        
+        const newUser = [...data].map(item => {
+            if(item.email === email) {
+                console.log({...item, isBlocked:!item.isBlocked });
+                return {...item, isBlocked:!item.isBlocked };
+            }
+            return item;
+        })
+        console.log(newUser,"thia ia thw user")
+        setData(newUser)
         const UserBlock = await UserBlocked(email,isBlock)
-        // console.log(UsersData);
-        console.log(UserBlock)
-        
     };
 
     // function CloseModal(){
     //     setIsEdit(false);
     // }
 
-    async function onEditUser(Userdata: any) {
-        alert('vannu')
-        // await setIsEdit(true);
-        console.log(Userdata)
-        const UserDataSending = await SingleUserDetails(Userdata)
-        await setUser(Userdata)
-        if (UserDataSending) {
-            console.log(UserDataSending);
-        }
+    // async function onEditUser(Userdata: any) {
+    //     alert('vannu')
+    //     // await setIsEdit(true);
+    //     console.log(Userdata)
+    //     const UserDataSending = await SingleUserDetails(Userdata)
+    //     await setData(Userdata)
+    //     if (UserDataSending) {
+    //         console.log(UserDataSending);
+    //     }
     
-    }
+    // }
     return (
-        <div className='p-4'>
+        <div className='pr-4'>
             {/* {isEdit === false ? ( */}
                 <>
-                    <h1 className='text-4xl font-bold flex justify-center mb-10'>User Management</h1><table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                    <h1 className='text-4xl font-bold flex justify-center mb-10'>User Management</h1>
+
+                    <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
                         <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal ">
                             <tr>
                                 <th className='py-3 px-6 text-left'>SlNo</th>
@@ -78,7 +85,7 @@ function AdminUserManagement({ columns, data }: AdminUserManagementProps) {
                                     <td className="py-3 px-6 text-left">
                                         <div className="form-check">
                                             <button
-                                                className='bg-slate-300 p-2 rounded-md font-bold'
+                                                className='bg-slate-300 w-24 h-10 rounded-md font-bold'
                                                 onClick={() => onBlockToggle({ email: item?.email, isBlock: item?.isBlocked })}
                                             >
                                                 {item?.isBlocked === true ? "Unblock" : "Block"}

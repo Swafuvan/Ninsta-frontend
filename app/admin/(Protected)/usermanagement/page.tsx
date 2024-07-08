@@ -26,7 +26,7 @@ function UserManagement() {
     
 
     return (
-        <AdminUserManagement columns={columns} data={data}  />
+        <AdminUserManagement columns={columns} data={data} setData={setData}  />
     );
 }
 

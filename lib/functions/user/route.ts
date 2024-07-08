@@ -2,7 +2,7 @@
 import { User, forgotPassword } from "@/type/users";
 import { LoginUser, SignupUser, googleUser } from "@/type/users";
 import axiosInstance from "../axiosInterceptor";
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
 const backendURL = 'http://localhost:5000';
 
@@ -16,7 +16,21 @@ export const userHome = async (user:any) => {
     }
 }
 
-
+export const UserState = async () =>{
+    try {
+        const userDetails = await axiosInstance.get('/userData')
+        if(userDetails){
+            console.log(userDetails)
+            if(userDetails.status === 217) {
+                Cookies.remove('userToken')
+                return {data:null}
+            }
+            return userDetails.data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const createUserAccount = async (user: SignupUser): Promise<User | null> => {
     try {
@@ -35,16 +49,19 @@ export const createUserAccount = async (user: SignupUser): Promise<User | null> 
 export const userLogin = async (user: LoginUser): Promise<any> => {
     try {
         const usersData = await axiosInstance.post('/login', user);
-        return usersData;
+        console.log(usersData);
+        if(usersData){
+            return usersData
+        }
+        return null;
     } catch (err) {
         console.log(err);
     }
 }
 
-export const logout = async () => {
+export const logout = () => {
     try {
         Cookies.remove('userToken');
-        setImmediate(()=>window.location.href='/login')
     } catch (error) {
         console.log(error);
     }
