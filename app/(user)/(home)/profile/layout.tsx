@@ -5,7 +5,7 @@ function profilepageLayout({children}:Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div >
+    <div className='ml-44'>
       {children}
     </div>
   )

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -20,19 +20,26 @@ import Logout from '@mui/icons-material/Logout';
 import Image from 'next/image';
 import LogoImg from '../../public/Ninsta Logo.png';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { logout } from '@/lib/functions/user/route';
+import ModalPage from '@/pages/user/userCreatepage';
 
 export default function TemporaryDrawer() {
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleDrawerOpen = () => {
+        setOpen(false);
+    };
+
     const router = useRouter();
     const handleLogout = () => {
         logout();
-        router.push('/Login')
+        router.push('/Login');
     };
-
-    const handleClick = () =>{
-        // window.location.href='/create'
-    }
+    const location = usePathname()
+    console.log(location);
+    const bannedUrl = ["/messages"];
 
     const iconMapping: { [key: string]: React.ReactElement } = {
         Home: <HomeIcon />,
@@ -48,113 +55,35 @@ export default function TemporaryDrawer() {
     };
 
     return (
-        <div className=' md:block h-screen p-2 mr-56'>
-            <div className='fixed top-8 left-8'>
-                <Box sx={{ width: 208 }} role="presentation" >
-                    <Image src={LogoImg} width={120} alt='logoImage' />
-                    <List>
-                        <Link href='#'>
-                            <ListItem key="Home" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Home']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Home" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Search" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Search']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Search" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Explore" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Explore']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Explore" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Reel" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Reel']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Reel" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Messages" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Messages']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Messages" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Notifications" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Notifications']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Notifications" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Create" disablePadding>
-                                <ListItemButton >
-                                    <ListItemIcon>
-                                        {iconMapping['Create']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Create" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="Profile" disablePadding>
-                                <ListItemButton onClick={handleClick}>
-                                    <ListItemIcon>
-                                        {iconMapping['Profile']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="Profile" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
-                        <Link href='#'>
-                            <ListItem key="More" disablePadding>
-                                <ListItemButton onClick={handleClick}>
-                                    <ListItemIcon>
-                                        {iconMapping['More']}
-                                    </ListItemIcon>
-                                    <ListItemText primary="More" />
-                                </ListItemButton>
-                            </ListItem>
-                        </Link>
+        <div>
+            <div className='fixed top-8 left-3'>
+                <Box sx={{ width: 208 }} role="presentation">
+                    {location?.includes('/messages') ? <img onClick={()=>window.location.href='/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer' alt='logo'/> : <Image onClick={()=>window.location.href='/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer" />}
+                    <List className={location?.includes('/messages') ? 'w-12' : ''} >
+                        {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text) => (
+                            <Link href={text === 'Home' ? '/' : text === 'Create' ? '#' : `/${text.toLowerCase()}`} key={text}>
+                                <ListItem disablePadding >
+                                    <ListItemButton onClick={text === 'Create' ? () => setOpen(true) : undefined}>
+                                        <ListItemIcon>
+                                            {iconMapping[text]}
+                                            {open && text === 'Create' && <ModalPage handleDrawerOpen={handleDrawerOpen} />}
+                                        </ListItemIcon>
+                                        <ListItemText primary={location === '/messages' || location === '/search' ? "" : text} className={location === '/messages' || location === '/search' ? 'p-3' : ''} />
+                                    </ListItemButton>
+                                </ListItem>
+                            </Link>
+                        ))}
                         <ListItem key="Logout" disablePadding>
                             <ListItemButton onClick={handleLogout}>
                                 <ListItemIcon>
                                     {iconMapping['Logout']}
                                 </ListItemIcon>
-                                <ListItemText primary="Logout" />
+                                {location !== '/messages' && <ListItemText primary="Logout" className="hidden md:block" />}
                             </ListItemButton>
                         </ListItem>
                     </List>
                 </Box>
             </div>
-
         </div>
     );
 }

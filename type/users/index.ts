@@ -1,16 +1,17 @@
-export interface SignupUser{
+export interface SignupUser {
     username: string;
     email: string;
     password: string;
 
 }
 
-export interface LoginUser{
+export interface LoginUser {
     email: string;
     password: string;
 }
 
 export interface User {
+    _id?: string;
     username: String,
     email: String,
     fullName: String,
@@ -18,21 +19,25 @@ export interface User {
     isAdmin: boolean,
     image: String,
     bio: String,
-    isBlocked:boolean,
-    Gender:string
-  } 
-
-export interface googleUser{
-    email:string,
-    password:string,
-    username:string,
-    fullName:string,
-    image:string
+    isBlocked: boolean,
+    Gender: string,
+    following:string[],
+    follower:string[]
 }
 
-export interface forgotPassword{
+
+
+export interface googleUser {
+    email: string,
+    password: string,
+    username: string,
+    fullName: string,
+    image: string
+}
+
+export interface forgotPassword {
     email: string,
     password: string,
     confirmPassword: string
-    
+
 }

@@ -14,6 +14,9 @@ import { GoogleLogin } from '@react-oauth/google';
 import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { googleUser } from '@/type/users';
 import Cookies from 'js-cookie'
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/redux/userSlice';
 
 
 
@@ -30,6 +33,10 @@ export function SignupRoute() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [resendEnabled, setResendEnabled] = useState(true);
     const [timer, setTimer] = useState(0);
+    const [error,setError] = useState('')
+    const [resend,setResend] = useState('')
+    const router = useRouter()
+    const dispatch = useDispatch()
 
     useEffect(() => {
         let interval: NodeJS.Timeout | undefined;
@@ -40,6 +47,7 @@ export function SignupRoute() {
                     if (prev <= 1) {
                         clearInterval(interval);
                         setResendEnabled(true);
+                        
                         return 0;
                     }
                     return prev - 1;
@@ -75,9 +83,15 @@ export function SignupRoute() {
             console.log(signupData)
             const response = await verifyOtp(signupData?.email!, Number(otp));
             console.log(response)
-            if (response) {
-                Cookies.set('userToken',response.JWTtoken)
-                location.href = '/';
+            if(response?.data?.message){
+                setError(response?.data?.message)
+                return
+            }
+            if (response?.data?.userData) {
+                Cookies.set('userToken',response?.data?.JWTtoken)
+                console.log(response?.data?.userData)
+                dispatch(setUser(response?.data?.userData))
+                router.push('/')
             } else {
                 console.error('OTP verification failed');
             }
@@ -91,10 +105,13 @@ export function SignupRoute() {
     const handleResendOtp = async () => {
         try {
             if (signupData?.email) {
-                await ResendOtp(signupData.email);
-                setIsOtpSent(true); 
-                setResendEnabled(false);
-                setTimer(60);
+                const resended = await ResendOtp(signupData.email);
+                if(resended){
+                    setResend(resended.data.message)
+                    setIsOtpSent(true); 
+                    setResendEnabled(false);
+                    setTimer(60);
+                }
             }
         } catch (error) {
             console.error('Resending OTP failed', error);
@@ -121,7 +138,10 @@ export function SignupRoute() {
             console.log(data)
             const UserResult = await googleSignup(data)
             if (UserResult) {
-                location.href = '/';
+                Cookies.set('userToken',UserResult.JWTtoken)
+                console.log(UserResult.userData)
+                dispatch(setUser(UserResult))
+                router.push('/')
             }
 
         }
@@ -184,7 +204,7 @@ export function SignupRoute() {
                                         <ErrorMessage name="password" component="div" className="text-red-500" />
                                     </div>
 
-                                    <Button type="submit" disabled={isSubmitting}>Create account</Button>
+                                    <Button type="submit" className='hover:bg-slate-500 bg-slate-300' disabled={isSubmitting}>Create account</Button>
                                 </div>
 
                                 <p className="text-small-regular text-light-2 text-center mt-2">
@@ -215,10 +235,11 @@ export function SignupRoute() {
                             shape='circle'
                         />
                     </div>
-
                 </div>
             ) : (
                 <div className="flex flex-col items-center mb-40 mt-52">
+                    <span className='text-red-600 text-xl'>{error}</span>
+                    <span className='text-green-600 text-xl'>{resend}</span>
                     <p className="text-small-regular text-light-2 text-center mt-2 mb-5">
                         Please enter the OTP sent to {signupData?.email}
                     </p>
@@ -257,8 +278,8 @@ export function SignupRoute() {
                         )}
                     />
                     <div className='flex justify-around pl-3 w-60'>
-                        <Button className='' onClick={handleOtpSubmit} disabled={isSubmitting || otp.length < 6}>Verify OTP</Button>
-                        <Button onClick={handleResendOtp} disabled={!resendEnabled}>Resend OTP </Button>
+                        <Button className='bg-slate-300 cursor-pointer hover:bg-slate-500' onClick={handleOtpSubmit} disabled={isSubmitting || otp.length < 6}>Verify OTP</Button>
+                        <Button onClick={handleResendOtp} className='bg-black hover:bg-black text-white' disabled={!resendEnabled}>Resend OTP </Button>
                     </div>
                 </div>
             )

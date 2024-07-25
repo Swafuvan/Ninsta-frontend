@@ -21,13 +21,13 @@ export default function RootLayout({ children, }: Readonly<{
 
 
   return (
-    <html lang="en">
+    <html lang="en" >
       <title></title>
       <body className={cn(
-        "min-h-screen bg-background font-sans antialiased",
+        
         fontSans.variable
       )}>
-        <div className="flex h-screen">
+        <div >
           <main className="flex-grow">
             <Toaster position="top-center" />
             <ClientProvider>

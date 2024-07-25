@@ -6,7 +6,6 @@ const adminUrl = 'http://localhost:5000/admin';
 export const AdminLogin = async (user : LoginUser): Promise<any> => {
     try {
         const Admindata = await axiosInstance.post(`/login`, user);
-        console.log(Admindata+'/////////////////////');
         return Admindata
     } catch (err) {
         console.log(err);
@@ -23,6 +22,17 @@ export const getUsers = async () =>{
     } catch (error) {
         console.log(error);
         
+    }
+}
+
+export const UserFindbyId = async (userId:string) => {
+    try {
+        const UserDetail = await axiosInstance.get('/userfindById?userId='+userId)
+        if(UserDetail){
+            return UserDetail.data
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 
@@ -52,9 +62,31 @@ export const adminDetails = async () =>{
     }
 }
 
+export const UserPostReport = async () => {
+    try {
+        const userReports = await axiosInstance.get('/userReports')
+        if(userReports){
+            return userReports.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const ReportPosts = async (postData:any) => {
+    try {
+        const PostReportData = await axiosInstance.post('/postReport',postData)
+        if(PostReportData){
+            return PostReportData
+        }
+    } catch (error) {
+        console.log(error)
+    }
+} 
+
 export const UserBlocked = async (email:any,isBlock:any) => {
     try {
-        console.log(email,isBlock,'00000000000000000000000000000')
+        
         const UserBlock = await axiosInstance.get('/UserBlock?User=',{params:{email,isBlock}})
         if(UserBlock){
             return UserBlock 

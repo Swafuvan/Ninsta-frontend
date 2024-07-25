@@ -9,7 +9,6 @@ import { forgotPasswordSchema } from '@/lib/validation';
 function ForgotPasswordPage() {
     const router = useRouter();
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
     async function forgotPassword(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         setErrors({});
@@ -35,7 +34,7 @@ function ForgotPasswordPage() {
         try {
             const changePassword = await ForgotPassword({ email, password, confirmPassword });
             console.log(changePassword);
-            if (changePassword?.data?.status === 200) {
+            if (changePassword?.status === 200) {
                 toast.success('Password Changed Successfully!');
                 router.push('/Login');
             }else{

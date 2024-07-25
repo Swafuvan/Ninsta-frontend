@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie'
 
-const getUserToken = () => {
+export const getUserToken = () => {
     return "Bearer " + Cookies.get('userToken')
 }
 
@@ -19,7 +19,6 @@ axiosInstance.interceptors.request.use(
     config => {
         // Add auth token to headers if available
         const token = Cookies.get('userToken');
-        console.log(token)
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }

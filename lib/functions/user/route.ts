@@ -1,5 +1,5 @@
 // userRoutes.js
-import { User, forgotPassword } from "@/type/users";
+import {  User, forgotPassword } from "@/type/users";
 import { LoginUser, SignupUser, googleUser } from "@/type/users";
 import axiosInstance from "../axiosInterceptor";
 import Cookies from 'js-cookie';
@@ -70,7 +70,7 @@ export const logout = () => {
 export const verifyOtp = async (email: string, otp: number) => {
     try {
         const OTP = await axiosInstance.post('/verifyOtp', { email, otp });
-        return OTP.data;
+        return OTP;
     } catch (error) {
         console.error('Error verifying OTP:', error);
         return null;
@@ -97,6 +97,18 @@ export const googleSignup = async (UserSession: googleUser) => {
     } catch (error) {
         console.error('Error', error);
         return { success: false, error: error };
+    }
+}
+
+export const UserfindById = async (userid:any) => {
+    try {
+        console.log(userid)
+        const allUserData = await axiosInstance.get('/user?id='+userid);
+        if(allUserData){
+            return allUserData.data;
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 

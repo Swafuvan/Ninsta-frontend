@@ -59,11 +59,11 @@ export function LoginForm() {
             let data = { email: usersResult?.email, password: usersResult?.sub }
             const UserResult = await userLogin(data)
             if (UserResult) {
-                location.href = '/';
+                Cookies.set('userToken', UserResult.data.JWTtoken)
+                router.push('/')
             }
 
         }
-
 
     }
 
@@ -96,7 +96,7 @@ export function LoginForm() {
                                 <Field type="password" id="password" name="password" placeholder="Password" as={Input} />
                                 <ErrorMessage name="password" component="div" className="text-red-500" />
                             </div>
-                            <Button type="submit" disabled={isSubmitting}>Login</Button>
+                            <Button type="submit" className="bg-slate-300 hover:bg-slate-500 rounded-md" disabled={isSubmitting}>Login</Button>
                         </div>
                         <p className="text-small-regular text-light-2 text-center mt-2">
                             Don't have an account?
