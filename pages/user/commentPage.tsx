@@ -8,11 +8,12 @@ import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
-import { CommentPost, comments } from '@/lib/functions/Posts/route';
+import { CommentLike, CommentPost, CommentReplies, comments } from '@/lib/functions/Posts/route';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { UserfindById } from '@/lib/functions/user/route';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -24,6 +25,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 export default function CommentsPage({ handleClickOpen, singlePost, setSinglePost }: any) {
 
     const [comment, setComment] = React.useState('');
+    const [reply, setReply] = React.useState('');
     const [commentData, setCommentData] = React.useState<any[]>([])
     const [clickedReply, setClickedReply] = React.useState<number[]>([])
     const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
@@ -34,6 +36,8 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
     const handleEmojiSelect = (emoji: any) => {
         setComment(comment + emoji.native);
     };
+
+
 
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -50,15 +54,34 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
 
     React.useEffect(() => {
         console.log(singlePost)
-        const commentdetails = comments(singlePost?._id).then((data) => {
+        const commentdetails = comments(singlePost?._id).then(async (data) => {
             console.log(data.Comments)
+
+            for(const val of data.Comments) {
+                val.replies = await Promise.all(val.replies.map(async (item: any) => ({
+                    ...item, ...await UserfindById(item.userId + "")
+                })))
+            }
             // console.log(singlePost)
             setCommentData(data.Comments)
         })
     }, [])
 
+    async function uploadReply(data: any) {
+
+        console.log(data)
+        const ReplyDetails = await CommentReplies(data, user.user?._id + '', reply)
+        if (ReplyDetails) {
+            // ReplyDetails.data.replies = await Promise.all(ReplyDetails.data.replies.map(async (item: any) => ({
+            //     ...item, userDetails: await UserfindById(item.userId + "")
+            // })))
+            console.log(ReplyDetails.replies);
+            setCommentData((prev) => [...prev, ReplyDetails.data.CommentRes])
+            setReply('');
+        }
+    }
+
     const toggleReply = (index: number) => {
-        alert('vanalo')
         setClickedReply(clickedReply.includes(index) ?
             (arr => arr.filter(item => item !== index)) :
             [...clickedReply, index]
@@ -79,6 +102,16 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
         setComment('')
     }
 
+    async function commentLikes(comment: any, index: number) {
+        console.log(comment, user.user?._id)
+        const CommentLikes = await CommentLike(comment, user.user?._id + '');
+        if (commentData[index].likes.includes(user.user?._id?.toString())) {
+            commentData[index].likes = commentData[index].likes.filter((like: any) => like !== user.user?._id?.toString())
+        } else {
+            commentData[index].likes.push(user.user?._id?.toString())
+        }
+        setCommentData([...commentData])
+    }
 
 
     return (
@@ -118,7 +151,7 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
                                                     <img className="w-9 h-9 rounded-full" src={data.userId.image} alt="image" />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-900 truncate dark:text-white">
+                                                    <p className="text-xs font-semibold text-gray-900 truncate dark:text-white">
                                                         {data?.userId.username}
                                                     </p>
                                                     <p className="text-xs text-gray-500 truncate dark:text-gray-400 w-60 h-fit">
@@ -127,20 +160,20 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
                                                     <p onClick={() => toggleReply(inx)} className="cursor-pointer text-xs text-gray-500 truncate dark:text-gray-400"><span className="text-xs">{(data?.replies?.length || "0") + " reply"}</span></p>
                                                 </div>
 
-                                                <div className="">
-
-                                                    {data.likes ?
-                                                        <svg aria-label="Like" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title>Like</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
-                                                         :
-                                                        <svg aria-label="Unlike" fill="currentColor" height="12" role="img" viewBox="0 0 48 48" width="12"><title>Unlike</title><path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path></svg>
+                                                <div className="flex ">
+                                                    <span className='text-xs '>{data.likes.length} </span>
+                                                    {data.likes.includes(user.user?._id + "") ?
+                                                        <svg onClick={() => commentLikes(data, inx)} className='cursor-pointer mt-0.5' aria-label="Unlike" fill="#262626" height="12" role="img" viewBox="0 0 48 48" width="12"><title>Unlike</title><path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path></svg>
+                                                        :
+                                                        <svg onClick={() => commentLikes(data, inx)} className='cursor-pointer mt-0.5' aria-label="Like" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title>Like</title><path d="M16.792 3.904A4.989 4.989 0 0 1 21.5 9.122c0 3.072-2.652 4.959-5.197 7.222-2.512 2.243-3.865 3.469-4.303 3.752-.477-.309-2.143-1.823-4.303-3.752C5.141 14.072 2.5 12.167 2.5 9.122a4.989 4.989 0 0 1 4.708-5.218 4.21 4.21 0 0 1 3.675 1.941c.84 1.175.98 1.763 1.12 1.763s.278-.588 1.11-1.766a4.17 4.17 0 0 1 3.679-1.938m0-2a6.04 6.04 0 0 0-4.797 2.127 6.052 6.052 0 0 0-4.787-2.127A6.985 6.985 0 0 0 .5 9.122c0 3.61 2.55 5.827 5.015 7.97.283.246.569.494.853.747l1.027.918a44.998 44.998 0 0 0 3.518 3.018 2 2 0 0 0 2.174 0 45.263 45.263 0 0 0 3.626-3.115l.922-.824c.293-.26.59-.519.885-.774 2.334-2.025 4.98-4.32 4.98-7.94a6.985 6.985 0 0 0-6.708-7.218Z"></path></svg>
                                                     }
 
 
                                                 </div>
                                             </div>
 
-                                            {/* {clickedReply.includes(index) && <>
-                                                <div className="ml-14">
+                                            {clickedReply.includes(inx) && <>
+                                                <div className="ml-9">
                                                     <form className='w-full'>
                                                         <label htmlFor="chat" className="sr-only">Your message</label>
                                                         <div className="flex items-center px-3 py-2 rounded-lg"  >
@@ -150,9 +183,9 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
                                                                 </svg>
                                                                 <span className="sr-only">Add emoji</span>
                                                             </button>
-                                                            <input type="text" onChange={(e) => setReply(e.target.value)} placeholder="Your comments here...." name="Email" id="floating_email" className="ml-3 block py-1 px-0 w-full text-sm text-white-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-graye dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
+                                                            <input type="text" onChange={(e) => setReply(e.target.value)} placeholder="Your comments here...." id="floating_email" className="ml-2 block py-1 px-0 w-full text-sm text-white-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-graye dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" />
 
-                                                            <button type="button" onClick={() => uploadReply(comm._id)} className="inline-flex ml-4 justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                                                            <button type="button" onClick={() => uploadReply(data._id)} className="inline-flex ml-4 justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                                                                 <svg className="w-5 h-5 rotate-90 rtl:-rotate-90" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 20">
                                                                     <path d="m17.914 18.594-8-18a1 1 0 0 0-1.828 0l-8 18a1 1 0 0 0 1.157 1.376L8 18.281V9a1 1 0 0 1 2 0v9.281l6.758 1.689a1 1 0 0 0 1.156-1.376Z" />
                                                                 </svg>
@@ -160,25 +193,25 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
 
                                                         </div>
                                                     </form>
-                                                    {comm.Replies && comm.Replies.map((item: any, ind: number) => {
+                                                    {data.replies && data.replies.map((item: any, ind: number) => {
                                                         return (
                                                             <div key={ind} className="flex mt-2 items-center space-x-3 rtl:space-x-reverse">
                                                                 <div className="flex-shrink-0">
-                                                                    <img className="w-9 h-9 rounded-full" src={user?.profileImage} alt="Neil image" />
+                                                                    <img className="w-9 h-9 rounded-full" src={item?.userDetail.image} alt="Neil image" />
                                                                 </div>
                                                                 <div className="flex-1 min-w-0">
                                                                     <p className="text-sm font-semibold text-gray-900 truncate dark:text-white">
-                                                                        {item.userName}
+                                                                        {item.userDetail.username}
                                                                     </p>
                                                                     <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                                                                        {item.Reply}
+                                                                        {item.reply}
                                                                     </p>
                                                                 </div>
                                                             </div>
                                                         )
                                                     })}
                                                 </div>
-                                            </>} */}
+                                            </>}
 
                                         </li>
                                     )

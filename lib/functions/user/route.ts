@@ -32,6 +32,39 @@ export const UserState = async () =>{
     }
 }
 
+export const SearchDetails = async () => {
+    try {
+        const searchRes = await axiosInstance.get('/search');
+        if(searchRes){
+            return searchRes.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserSearch = async (search:any): Promise<any> => {
+    try {
+        const searchRes = await axiosInstance.get('/userSearch?search='+search);
+        if(searchRes){
+            return searchRes.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const AllUserData = async (userId:any) => {
+    try {
+        const UsersData = await axiosInstance.get('/AllUsers?userId='+userId);
+        if(UsersData){
+            return UsersData.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const createUserAccount = async (user: SignupUser): Promise<User | null> => {
     try {
         console.log(backendURL+'/signup', user);

@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from '@/redux/store';
 import { UserState } from '@/lib/functions/user/route';
@@ -9,18 +9,19 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { adminDetails } from '@/lib/functions/admin/route';
 import { NextUIProvider } from '@nextui-org/react'
-
+import { UseDispatch } from 'react-redux';
 import { usePathname } from 'next/navigation';
-import useSocket from '@/helpers/socketIO';
+import { io } from 'socket.io-client';
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
-  const { socket } = useSocket();
 
 
   return (
     <ReduxProvider store={store}>
       <UserProvider>
-        {children}
+        <SocketProvider>
+          {children}
+        </SocketProvider>
       </UserProvider>
     </ReduxProvider>
   )
@@ -30,22 +31,20 @@ function UserProvider({ children }: { children: ReactNode }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const locationPath = usePathname()
-  const { socket } = useSocket()
-
-  const user = useSelector((state: RootState) => state.auth);
 
 
   useEffect(() => {
-    console.log(locationPath)
-    if (socket) {
-      alert("aa socket vannu")
-      socket.emit('join', user.user?._id);
-    }
 
     if (locationPath?.includes('/admin')) {
       adminDetails().then((admin) => {
         if (admin) {
-          dispatch(setUser(admin.adminData))
+          // console.log(admin)
+          if (!admin?.data) {
+            // console.log(admin.data,)
+            router.push('/admin/login')
+          } else {
+            dispatch(setUser(admin.data))
+          }
         } else {
           router.push('/admin/login')
         }
@@ -68,3 +67,32 @@ function UserProvider({ children }: { children: ReactNode }) {
   )
 }
 
+const SocketContext = createContext<any>(null);
+
+
+function SocketProvider({ children }: { children: ReactNode }) {
+  const user = useSelector((state: RootState) => state.auth);
+  const [socket, setSocket] = useState<any>(null)
+
+  useEffect(() => {
+    const newSocket: any = io("http://localhost:5000");
+    setSocket(newSocket);
+    if (user && user.user) {
+      newSocket.emit('join', user.user?._id);
+    }
+    // newSocket.on('message', (data: any) => alert(data.message))
+
+    return () => {
+      newSocket.close();
+    };
+  }, [user]);
+
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
+
+}
+
+export const useSocket = () => useContext(SocketContext);

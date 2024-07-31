@@ -23,7 +23,7 @@ function PostEditModal({ singlePost, PostEdits }: any) {
                     backdrop: "bg-gradient-to-t from-zinc-900 to-zinc-900/10 backdrop-opacity-20 "
                 }}
             >
-                <ModalContent className="border w-96 border-gray-400 bg-slate-200 rounded-md h-fit mt-28">
+                <ModalContent style={{borderRadius:'20px'}} className="border w-96 border-gray-400 bg-slate-200 h-fit mt-28">
                     {(PostEdits) => (
                         <>
                             {open && <ChildModal handleClose={handleClose} singlePost={singlePost} />}

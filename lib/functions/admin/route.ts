@@ -3,7 +3,7 @@ import axiosInstance from "./adminAxiosInterceptor";
 
 const adminUrl = 'http://localhost:5000/admin';
 
-export const AdminLogin = async (user : LoginUser): Promise<any> => {
+export const AdminLogin = async (user: LoginUser): Promise<any> => {
     try {
         const Admindata = await axiosInstance.post(`/login`, user);
         return Admindata
@@ -12,23 +12,23 @@ export const AdminLogin = async (user : LoginUser): Promise<any> => {
     }
 }
 
-export const getUsers = async () =>{
+export const getUsers = async () => {
     try {
         const userMangement = await axiosInstance.get(`/userManagement`)
-        if(userMangement){
+        if (userMangement) {
             return userMangement
         }
         return null
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-export const UserFindbyId = async (userId:string) => {
+export const UserFindbyId = async (userId: string) => {
     try {
-        const UserDetail = await axiosInstance.get('/userfindById?userId='+userId)
-        if(UserDetail){
+        const UserDetail = await axiosInstance.get('/userfindById?userId=' + userId)
+        if (UserDetail) {
             return UserDetail.data
         }
     } catch (error) {
@@ -36,11 +36,11 @@ export const UserFindbyId = async (userId:string) => {
     }
 }
 
-export const SingleUserDetails = async (userData:any) =>{
+export const SingleUserDetails = async (userData: any) => {
     try {
         // console.log(userData)
-        const UserDetails = await axiosInstance.post('/UserData',userData)
-        if(UserDetails){
+        const UserDetails = await axiosInstance.post('/UserData', userData)
+        if (UserDetails) {
             return UserDetails
         }
         return null
@@ -49,23 +49,21 @@ export const SingleUserDetails = async (userData:any) =>{
     }
 }
 
-export const adminDetails = async () =>{
+export const adminDetails = async () => {
     try {
         const Admin = await axiosInstance.get('/adminData')
         console.log(Admin)
-        if(Admin){
-            return Admin.data
-        }
+        return { data: Admin.status === 400 ? null : Admin.data.adminData }
     } catch (error) {
         console.log(error)
-        
+
     }
 }
 
 export const UserPostReport = async () => {
     try {
         const userReports = await axiosInstance.get('/userReports')
-        if(userReports){
+        if (userReports) {
             return userReports.data
         }
     } catch (error) {
@@ -73,23 +71,23 @@ export const UserPostReport = async () => {
     }
 }
 
-export const ReportPosts = async (postData:any) => {
+export const ReportPosts = async (postData: any) => {
     try {
-        const PostReportData = await axiosInstance.post('/postReport',postData)
-        if(PostReportData){
-            return PostReportData
+        const PostReportData = await axiosInstance.post('/postReport', postData)
+        if (PostReportData) {
+            return PostReportData.data
         }
     } catch (error) {
         console.log(error)
     }
-} 
+}
 
-export const UserBlocked = async (email:any,isBlock:any) => {
+export const UserBlocked = async (email: any, isBlock: any) => {
     try {
-        
-        const UserBlock = await axiosInstance.get('/UserBlock?User=',{params:{email,isBlock}})
-        if(UserBlock){
-            return UserBlock 
+
+        const UserBlock = await axiosInstance.get('/UserBlock?User=', { params: { email, isBlock } })
+        if (UserBlock) {
+            return UserBlock
         }
         return null
     } catch (error) {

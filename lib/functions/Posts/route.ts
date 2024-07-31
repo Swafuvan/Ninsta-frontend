@@ -19,9 +19,9 @@ export const postUpload = async (file: File[], text: string) => {
 
 }
 
-export const likePost = async (user: any) => {
+export const likePost = async (post: any, userId:string) => {
     try {
-        const response = await axiosInstance.post('/likePost', user)
+        const response = await axiosInstance.post('/likePost', { post, userId })
         if (response) {
             return response.data
         }
@@ -30,15 +30,26 @@ export const likePost = async (user: any) => {
     }
 }
 
-export const SavePosts = async (postData:any,userId:string) => {
+export const CommentLike = async (comment:any,userId:string) =>{
     try {
-        const SavedData = await axiosInstance.post('/savePosts',{postDetails:postData,userData:userId})
+        const CommentLikeResponse = await axiosInstance.post('/commentLike',{comment,userId});
+        if (CommentLikeResponse) {
+            return CommentLikeResponse.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const SavePosts = async (postData: any, userId: string) => {
+    try {
+        const SavedData = await axiosInstance.post('/savePosts', { postDetails: postData, User: userId })
         if (SavedData) {
             console.log(SavedData)
             return SavedData
-        } 
+        }
     } catch (error) {
-        
+
     }
 }
 
@@ -72,6 +83,17 @@ export const UserPosts = async (userId: any) => {
         console.log(AllPostdetails.data)
         if (AllPostdetails) {
             return AllPostdetails.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const CommentReplies = async (data:any,userId:string,reply:string) =>{
+    try {
+        const CommentResponse = await axiosInstance.post('/commentReply',{data,userId,reply});
+        if (CommentResponse) {
+            return CommentResponse.data
         }
     } catch (error) {
         console.log(error);

@@ -56,7 +56,7 @@ function HomePage() {
 
   async function UserLike(post: any) {
     try {
-      const Postsdetail = await likePost(post)
+      const Postsdetail = await likePost(post,user?.user?._id + '')
       if (Postsdetail) { console.log(Postsdetail) }
       const updatedPost = [...Posts]
 
@@ -81,6 +81,12 @@ function HomePage() {
     try {
       const savedPost = await SavePosts(post,user.user?._id+'')
       console.log(savedPost)
+      if(savedPost){
+        const updatedPost = [...Posts]
+        const postIndex = updatedPost.findIndex((item: any) => item._id === post._id)
+        updatedPost[postIndex].saved =!updatedPost[postIndex].saved
+        setPosts(updatedPost)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -90,12 +96,12 @@ function HomePage() {
     <div className='flex justify-center ml-44'>
       {/* Left side (Stories and Posts) */}
       <div className="w-full">
-        <div className=" p-3">
-          <ul className="flex space-x-2">
+        <div className=" p-3 ml-9">
+          <ul  className="flex space-x-2 ">
             <li className="flex flex-col items-center space-y-1 ">
-              <div className="relative bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute kitty" />
+              <div className="relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full">
+                <a href="#" className="block bg-white p-1 rounded-full transform transition z-0 hover:-rotate-6">
+                  <img className="-z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
                 </a>
                 <button className="absolute bg-blue-500 text-white text-2xl font-medium w-6 h-6 rounded-full bottom-0 right-1 border-4 border-white flex justify-center items-center font-mono hover:bg-blue-700 focus:outline-none">
                   <div className="transform -translate-y-px">+</div>
@@ -107,70 +113,70 @@ function HomePage() {
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_two</a>
+              <a href="#">User_two</a>
             </li>
 
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/V1J51pIvfHGATMCKjKhMkr1MGp49ebOJtCVf2_hsVbI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/NTYwNjYzNy9waG90/by9zaG90LW9mLWEt/eW91bmctYnVzaW5l/c3N3b21hbi11c2lu/Zy1hLWRpZ2l0YWwt/dGFibGV0LXdoaWxl/LWF0LXdvcmsuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPUtV/alZsb0JVWHRjWnpO/akd5eWlSRmxwbFZ1/dVBFNlRhcDNPTDZo/X3hJNWs9" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/V1J51pIvfHGATMCKjKhMkr1MGp49ebOJtCVf2_hsVbI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/NTYwNjYzNy9waG90/by9zaG90LW9mLWEt/eW91bmctYnVzaW5l/c3N3b21hbi11c2lu/Zy1hLWRpZ2l0YWwt/dGFibGV0LXdoaWxl/LWF0LXdvcmsuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPUtV/alZsb0JVWHRjWnpO/akd5eWlSRmxwbFZ1/dVBFNlRhcDNPTDZo/X3hJNWs9" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_three</a>
+              <a href="#">User_three</a>
             </li>
 
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
 
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
 
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1473830394358-91588751b241?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1473830394358-91588751b241?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
             <li className="flex flex-col items-center space-y-1 ">
               <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
                 <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute kitty" />
+                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
                 </a>
               </div>
-              <a href="#">kitty_four</a>
+              <a href="#">User_four</a>
             </li>
           </ul>
         </div>
@@ -200,6 +206,7 @@ function HomePage() {
                 <img src={item.Url} />
                 <div className="flex items-center justify-between mx-4 mt-3 mb-2">
                   <div className="flex gap-5">
+                    
                     {item.likes.includes(user.user?._id + "") ? 
                     <svg onClick={() => UserLike(item)} style={{ cursor: 'pointer' }} aria-label="Unlike" fill="#bd200b" height="24" role="img" viewBox="0 0 48 48" width="24"><title>Unlike</title><path d="M34.6 3.1c-4.5 0-7.9 1.8-10.6 5.6-2.7-3.7-6.1-5.5-10.6-5.5C6 3.1 0 9.6 0 17.6c0 7.3 5.4 12 10.6 16.5.6.5 1.3 1.1 1.9 1.7l2.3 2c4.4 3.9 6.6 5.9 7.6 6.5.5.3 1.1.5 1.6.5s1.1-.2 1.6-.5c1-.6 2.8-2.2 7.8-6.8l2-1.8c.7-.6 1.3-1.2 2-1.7C42.7 29.6 48 25 48 17.6c0-8-6-14.5-13.4-14.5z"></path></svg>
                       :
@@ -208,11 +215,13 @@ function HomePage() {
                     <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24" onClick={() => { setOpen(true), setSinglePost(item),console.log(item) }} style={{ cursor: 'pointer' }}><path clipRule="evenodd" d="M47.5 46.1l-2.8-11c1.8-3.3 2.8-7.1 2.8-11.1C47.5 11 37 .5 24 .5S.5 11 .5 24 11 47.5 24 47.5c4 0 7.8-1 11.1-2.8l11 2.8c.8.2 1.6-.6 1.4-1.4zm-3-22.1c0 4-1 7-2.6 10-.2.4-.3.9-.2 1.4l2.1 8.4-8.3-2.1c-.5-.1-1-.1-1.4.2-1.8 1-5.2 2.6-10 2.6-11.4 0-20.6-9.2-20.6-20.5S12.7 3.5 24 3.5 44.5 12.7 44.5 24z" fillRule="evenodd"></path></svg>
                     <svg fill="#262626" height="24" viewBox="0 0 48 48" width="24"><path d="M47.8 3.8c-.3-.5-.8-.8-1.3-.8h-45C.9 3.1.3 3.5.1 4S0 5.2.4 5.7l15.9 15.6 5.5 22.6c.1.6.6 1 1.2 1.1h.2c.5 0 1-.3 1.3-.8l23.1-39.9c.3-.5.3-1.1-.1-1.5zM18.4 28.8l-3.8-15.6L40.3 7 18.4 28.8z"></path></svg>
                   </div>
+                  { 
                   <svg onClick={()=>handleSavePost(item)}
-                   aria-label="Save" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Save</title><polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
-                  {/* {
-                    <svg aria-label="Remove" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Remove</title><path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path></svg>
-                  } */}
+                   aria-label="Save" fill="currentColor" className='cursor-pointer' height="24" role="img" viewBox="0 0 24 24" width="24"><title>Save</title><polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
+
+                    // <svg aria-label="Remove" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Remove</title><path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path></svg>
+                  
+                  }
                 </div>
                 <div className="font-semibold text-sm mx-4 mt-5 mb-4">{item.likes.length + ''} likes</div>
                 <div className="text-sm mx-4 mb-2">
@@ -271,6 +280,11 @@ function HomePage() {
 }
 
 export default HomePage
+
+
+
+
+
 
 
 

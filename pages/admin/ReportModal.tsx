@@ -8,11 +8,21 @@ import toast from 'react-hot-toast';
 function ReportModalPage({closeModal,data}:any) {
     
     async function handleReport(data:any){
-        alert('modal set')
         const response = await ReportPosts(data) 
+        console.log(response)
+        if(response?.reportResponse){
+            if(response?.reportResponse?.solve === false){
+                toast.success('Post Blocked From Userside')
+            }else{
+                toast.success('Post Unblocked From Userside')
+            }
+        }
         closeModal()
-        toast.success('Post Removed From Userside')
     }
+
+    // async function CancelTheReport(data:any){
+    //     const CancellingReport = await
+    // }
     return (
         <div>
             <>
@@ -40,9 +50,9 @@ function ReportModalPage({closeModal,data}:any) {
                                     <Button onClick={()=>handleReport(data)} className='border bg-gray-500 border-black rounded-md'>
                                         {data.solve === true ? "UnBlock" : "Block"}
                                     </Button>
-                                    <Button className='border bg-slate-300 border-black rounded-md'>
+                                    {/* <Button onClick={()=>CancelTheReport(data)} className='border bg-slate-300 border-black rounded-md'>
                                         Cancel
-                                    </Button>
+                                    </Button> */}
                                     <Button className='Button border bg-black text-white border-black rounded-md' onPress={closeModal}>
                                         Close
                                     </Button>

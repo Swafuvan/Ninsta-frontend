@@ -8,18 +8,19 @@ import { UserPosts } from '@/lib/functions/Posts/route';
 function ProfilePage() {
 
   const [posts, setPosts] = useState([])
-    // const user = useSelector((state: RootState) => state.auth);
+  // const user = useSelector((state: RootState) => state.auth);
   const user = useSelector((state: RootState) => state.auth);
 
-  console.log(user.user,"what is thia");
+  console.log(user.user, "what is thia");
 
   // const userPost = UserPosts(user.user?._id)
+ 
 
   useEffect(() => {
     console.log(user)
     if (user.user?._id) {
       UserPosts(user.user?._id).then((Userpost) => {
-        console.log(Userpost,"tjis is poyuhiuig")
+        console.log(Userpost)
         setPosts(Userpost.UserPostData ?? [])
       })
     }
@@ -63,7 +64,7 @@ function ProfilePage() {
             {/* <!-- post, following, followers list for medium screens --> */}
             <ul className="hidden md:flex space-x-8 mb-4">
               <li>
-                <span className="font-semibold">{posts && posts?.length ? posts.length : 0 } </span>
+                <span className="font-semibold">{posts && posts?.length ? posts.length : 0} </span>
                 posts
               </li>
 
@@ -125,15 +126,27 @@ function ProfilePage() {
                     border-t">
             {/* <!-- posts tab is active --> */}
             <li className="md:border-t md:border-gray-700 md:-mt-px md:text-gray-700">
-              <a className="inline-block p-3" href="#">
-                <i className="fas fa-th-large text-xl md:text-xs"></i>
+              <a className=" flex p-3" href="/profile">
+                <i className="fas mt-0.5 fa-th-large text-xl md:text-xs">
+                  <svg aria-label="" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><rect fill="none" height="18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="18" x="3" y="3"></rect><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="9.015" x2="9.015" y1="3" y2="21"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="14.985" x2="14.985" y1="3" y2="21"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="21" x2="3" y1="9.015" y2="9.015"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="21" x2="3" y1="14.985" y2="14.985"></line></svg>
+                </i>
                 <span className="hidden md:inline">post</span>
               </a>
             </li>
             <li>
-              <a className="inline-block p-3" href="#">
-                <i className="far fa-square text-xl md:text-xs"></i>
+              <a className="flex p-3" href="#">
+                <i className="far mt-0.5 fa-square text-xl md:text-xs">
+                  <svg aria-label="" className="x1lliihq x1n2onr6 x1roi4f4" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><line fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fill-rule="evenodd"></path></svg>
+                </i>
                 <span className="hidden md:inline">Reels</span>
+              </a>
+            </li>
+            <li>
+              <a className="flex p-3" href="/saved">
+                <i className="far mt-0.5 fa-square text-xl md:text-xs">
+                  <svg aria-label="" className="x1lliihq x1n2onr6 x1roi4f4" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
+                </i>
+                <span  className="hidden md:inline">Saved</span>
               </a>
             </li>
             {/* <li>
@@ -146,7 +159,7 @@ function ProfilePage() {
           </ul>
           {/* <!-- flexbox grid --> */}
           <div className="flex flex-wrap -mx-px md:-mx-3">
-          {posts?.length > 0 ? posts && posts.map((data:any, index) => {
+            {posts?.length > 0 ? posts && posts.map((data: any, index) => {
               return (
                 <div className="w-1/3 p-px md:px-3">
                   {/* <!-- post 1--> */}
@@ -164,21 +177,21 @@ function ProfilePage() {
                           <span className="p-2">
                             <i className="fas fa-heart"></i>
                             {data?.likes.length + ''} likes
-                            
+
                           </span>
 
-                          
+
                         </div>
                       </div>
 
                     </article>
                   </a>
                 </div>
-               ) 
-             }): <>
+              )
+            }) : <>
 
-             </>
-             } 
+            </>
+            }
 
           </div>
         </div>

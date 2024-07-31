@@ -17,7 +17,7 @@ const initialState: UserState = {
   error: null,
   email: function (user: UserState, email: any): unknown {
     throw new Error('Function not implemented.');
-  }
+  },
 };
 
 export const createUserAsync = createAsyncThunk(
@@ -60,6 +60,7 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
+    
   },
   extraReducers: (builder) => {
     builder

@@ -25,8 +25,16 @@ interface LoginFormValues {
 
 export function LoginForm() {
 
+    const [loading, setLoading] = React.useState(true)
     const router = useRouter()
     const dispatch = useDispatch()
+
+    React.useEffect(()=>{
+        const token= Cookies.get('userToken')
+        if(token){
+            router.push('/');   
+        }
+    })
     
     const [Error, setError] = React.useState('')
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
@@ -39,7 +47,6 @@ export function LoginForm() {
                 console.log('enghott poyi');
                 dispatch(setUser(user.data.userDetails))
                 router.push('/')
-                
             }else{
                 console.log('poyitta')
                 setError(user.data.messages)
@@ -51,6 +58,8 @@ export function LoginForm() {
             setSubmitting(false);
         }
     }
+
+
 
     const googleSuccess = async (response: any) => {
         console.log(response.credential);
