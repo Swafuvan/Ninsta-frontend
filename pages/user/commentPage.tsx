@@ -89,7 +89,6 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
     }
 
     const CommentPosted = async (e: any) => {
-        alert('vannu')
         e.preventDefault()
         const formData = new FormData(e.currentTarget);
         const comment = formData.get('comment');
@@ -99,7 +98,8 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
             CommentResult.data.CommentDetails.userId = user.user
         }
         setCommentData([...commentData, CommentResult?.data?.CommentDetails])
-        setComment('')
+        setComment('');
+        alert('ok aan')
     }
 
     async function commentLikes(comment: any, index: number) {
@@ -112,7 +112,6 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
         }
         setCommentData([...commentData])
     }
-
 
     return (
         <>
@@ -241,12 +240,7 @@ export default function CommentsPage({ handleClickOpen, singlePost, setSinglePos
                         {showEmojiPicker && <Picker data={data} onEmojiSelect={handleEmojiSelect} />}
                     </div>
                 </DialogContent>
-                {/* <DialogActions>
-                    <Button onClick={handleClickOpen}>Cancel</Button>
-                    <Button onClick={CommentPosted}>
-                        Comment
-                    </Button>
-                </DialogActions> */}
+                
             </BootstrapDialog>
 
         </>

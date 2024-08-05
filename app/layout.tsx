@@ -7,6 +7,7 @@ import ClientProvider from "@/components/Provider/clientProvider";
 import { useEffect } from "react";
 import { UserState } from "@/lib/functions/user/route";
 import { setUser } from "@/redux/userSlice";
+import { ToastContainer } from 'react-toastify';
 
 
 const fontSans = FontSans({
@@ -29,8 +30,9 @@ export default function RootLayout({ children, }: Readonly<{
       )}>
         <div >
           <main className="flex-grow">
-            <Toaster position="top-center" />
             <ClientProvider>
+            <Toaster position="top-center" />
+            <ToastContainer  />
               {children}
             </ClientProvider>
           </main>

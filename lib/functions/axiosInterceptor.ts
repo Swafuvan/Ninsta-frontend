@@ -1,12 +1,14 @@
 import axios from 'axios';
 import Cookies from 'js-cookie'
+import dotenv from 'dotenv'
+dotenv.config()
 
 export const getUserToken = () => {
     return "Bearer " + Cookies.get('userToken')
 }
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: process.env.baseURL ||'http://localhost:5000',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',

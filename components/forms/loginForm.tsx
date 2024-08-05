@@ -59,8 +59,6 @@ export function LoginForm() {
         }
     }
 
-
-
     const googleSuccess = async (response: any) => {
         console.log(response.credential);
         if (response.credential) {

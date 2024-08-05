@@ -65,8 +65,6 @@ export const CommentPost = async (PostDetails: any, comment: any, userId: any) =
     }
 }
 
-
-
 export const getPosts = async () => {
     try {
         const PostDetails = await axiosInstance.get('/allPosts')

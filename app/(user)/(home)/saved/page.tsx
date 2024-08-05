@@ -1,10 +1,29 @@
 'use client'
+
+import { savedPosts } from '@/lib/functions/user/route';
 import { RootState } from '@/redux/store'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function SavedPage() {
-    const user = useSelector((state: RootState) => state.auth)
+    const user = useSelector((state: RootState) => state.auth);
+    const [savePost, setSavePost] = useState(false);
+    const [allSavePost, setAllSavePost] = useState([]);
+
+    useEffect(() => {
+        if (user.user?._id) {
+            savedPosts(user.user._id + '').then((res) => {
+                console.log(res.savedData);
+                setAllSavePost(res.savedData);
+            })
+
+        }
+    }, [user.user?._id])
+
+    const savedPostsShow = () => {
+        setSavePost(false)
+    }
+
     return (
         <div className='lg:w-11/12 lg:mx-auto  mb-8'>
             <header className="flex flex-wrap ml-16 items-center p-4 md:py-8">
@@ -42,7 +61,7 @@ function SavedPage() {
                         </li>
 
                         <li>
-                            <span className="font-semibold">{user.user?.follower?.length ?? 0} </span>
+                            <span className="font-semibold">{user.user?.followers?.length ?? 0} </span>
                             followers
                         </li>
                         <li>
@@ -105,77 +124,38 @@ function SavedPage() {
             {/* Saved posts */}
             <div className="flex items-start gap-2.5 ml-32 mt-3">
                 <div className="flex flex-col gap-1">
-                    <div className="flex flex-col w-full max-w-[326px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse mb-2">
-                            <span className="text-sm font-semibold text-gray-900 dark:text-white">Bonnie Green</span>
-                        </div>
-                        <p className="text-sm font-normal text-gray-900 dark:text-white">This is the new office </p>
-                        <div className="grid gap-4 grid-cols-2 my-2.5">
-                            <div className="group relative">
-                                <div className="absolute w-full h-full bg-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                                    <div id="download-image-1" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Download image
-                                        <div className="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
-                                </div>
-                                <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
+                    {!savePost ?
+                        <div onClick={() => setSavePost(true)} className="cursor-pointer flex flex-col w-full max-w-[326px] leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700">
+                            <div className="flex items-center space-x-2 rtl:space-x-reverse mb-2">
+                                <span className="text-sm font-semibold text-gray-900 dark:text-white">Saved Posts</span>
                             </div>
-                            <div className="group relative">
-                                <div className="absolute w-full h-full bg-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                                    
-                                    <div id="download-image-2" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Download image
-                                        <div className="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
+                            <div className="grid gap-4 grid-cols-2 my-2.5">
+                                <div className="group relative">
+
+                                    <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
                                 </div>
-                                <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
-                            </div>
-                            <div className="group relative">
-                                <div className="absolute w-full h-full bg-gray-900/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg flex items-center justify-center">
-                                    
-                                    <div id="download-image-3" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-                                        Download image
-                                        <div className="tooltip-arrow" data-popper-arrow></div>
-                                    </div>
+                                <div className="group relative">
+
+                                    <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
                                 </div>
-                                <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
+                                <div className="group relative">
+
+                                    <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
+                                </div>
+                                <div className="group relative">
+
+                                    <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
+                                </div>
                             </div>
-                            <div className="group relative">
-                                
-                                <img src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" className="rounded-lg" />
+                            <div className="flex justify-between items-center">
+
                             </div>
                         </div>
-                        <div className="flex justify-between items-center">
-                            <button className="text-sm text-blue-700 dark:text-blue-500 font-medium inline-flex items-center hover:underline">
-                                Remove all
-                            </button>
-                        </div>
-                    </div>
+                        :
+                        <SavePosts savedPostsShow={savedPostsShow} allSavePost={allSavePost} />
+                    }
                 </div>
-                {/* <button id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" data-dropdown-placement="bottom-start" className="inline-flex self-center items-center p-2 text-sm font-medium text-center text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800 dark:focus:ring-gray-600" type="button">
-                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
-                        <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-                    </svg>
-                </button>
-                <div id="dropdownDots" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-40 dark:bg-gray-700 dark:divide-gray-600">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                        <li>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Reply</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Forward</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Copy</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report</a>
-                        </li>
-                        <li>
-                            <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a>
-                        </li>
-                    </ul>
-                </div> */}
+
             </div>
         </div >
 
@@ -183,3 +163,39 @@ function SavedPage() {
 }
 
 export default SavedPage
+
+function SavePosts({ savedPostsShow, allSavePost }: any) {
+    console.log(allSavePost);
+    return (
+        <div className="flex flex-wrap -mx-px md:-mx-3">
+            {allSavePost.map((data: any,index:number) => {
+                return (
+                    <div key={index} className="w-[200px]  p-px md:px-3">
+                        {/* <!-- post 1--> */}
+                        <a href="#">
+                            <article className="post bg-gray-100 text-white relative pb-full md:mb-6">
+                                {/* <!-- post images--> */}
+                                <img className="absolute left-0 top-0 object-cover" src={data.postId.Url} alt="image" />
+
+                                <i className="fas fa-square absolute right-0 top-0 m-1"></i>
+                                {/* <!-- overlay--> */}
+                                <div className="overlay bg-gray-800 bg-opacity-25 w-full h-full absolute 
+                                left-0 top-0 hidden">
+                                    <div className="flex justify-center items-center 
+                                    space-x-4 h-full">
+                                        <span className="p-2">
+                                            <i className="fas fa-heart"></i>
+                                            {data.postId.likes.length+''} likes
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </article>
+                        </a>
+                    </div>
+                )
+            })}
+
+        </div>
+    )
+}

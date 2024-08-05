@@ -36,7 +36,6 @@ export default function Home() {
         {user ?
           <>
             <TemporaryDrawer />
-            
             <HomePage />
           </> :
           <>loading...</>

@@ -23,7 +23,7 @@ export interface User {
     isBlocked: boolean,
     Gender: string,
     following:string[],
-    follower:string[]
+    followers:string[]
 }
 
 

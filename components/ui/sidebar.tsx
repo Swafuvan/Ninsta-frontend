@@ -23,13 +23,17 @@ import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { logout } from '@/lib/functions/user/route';
 import ModalPage from '@/pages/user/userCreatepage';
-import MoreModalPage from '@/pages/user/MoreModal';
 import SearchBar from '@/pages/user/searchBar';
+
+import { useMediaQuery } from '@mui/material';
 
 export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
     const [openMore, setOpenMore] = React.useState(true);
-    const [searchOpen, setSearchOpen] = React.useState(false)
+    const [searchOpen, setSearchOpen] = React.useState(false);
+
+    const isMobile = useMediaQuery('(max-width: 600px)');
+    const isTablet = useMediaQuery('(max-width: 960px)');
 
     const handleDrawerOpen = () => {
         setOpen(false);
@@ -42,7 +46,6 @@ export default function TemporaryDrawer() {
     const handleMoreClick = () => {
         setOpenMore(!openMore);
     };
-
 
     const router = useRouter();
     const handleLogout = () => {
@@ -68,11 +71,11 @@ export default function TemporaryDrawer() {
     return (
         <div>
             <div className='fixed top-8 left-2'>
-                <Box sx={{ width: 208 }} role="presentation">
+                <Box sx={{ maxWidth: 200, minWidth: 20 }} role="presentation">
                     {location?.includes('/messages') ?
-                        <img onClick={() => window.location.href = '/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer' alt='logo' />
+                        <img onClick={() => window.location.href = '/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer ' alt='logo' />
                         :
-                        <Image onClick={() => window.location.href = '/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer" />}
+                        <Image onClick={() => window.location.href = '/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer " />}
                     <List className={location?.includes('/messages') ? 'w-12' : ''} >
                         {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text) => (
                             <Link href={text === 'Home' ? '/' : text === 'Create' ? '#' : text === 'More' ? '#' : text === 'Search' ? '#' : `/${text.toLowerCase()}`} key={text}>
@@ -84,7 +87,12 @@ export default function TemporaryDrawer() {
                                             {!openMore && text === 'More' && <MoreDiv handleMoreClick={handleMoreClick} />}
                                             {searchOpen && text === 'Search' && <SearchBar handleSearchClick={handleSearchClick} />}
                                         </ListItemIcon>
-                                        <ListItemText primary={location === '/messages' || location === '/search' ? "" : text} className={location === '/messages' || location === '/search' ? 'p-3' : ''} />
+                                        {!isMobile && !isTablet && (
+                                            <ListItemText
+                                                primary={location === '/messages' || location === '/search' ? "" : text}
+                                                className={location === '/messages' || location === '/search' ? 'p-3' : ''}
+                                            />
+                                        )}
                                     </ListItemButton>
                                 </ListItem>
                             </Link>
@@ -94,7 +102,9 @@ export default function TemporaryDrawer() {
                                 <ListItemIcon>
                                     {iconMapping['Logout']}
                                 </ListItemIcon>
-                                {location !== '/messages' && <ListItemText primary="Logout" className="hidden md:block" />}
+                                {!isMobile && !isTablet && location !== '/messages' && (
+                                    <ListItemText primary="Logout" className="hidden md:block" />
+                                )}
                             </ListItemButton>
                         </ListItem>
                     </List>

@@ -84,14 +84,15 @@ export function SignupRoute() {
             const response = await verifyOtp(signupData?.email!, Number(otp));
             console.log(response)
             if(response?.data?.message){
-                setError(response?.data?.message)
+                setError(response?.data?.message);
                 return
             }
             if (response?.data?.userData) {
                 Cookies.set('userToken',response?.data?.JWTtoken)
+                console.log(response.data)
                 console.log(response?.data?.userData)
                 dispatch(setUser(response?.data?.userData))
-                router.push('/')
+                router.push('/');
             } else {
                 console.error('OTP verification failed');
             }

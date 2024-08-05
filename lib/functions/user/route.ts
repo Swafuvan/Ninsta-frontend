@@ -1,14 +1,14 @@
 // userRoutes.js
-import {  User, forgotPassword } from "@/type/users";
+import { User, forgotPassword } from "@/type/users";
 import { LoginUser, SignupUser, googleUser } from "@/type/users";
 import axiosInstance from "../axiosInterceptor";
 import Cookies from 'js-cookie';
 
 const backendURL = 'http://localhost:5000';
 
-export const userHome = async (user:any) => {
+export const userHome = async (user: any) => {
     try {
-        const userDetail = await axiosInstance.get('/?email='+user);
+        const userDetail = await axiosInstance.get('/?email=' + user);
         // console.log(userDetail)
         return userDetail.data;
     } catch (error) {
@@ -16,14 +16,14 @@ export const userHome = async (user:any) => {
     }
 }
 
-export const UserState = async () =>{
+export const UserState = async () => {
     try {
         const userDetails = await axiosInstance.get('/userData')
-        if(userDetails){
+        if (userDetails) {
             console.log(userDetails)
-            if(userDetails.status === 217) {
+            if (userDetails.status === 217) {
                 Cookies.remove('userToken')
-                return {data:null}
+                return { data: null }
             }
             return userDetails.data;
         }
@@ -35,7 +35,7 @@ export const UserState = async () =>{
 export const SearchDetails = async () => {
     try {
         const searchRes = await axiosInstance.get('/search');
-        if(searchRes){
+        if (searchRes) {
             return searchRes.data
         }
     } catch (error) {
@@ -43,10 +43,10 @@ export const SearchDetails = async () => {
     }
 }
 
-export const UserSearch = async (search:any): Promise<any> => {
+export const UserSearch = async (search: any): Promise<any> => {
     try {
-        const searchRes = await axiosInstance.get('/userSearch?search='+search);
-        if(searchRes){
+        const searchRes = await axiosInstance.get('/userSearch?search=' + search);
+        if (searchRes) {
             return searchRes.data
         }
     } catch (error) {
@@ -54,10 +54,43 @@ export const UserSearch = async (search:any): Promise<any> => {
     }
 }
 
-export const AllUserData = async (userId:any) => {
+export const userChats = async (userIdTo: string, userIdFrom: string) => {
     try {
-        const UsersData = await axiosInstance.get('/AllUsers?userId='+userId);
-        if(UsersData){
+        const chatResult = await axiosInstance.get('/chat?userIdTo=' + userIdTo + '&userIdFrom=' + userIdFrom);
+        if (chatResult) {
+            return chatResult.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const savedPosts = async (UserId:string) => {
+    try {
+        const savedData = await axiosInstance.get('/savedPosts?userId='+UserId);
+        if (savedData) {
+            return savedData.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const AllUsersStory = async () => {
+    try {
+        const Users = await axiosInstance.get('/stories');
+        if (Users) {
+            return Users.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const AllUserData = async (userId: any) => {
+    try {
+        const UsersData = await axiosInstance.get('/AllUsers?userId=' + userId);
+        if (UsersData) {
             return UsersData.data
         }
     } catch (error) {
@@ -67,7 +100,7 @@ export const AllUserData = async (userId:any) => {
 
 export const createUserAccount = async (user: SignupUser): Promise<User | null> => {
     try {
-        console.log(backendURL+'/signup', user);
+        console.log(backendURL + '/signup', user);
         const response = await axiosInstance.post('/signup', user);
         if (response.data) {
             return response.data;
@@ -83,7 +116,7 @@ export const userLogin = async (user: LoginUser): Promise<any> => {
     try {
         const usersData = await axiosInstance.post('/login', user);
         console.log(usersData);
-        if(usersData){
+        if (usersData) {
             return usersData
         }
         return null;
@@ -112,7 +145,7 @@ export const verifyOtp = async (email: string, otp: number) => {
 
 export const ResendOtp = async (email: string) => {
     try {
-        const OTP = await axiosInstance.get('/resendOtp', { params: { email } });
+        const OTP = await axiosInstance.get('/resendOtp?email='+email);
         return OTP.data;
     } catch (error) {
         console.error('Error resending OTP:', error);
@@ -133,22 +166,44 @@ export const googleSignup = async (UserSession: googleUser) => {
     }
 }
 
-export const UserfindById = async (userid:any) => {
+export const FollowUsers = async (user:string,follower:any) => {
     try {
-        console.log(userid)
-        const allUserData = await axiosInstance.get('/user?id='+userid);
-        if(allUserData){
-            return allUserData.data;
+        const FollowedData = await axiosInstance.post('/follow',{user,follower});
+        if(FollowedData){
+            return FollowedData.data
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
-export const ForgotPassword = async (Userdata:forgotPassword) =>{
+export const FriendSuggession = async (userId:string) => {
     try {
-        const Changed = await axiosInstance.post('/forgotPassword',Userdata);
-        if(Changed){
+        const suggession = await axiosInstance.get('/suggession?userId='+userId);
+        if(suggession){
+            return suggession.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserfindById = async (userid: any) => {
+    try {
+        console.log(userid)
+        const allUserData = await axiosInstance.get('/user?id=' + userid);
+        if (allUserData) {
+            return allUserData.data;
+        }
+    } catch (error) {
+        console.log(error); 
+    }
+}
+
+export const ForgotPassword = async (Userdata: forgotPassword) => {
+    try {
+        const Changed = await axiosInstance.post('/forgotPassword', Userdata);
+        if (Changed) {
             return Changed
         }
         return null
