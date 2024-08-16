@@ -11,7 +11,6 @@ export interface LoginUser {
 }
 
 export interface User {
-    
     _id?: string;
     username: String,
     email: String,
@@ -22,6 +21,7 @@ export interface User {
     bio: String,
     isBlocked: boolean,
     Gender: string,
+    blockedUsers:string[],
     following:string[],
     followers:string[]
 }
@@ -41,4 +41,25 @@ export interface forgotPassword {
     password: string,
     confirmPassword: string
 
+}
+
+export interface messages{
+    _id?: string,
+    to: String,
+    from: String,
+    message: String,
+    seen:Boolean,
+    createdAt: Date,
+    time:Date,
+    File:{
+        fileType: String,
+        link: String,
+    }
+}
+
+export interface userReports{
+    userId: String,
+    reportedBy: String,
+    reason: String,
+    solve: Boolean,
 }

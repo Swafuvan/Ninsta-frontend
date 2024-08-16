@@ -14,7 +14,7 @@ export const AdminLogin = async (user: LoginUser): Promise<any> => {
 
 export const getUsers = async () => {
     try {
-        const userMangement = await axiosInstance.get(`/userManagement`)
+        const userMangement = await axiosInstance.get(`/userManagement`);
         if (userMangement) {
             return userMangement
         }
@@ -60,11 +60,33 @@ export const adminDetails = async () => {
     }
 }
 
-export const UserPostReport = async () => {
+export const UserReports = async () => {
     try {
         const userReports = await axiosInstance.get('/userReports')
         if (userReports) {
             return userReports.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const userReportAction = async (data:any) => {
+    try {
+        const userReportDetails = await axiosInstance.put('/userReportAction',data);
+        if (userReportDetails) {
+            return userReportDetails.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserPostReport = async () => {
+    try {
+        const userPostReports = await axiosInstance.get('/userPostReports')
+        if (userPostReports) {
+            return userPostReports.data
         }
     } catch (error) {
         console.log(error)
@@ -84,8 +106,7 @@ export const ReportPosts = async (postData: any) => {
 
 export const UserBlocked = async (email: any, isBlock: any) => {
     try {
-
-        const UserBlock = await axiosInstance.get('/UserBlock?User=', { params: { email, isBlock } })
+        const UserBlock = await axiosInstance.get(`/UserBlock?User=${email}&isBlock=${isBlock}`)
         if (UserBlock) {
             return UserBlock
         }

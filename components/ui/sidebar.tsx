@@ -19,7 +19,6 @@ import Logout from '@mui/icons-material/Logout';
 
 import Image from 'next/image';
 import LogoImg from '../../public/Ninsta Logo.png';
-import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import { logout } from '@/lib/functions/user/route';
 import ModalPage from '@/pages/user/userCreatepage';
@@ -59,7 +58,7 @@ export default function TemporaryDrawer() {
         Home: <HomeIcon />,
         Search: <SearchIcon />,
         Explore: <ExploreIcon />,
-        Reel: <VideoLibraryIcon />,
+        Reels: <VideoLibraryIcon />,
         Messages: <MailIcon />,
         Notifications: <NotificationsIcon />,
         Create: <AddCircleIcon />,
@@ -69,59 +68,70 @@ export default function TemporaryDrawer() {
     };
 
     return (
-        <div>
-            <div className='fixed top-8 left-2'>
-                <Box sx={{ maxWidth: 200, minWidth: 20 }} role="presentation">
-                    {location?.includes('/messages') ?
-                        <img onClick={() => window.location.href = '/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer ' alt='logo' />
-                        :
-                        <Image onClick={() => window.location.href = '/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer " />}
-                    <List className={location?.includes('/messages') ? 'w-12' : ''} >
-                        {['Home', 'Search', 'Explore', 'Reel', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text) => (
-                            <Link href={text === 'Home' ? '/' : text === 'Create' ? '#' : text === 'More' ? '#' : text === 'Search' ? '#' : `/${text.toLowerCase()}`} key={text}>
-                                <ListItem disablePadding >
-                                    <ListItemButton onClick={text === 'Create' ? () => setOpen(true) : text === 'More' ? () => handleMoreClick() : text === 'Search' ? () => handleSearchClick() : undefined}>
-                                        <ListItemIcon>
-                                            {iconMapping[text]}
-                                            {open && text === 'Create' && <ModalPage handleDrawerOpen={handleDrawerOpen} />}
-                                            {!openMore && text === 'More' && <MoreDiv handleMoreClick={handleMoreClick} />}
-                                            {searchOpen && text === 'Search' && <SearchBar handleSearchClick={handleSearchClick} />}
-                                        </ListItemIcon>
-                                        {!isMobile && !isTablet && (
-                                            <ListItemText
-                                                primary={location === '/messages' || location === '/search' ? "" : text}
-                                                className={location === '/messages' || location === '/search' ? 'p-3' : ''}
-                                            />
-                                        )}
-                                    </ListItemButton>
-                                </ListItem>
-                            </Link>
-                        ))}
-                        <ListItem key="Logout" disablePadding>
-                            <ListItemButton onClick={handleLogout}>
-                                <ListItemIcon>
-                                    {iconMapping['Logout']}
-                                </ListItemIcon>
-                                {!isMobile && !isTablet && location !== '/messages' && (
-                                    <ListItemText primary="Logout" className="hidden md:block" />
-                                )}
-                            </ListItemButton>
-                        </ListItem>
-                    </List>
-                </Box>
-            </div>
-        </div>
+        <aside
+            id="logo-sidebar"
+            className="fixed justify-start items-start top-0 left-0 z-40 h-screen pt-20 transition-transform bg-white sm:w-auto md:w-auto "
+            aria-label="Sidebar"
+        >
+            <div className="h-full px-3  pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+
+                <div className='fixed top-8 left-2'>
+                    <Box sx={{ maxWidth: 200, minWidth: 20 }} role="presentation">
+                        {location?.includes('/messages') ?
+                            <img onClick={() => window.location.href = '/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer md:max-w-none' alt='logo' />
+                            :
+                            <Image onClick={() => window.location.href = '/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer hidden md:inline ms-3" />}
+                        <List className={location?.includes('/messages') ? 'w-12' : ''} >
+                            {['Home', 'Search', 'Explore', 'Reels', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text) => (
+                                <a href={text === 'Home' ? '/' : text === 'Create' ? '#' : text === 'More' ? '#' : text === 'Search' ? '#' : `/${text.toLowerCase()}`} key={text}>
+                                    <ListItem disablePadding >
+                                        <ListItemButton onClick={text === 'Create' ? () => setOpen(true) : text === 'More' ? () => handleMoreClick() : text === 'Search' ? () => handleSearchClick() : undefined}>
+                                            <ListItemIcon>
+                                                {iconMapping[text]}
+                                                {open && text === 'Create' && <ModalPage handleDrawerOpen={handleDrawerOpen} />}
+                                                {!openMore && text === 'More' && <MoreDiv handleMoreClick={handleMoreClick} />}
+                                                {searchOpen && text === 'Search' && <SearchBar handleSearchClick={handleSearchClick} />}
+                                            </ListItemIcon>
+                                            {!isMobile && !isTablet && (
+                                                <ListItemText
+                                                    primary={location === '/messages' || location === '/search' ? "" : text}
+                                                    className={location === '/messages' || location === '/search' ? 'p-3 hidden md:inline ms-3' : 'hidden md:inline ms-3'}
+                                                />
+                                            )}
+                                        </ListItemButton>
+                                    </ListItem>
+                                </a>
+                            ))}
+                            <ListItem key="Logout" disablePadding>
+                                <ListItemButton onClick={handleLogout}>
+                                    <ListItemIcon>
+                                        {iconMapping['Logout']}
+                                    </ListItemIcon>
+                                    {!isMobile && !isTablet && location !== '/messages' && (
+                                        <ListItemText primary="Logout" className="hidden md:block" />
+                                    )}
+                                </ListItemButton>
+                            </ListItem>
+                        </List>
+                    </Box>
+                    {/* <UserSideBar /> */}
+                </div>
+
+            </div >
+        </aside>
     );
 }
+
+
 
 function MoreDiv({ handleMoreClick }: any) {
     return (
         <div id='moreIcon' className='fixed bottom-36 left-2 z-50 w-52 bg-white shadow-md rounded p-4'>
             <ul>
                 {/* <li className='mb-2 cursor-pointer' >Report a Problem</li> */}
-                <Link href='/saved'>
+                <a href='/saved'>
                     <li className='mb-2 cursor-pointer' >Saved</li>
-                </Link>
+                </a>
                 <hr />
                 <li className='mb-2 cursor-pointer' >Your Activity</li>
                 <hr />

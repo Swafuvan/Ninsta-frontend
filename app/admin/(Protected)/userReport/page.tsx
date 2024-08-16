@@ -1,33 +1,34 @@
 'use client'
-import { UserFindbyId, UserPostReport } from '@/lib/functions/admin/route'
+import { UserReports } from '@/lib/functions/admin/route';
 import ReportModalPage from '@/pages/admin/ReportModal';
+import { RootState } from '@/redux/store';
+import { userReports } from '@/type/users';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
+function UserReportPage() {
 
-function PostReports() {
-    const [report, setReport] = useState<any[]>([])
-    const [openModal,setaopenModal] = useState(-1);
+    const user = useSelector((state:RootState) => state.auth);
+    const [openAction,setOpenAction] = useState(-1);
+    const [userReport,setUserReport] = useState<userReports[]>([]);
+
+    useEffect(()=>{
+        UserReports().then((res) => {
+            setUserReport(res.userReports);
+            console.log('sett')
+        })
+    },[]);
 
     function closeModal(){
-        setaopenModal(-1);
+        setOpenAction(-1);
     }
-
-    useEffect(() => {
-        
-        const postRepo = UserPostReport().then(async (userReport) => {
-            console.log(userReport.userReport)
-            setReport(userReport.userReport)
-            
-            
-        })
-    }, [])
 
     return (
         <div className='mr-3'>
             <div className="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700">
                 <div className="w-full mb-1">
                     <div className="mb-4">
-                        <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">All Posts Reports</h1>
+                        <h1 className="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">All Users Reports</h1>
                     </div>
                     <div className="md:flex">
                         <div className="items-center hidden mb-3 sm:flex sm:divide-x sm:divide-gray-100 sm:mb-0 dark:divide-gray-700">
@@ -67,36 +68,36 @@ function PostReports() {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                    {report.length === 0 &&
+                                    {userReport.length === 0 &&
                                         <div className="flex items-center justify-center w-full h-full">
                                             <span className="text-gray-500 dark:text-gray-400">No reports found.</span>
 
                                         </div>
                                     }
-                                    {report && report.length > 0 && report.map((data, idx) => {
+                                    {userReport && userReport.length > 0 && userReport.map((data:any, idx:number) => {
                                         return (
                                             <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                                                 <td className="flex items-center p-4 mr-12 space-x-6 whitespace-nowrap">
-                                                    <img className="w-10 h-10 rounded-full" src={data?.postId?.Url[0].url} alt=" avatar" />
+                                                    <img className="w-10 h-10 rounded-full" src={data?.userId?.image+''} alt=" avatar" />
                                                     <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
-                                                        <div className="text-base font-semibold text-gray-900 dark:text-white">{data?.reportedBy?.fullName}</div>
+                                                        <div className="text-base font-semibold text-gray-900 dark:text-white">{data?.reportedBy?.username}</div>
                                                         <div className="text-sm font-normal text-gray-500 dark:text-gray-400">{data?.reportedBy?.email}</div>
                                                     </div>
                                                 </td>
                                                 <td className="max-w-sm p-4 overflow-hidden text-base font-normal text-gray-500 truncate xl:max-w-xs dark:text-gray-400">{data.reason}</td>
 
                                                 <td className="p-2 text-base font-normal text-gray-900 whitespace-nowrap dark:text-white">
-                                                    <div className={data.solve && data.solve === true ? "text-green-600" : "text-red-600"} >
-                                                        {data.solve && data.solve === true ? "Solved" : "Pending"}
+                                                    <div className={data && data?.solve === true ? "text-green-600" : "text-red-600"} >
+                                                        {data && data?.solve === true ? "Solved" : "Pending"}
                                                     </div>
                                                 </td>
                                                 <td className="p-4 space-x-2 whitespace-nowrap">
 
-                                                    <button type="button" onClick={()=>setaopenModal(idx)} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-600 rounded-lg hover:bg-orange-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-black">
+                                                    <button type="button" onClick={() => setOpenAction(idx)} className="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-orange-600 rounded-lg hover:bg-orange-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-black">
                                                         Action
                                                     </button>
                                                 </td>
-                                                {openModal===idx && <ReportModalPage closeModal={closeModal} data={data} />}
+                                                {openAction === idx && <ReportModalPage closeModal={closeModal} data={data} />}
                                             </tr>
                                         )
                                     })}
@@ -110,6 +111,4 @@ function PostReports() {
     )
 }
 
-export default PostReports
-
-
+export default UserReportPage

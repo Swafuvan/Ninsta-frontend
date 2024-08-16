@@ -1,15 +1,18 @@
 'use client'
 import { UserSearch } from '@/lib/functions/user/route';
+import { RootState } from '@/redux/store';
 import { User } from '@/type/users';
 import { TextField } from '@mui/material';
 import { Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 function SearchBarPage({ handleSearchClick }: any) {
     const [query, setQuery] = useState('');
     const [error, setError] = useState('');
     const [searchData, setSearchData] = useState<User[]>([]);
+    const user = useSelector((state:RootState)=>state.auth)
 
     async function handleSearch(val:any){
         window.location.href= `/profile?Values=${val._id}` 
@@ -19,7 +22,7 @@ function SearchBarPage({ handleSearchClick }: any) {
         e.preventDefault();
         const search = e.target.search.value;
         console.log(search);
-        const SearchDetails = await UserSearch(search);
+        const SearchDetails = await UserSearch(search,user.user?._id+'');
         if (SearchDetails.searchResult) {
             setSearchData(SearchDetails.searchResult);
         } else {
@@ -30,12 +33,12 @@ function SearchBarPage({ handleSearchClick }: any) {
     }
 
     return (
-        <div style={{ zIndex: 1000 }} className='fixed inset-0'>
+        <div style={{ zIndex: 1000 }} className='fixed inset-0 '>
             {/* Background Overlay */}
-            <div className="flex absolute z-50 w-full  " />
+            <div className="flex absolute z-50 w-full" />
 
             {/* Search Bar Container */}
-            <div className="absolute top-0 h-full left-16 w-96 bg-white shadow-lg p-4">
+            <div className="absolute md: top-0 h-full left-16 w-96 bg-white shadow-lg p-4">
                 <div className='mt-3'>
                     <h2 className="text-2xl font-bold text-gray-800">Search</h2>
                     <hr className='border-b-black' />
@@ -62,11 +65,11 @@ function SearchBarPage({ handleSearchClick }: any) {
                 </div>
 
                 {/* Search Results */}
-                <div>
+                <div className='overflow-auto'>
                     {searchData.map((data, index) => (
                         <div onClick={
                             () => handleSearch (data)
-                        } key={index} className='mt-2 flex'>
+                        } key={index} className='mt-2 flex overflow-y-auto'>
                             <img src={data.image+''} className='w-12 rounded-full' alt="user" />
                             <div className='ml-3'>
                                 <p className='text-gray-800 text-md'>{data.username}</p>

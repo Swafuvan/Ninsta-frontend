@@ -1,8 +1,8 @@
 import axiosInstance, { getUserToken } from "../axiosInterceptor"
 
-export const postUpload = async (file: File[], text: string) => {
+export const postUpload = async (file: any, text: string) => {
     try {
-        const data = { image: file, text }
+        const data = { PostFiles: file, text }
         const UploadedData = await axiosInstance.post('/Posts', data, {
             headers: {
                 "Content-Type": "multipart/form-data",
@@ -17,6 +17,17 @@ export const postUpload = async (file: File[], text: string) => {
         console.log(error);
     }
 
+}
+
+export const ExplorePosts = async () => {
+    try {
+        const AllPosts = await axiosInstance.get('/explore');
+        if (AllPosts) {
+            return AllPosts.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const likePost = async (post: any, userId:string) => {

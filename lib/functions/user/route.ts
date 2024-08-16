@@ -32,6 +32,14 @@ export const UserState = async () => {
     }
 }
 
+export const BlockUsers = async (userId:string,BlockUserId:string) => {
+    try {
+        const userBlocking = await axiosInstance.put('/blockUser',{userId,BlockUserId})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const SearchDetails = async () => {
     try {
         const searchRes = await axiosInstance.get('/search');
@@ -43,9 +51,9 @@ export const SearchDetails = async () => {
     }
 }
 
-export const UserSearch = async (search: any): Promise<any> => {
+export const UserSearch = async (search: any,userId:string): Promise<any> => {
     try {
-        const searchRes = await axiosInstance.get('/userSearch?search=' + search);
+        const searchRes = await axiosInstance.get(`/userSearch?search=${search}&userId=${userId}`);
         if (searchRes) {
             return searchRes.data
         }
@@ -76,11 +84,44 @@ export const savedPosts = async (UserId:string) => {
     }
 }
 
-export const AllUsersStory = async () => {
+export const AllUsersStory = async (userId:string) => {
     try {
-        const Users = await axiosInstance.get('/stories');
+        const Users = await axiosInstance.get('/stories?userId='+userId);
         if (Users) {
             return Users.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserNotification = async (userId:string) => {
+    try {
+        const notifiRes = await axiosInstance.get('/notification?userId='+userId);
+        if (notifiRes) {
+            return notifiRes.data
+        } 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const fetchLastMessages = async (userId:string) => {
+    try {
+        const messageData = await axiosInstance.get('/allMessage?userId='+userId);
+        if (messageData) {
+            return messageData.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserStoryAdding = async (userId:string) => {
+    try {
+        const AddedStory = await axiosInstance.post('/userStory',userId);
+        if (AddedStory) {
+            return AddedStory.data
         }
     } catch (error) {
         console.log(error);
@@ -112,12 +153,19 @@ export const createUserAccount = async (user: SignupUser): Promise<User | null> 
     }
 };
 
+export const MessageSeen = async () => {
+    try {
+        const MessageData = await axiosInstance.put('/messageSeen')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const userLogin = async (user: LoginUser): Promise<any> => {
     try {
         const usersData = await axiosInstance.post('/login', user);
-        console.log(usersData);
         if (usersData) {
-            return usersData
+            return usersData.data
         }
         return null;
     } catch (err) {
@@ -177,6 +225,17 @@ export const FollowUsers = async (user:string,follower:any) => {
     }
 }
 
+export const UserReports = async (reason:string,userId:string,reportedId:string) => {
+    try {
+        const reportRes = await axiosInstance.post('/reportUser',{reason,userId,reportedId});
+        if(reportRes){
+            return reportRes
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const FriendSuggession = async (userId:string) => {
     try {
         const suggession = await axiosInstance.get('/suggession?userId='+userId);
@@ -193,6 +252,7 @@ export const UserfindById = async (userid: any) => {
         console.log(userid)
         const allUserData = await axiosInstance.get('/user?id=' + userid);
         if (allUserData) {
+            console.log(allUserData.data)
             return allUserData.data;
         }
     } catch (error) {

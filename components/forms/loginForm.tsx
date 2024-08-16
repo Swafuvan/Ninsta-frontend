@@ -29,7 +29,7 @@ export function LoginForm() {
     const router = useRouter()
     const dispatch = useDispatch()
 
-    React.useEffect(()=>{
+    React.useLayoutEffect(()=>{
         const token= Cookies.get('userToken')
         if(token){
             router.push('/');   
@@ -40,16 +40,15 @@ export function LoginForm() {
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
             const user = await userLogin(values);
-            console.log('Login successful', user.data);
+            console.log('Login successful', user);
             
-            if (user.status !== 400) {                
-                Cookies.set('userToken',user.data.JWTtoken)
-                console.log('enghott poyi');
-                dispatch(setUser(user.data.userDetails))
+            if (user.userDetails && user.JWTtoken) {                
+                Cookies.set('userToken',user.JWTtoken)
+                dispatch(setUser(user.userDetails))
                 router.push('/')
-            }else{
-                console.log('poyitta')
-                setError(user.data.messages)
+            }else {
+                console.log(user.message)
+                setError(user.message)
             }
         } catch (error) {
             console.log('err anutta')
@@ -91,9 +90,9 @@ export function LoginForm() {
             >
                 {({ isSubmitting }) => (
                     <Form className="sm:w-380 flex-col ">
-                        <Image src={NinstaLogo} height={70} className="ml-20" alt="Logo" />
-                        <p className="pb-2 pl-10">Log in and enjoy with friends</p>
-                        <span className="text-red-600">{Error}</span>
+                        <Image src={NinstaLogo} height={70} className="ml-24" alt="Logo" />
+                        <p className="pb-2 pl-14">Log in and enjoy with friends</p>
+                        <span className="text-red-600 flex justify-center">{Error}</span>
                         <div className="flex flex-col w-full mt-4 gap-5">
                             <div>
                                 <Field type="email" id="email" name="email" placeholder="sample@gmail.com" as={Input} />

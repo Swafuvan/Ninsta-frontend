@@ -1,47 +1,82 @@
 import { useSocket } from '@/components/Provider/clientProvider';
-import { userChats } from '@/lib/functions/user/route';
+import { MessageSeen, userChats } from '@/lib/functions/user/route';
 import { RootState } from '@/redux/store';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
+import { BiCheckDouble } from "react-icons/bi";
+import toast from 'react-hot-toast';
+import moment from 'moment';
+
 
 interface message {
-    message: String;
-    from: String;
-    to: String;
-    time: String;
+    _id?: string;
+    message: string;
+    from: string;
+    to: string;
+    time: string;
     seen: Boolean;
     File: {
-        fileType: String,
-        Link: String
+        fileType: string,
+        Link: string
     }
 }
 
-function MessagePage({ userDetails }: any) {
+function MessagePage({ userDetails, filter }: any) {
     const [message, setMessage] = useState('');
     const [allMessages, setAllMessages] = useState<message[]>([]);
     const user = useSelector((state: RootState) => state.auth);
+    const chatRef = useRef<any>()
     // const [socket, setSocket] = useState<any>()
     const { socket } = useSocket()
 
-    useEffect(() => {
-        if (socket) {
-            const handleMessage = (newMessage: message) => {
-                setAllMessages(prevMessages => [...prevMessages, newMessage]);
-            };
-            socket.on('send_message', handleMessage);
-            return () => socket.off('send_message', handleMessage);
+    const handleMessage = (newMessage: message) => {
+        if (newMessage.to === user.user?._id) {
+            newMessage.seen = true;
+            console.log(allMessages,'1212121212121212121');
+            setAllMessages((prevMessages) => [...prevMessages, newMessage]);
+
+            socket.emit('messages_seen', { to: userDetails._id, from: user.user._id });
         }
-    }, [socket]);
+    };
 
     useEffect(() => {
-        if (user.user?._id, userDetails._id) {
+        if (socket && user.user) {
+            socket.on('send_message', handleMessage);
+            socket.on('messages_seen', handleSeenConfirmation);
+            return () => socket.off();
+        }
+    }, [socket, user.user]);
+
+    useEffect(() => {
+        if (user.user?._id && userDetails._id) {
             userChats(userDetails._id, user.user?._id + '').then((Chats) => {
-                console.log(Chats);
+                // console.log(Chats.UserChatRes);
                 setAllMessages(Chats.UserChatRes);
             })
         }
 
-    }, [user.user?._id, userDetails._id])
+    }, [user.user?._id, userDetails]);
+
+    const handleSeenConfirmation = ({ messageIds }: {
+        from: string;
+        to: string;
+        messageIds: string[];
+    }) => {
+        console.log(allMessages, "::::::")
+        setAllMessages((prevs) => {
+            prevs.forEach((prev) => {
+                if (!prev.seen) return { ...prev, seen: true };
+                else return prev;
+            })
+            return prevs;
+        })
+    };
+
+    useEffect(() => {
+        if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+    }, [allMessages]);
 
     const sendMessage = (e: any) => {
         e.preventDefault()
@@ -57,26 +92,35 @@ function MessagePage({ userDetails }: any) {
                     Link: ''
                 }
             };
-            console.log(newMessage)
-            socket.emit('send_message', newMessage);
-            setAllMessages(prevMessages => [...prevMessages, newMessage]);
+            const userBlockedRecipient = user.user?.blockedUsers.includes(newMessage.to + '');
+            const recipientBlockedUser = userDetails.blockedUsers.includes(newMessage.from);
+
+            if (!userBlockedRecipient && !recipientBlockedUser) {
+                console.log(newMessage)
+                filter(userDetails)
+                console.log(allMessages)
+                setAllMessages([...allMessages, newMessage]);
+                console.log(allMessages)
+                socket.emit('send_message', newMessage);
+            } else {
+                toast.error('Sorry You Blocked , you cannot send a message to this user.');
+            }
             setMessage('');
         }
     };
 
     return (
-        <div className="hidden lg:col-span-2 h-screen lg:block sm:w-1/2 overflow-hidden md:w-2/3 lg:w-3/4">
+        <div className="lg:col-span-2 h-screen w-full sm:w-full overflow-hidden md:w-2/3 lg:w-3/4">
             <div className="w-full ">
                 <div className="relative flex items-center p-3 border-b border-gray-300">
                     <img className="object-cover w-10 h-10 rounded-full"
                         src={userDetails.image} alt="username" />
                     <span className="block ml-2 font-bold text-gray-600">{userDetails.username}</span>
-                    <span className="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3">
-                    </span>
+                    <span className="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3"></span>
                 </div>
 
-                <div className="flex flex-col flex-grow w-full p-2 h-[79vh] max-w-auto bg-white rounded-lg overflow-y-scroll">
-                    {allMessages.map((mesg) => {
+                <div className="flex flex-col flex-grow w-full p-2 h-[79vh] max-w-auto bg-white rounded-lg overflow-y-scroll" ref={chatRef}>
+                    {allMessages?.length > 0 && allMessages?.map((mesg) => {
                         return (
                             <div className={mesg.to === user.user?._id ? "flex w-full mt-2 space-x-3 max-w-xs " : "flex w-full mt-2 space-x-3 max-w-xs ml-auto justify-end "} >
                                 <div className={mesg.to === user.user?._id ? "flex-shrink-0 h-10 w-10 rounded-full bg-gray-300" : ""} ></div>
@@ -84,10 +128,13 @@ function MessagePage({ userDetails }: any) {
                                     <div className={mesg.to === user.user?._id ? 'bg-gray-300 p-2 rounded-bl-lg rounded-full' : 'bg-blue-600 text-white p-2 rounded-full rounded-br-lg '}>
                                         <p className="text-sm">{mesg.message}</p>
                                         {
-                                        // <img src={} alt="" />
+                                            // <img src={} alt="" />
                                         }
                                     </div>
-                                    <span className="text-xs text-gray-500 leading-none">{mesg.time}</span>
+                                    <div className='flex justify-end w-40 '>
+                                        <span className="text-xs flex text-gray-500 leading-none ">{moment(mesg.time + '').fromNow()}</span>
+                                        <span className={mesg.to === user.user?._id ? "hidden" : "flex space-x-1 max-w-xs justify-end"}><BiCheckDouble color={mesg.seen === true ? 'blue' : 'black'} /></span>
+                                    </div>
                                 </div>
                                 {mesg.to !== user.user?._id ? <img className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300" src={userDetails.image} /> : ''}
                             </div>

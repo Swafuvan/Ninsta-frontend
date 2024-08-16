@@ -1,6 +1,7 @@
 'use client'
 
 import { savedPosts } from '@/lib/functions/user/route';
+import CommentsPage from '@/pages/user/commentPage';
 import { RootState } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -166,16 +167,33 @@ export default SavedPage
 
 function SavePosts({ savedPostsShow, allSavePost }: any) {
     console.log(allSavePost);
+    const [open, setOpen] = useState(false);
+    const [singlePost, setSinglePost] = useState([]);
+
+
+    const handleClickOpen = () => {
+        setOpen(false);
+    };
     return (
         <div className="flex flex-wrap -mx-px md:-mx-3">
-            {allSavePost.map((data: any,index:number) => {
+            {open && <CommentsPage handleClickOpen={handleClickOpen} singlePost={singlePost} />}
+            {allSavePost.length>0 ? allSavePost.map((data: any, index: number) => {
                 return (
                     <div key={index} className="w-[200px]  p-px md:px-3">
                         {/* <!-- post 1--> */}
                         <a href="#">
                             <article className="post bg-gray-100 text-white relative pb-full md:mb-6">
                                 {/* <!-- post images--> */}
-                                <img className="absolute left-0 top-0 object-cover" src={data.postId.Url} alt="image" />
+                                {data.postId?.Url[0]?.fileType === 'video' ? (
+                                    <video controls className="absolute left-0 h-56 top-0 object-cover"
+                                    onClick={() => { setOpen(true), setSinglePost(data.postId) }}
+                                    >
+                                        <source src={data.postId.Url[0].url} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </video>
+                                ) : (
+                                    <img onClick={() => { setOpen(true), setSinglePost(data.postId) }} className="absolute left-0 top-0 h-56 object-cover" src={data.postId.Url[0].url} alt="image" />
+                                )}
 
                                 <i className="fas fa-square absolute right-0 top-0 m-1"></i>
                                 {/* <!-- overlay--> */}
@@ -185,7 +203,7 @@ function SavePosts({ savedPostsShow, allSavePost }: any) {
                                     space-x-4 h-full">
                                         <span className="p-2">
                                             <i className="fas fa-heart"></i>
-                                            {data.postId.likes.length+''} likes
+                                            {data.postId.likes.length + ''} likes
                                         </span>
                                     </div>
                                 </div>
@@ -194,7 +212,13 @@ function SavePosts({ savedPostsShow, allSavePost }: any) {
                         </a>
                     </div>
                 )
-            })}
+            })  :
+            <>
+            <div className="flex justify-center items-center h-full">
+                <p className="text-gray-400 text-lg">No saved posts found</p>
+            </div>
+            </>
+            }
 
         </div>
     )

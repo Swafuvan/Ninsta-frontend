@@ -38,6 +38,13 @@ export function SignupRoute() {
     const router = useRouter()
     const dispatch = useDispatch()
 
+    React.useLayoutEffect(()=>{
+        const token= Cookies.get('userToken')
+        if(token){
+            router.push('/');   
+        }
+    })
+
     useEffect(() => {
         let interval: NodeJS.Timeout | undefined;
 
