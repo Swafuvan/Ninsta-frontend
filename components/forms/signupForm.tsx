@@ -147,8 +147,8 @@ export function SignupRoute() {
             const UserResult = await googleSignup(data)
             if (UserResult) {
                 Cookies.set('userToken',UserResult.JWTtoken)
-                console.log(UserResult.userData)
-                dispatch(setUser(UserResult))
+                console.log(UserResult);
+                dispatch(setUser(UserResult.userData))
                 router.push('/')
             }
 

@@ -8,17 +8,14 @@ import { UserStoryAdding } from "@/lib/functions/user/route";
 
 export default function StoryCreatePage({ CloseStory, userData }: any) {
 
-    const [stories,setStories] = useState([]);
-//   const [files, setFiles] = useState<{file: File, type: string}[]>([]);
+  const [stories, setStories] = useState<{ file: File, type: string }[]>([]);
   const [content, setContent] = useState('');
-//   const [isUploading, setIsUploading] = useState(false);
+  //   const [isUploading, setIsUploading] = useState(false);
 
   async function handleFiles(e: any) {
     e.preventDefault();
-
-
-    const UploadedData = await UserStoryAdding(userData._id);
-
+    console.log(stories, content, 'plplplpplpllplplpl');
+    const UploadedData = await UserStoryAdding(userData._id,stories,content);
     if (UploadedData?.status === 200) {
       toast.success('Post Created Successfully');
       CloseStory();
@@ -43,9 +40,9 @@ export default function StoryCreatePage({ CloseStory, userData }: any) {
       const fileType = file.type.startsWith('image') ? 'image' : 'video';
       return { file, type: fileType };
     });
-    // setStories((prevFiles) => [...prevFiles, ...newFiles]);
+    setStories((prevFiles) => [...prevFiles, ...newFiles]);
   }
-  
+
   return (
     <>
       <Modal
@@ -70,7 +67,7 @@ export default function StoryCreatePage({ CloseStory, userData }: any) {
                   </svg>
                   <label>Select a Story here</label>
                   <input onClick={(e) => e.stopPropagation()} onChange={onChange}
-                   type="file" multiple name="PostUpload" id="PostUpload" accept="image/*,video/*" />
+                    type="file" multiple name="PostUpload" id="PostUpload" accept="image/*,video/*" />
                   <div className="flex flex-wrap gap-4">
                     {stories.length > 0 && stories.map((item: any, idx: number) => (
                       <div key={idx} className="relative w-20 h-20 border border-gray-300 rounded overflow-hidden">
@@ -78,11 +75,20 @@ export default function StoryCreatePage({ CloseStory, userData }: any) {
                           className="absolute top-0 right-0 m-1 text-red-600 cursor-pointer"
                           onClick={() => removeFiles(idx)}
                         />
-                        <img
-                          className="object-cover w-full h-full"
-                          src={URL.createObjectURL(item)}
-                          alt="images"
-                        />
+                        {item.type === "image" && (
+                          <img
+                            src={URL.createObjectURL(item.file)}
+                            alt="Preview"
+                            className="object-cover w-full h-full"
+                          />
+                        )}
+                        {item.type === "video" && (
+                          <video
+                            src={URL.createObjectURL(item.file)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="object-cover w-full h-full"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

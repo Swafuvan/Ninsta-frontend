@@ -20,6 +20,7 @@ function ProfilePage() {
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
   const [followingData, setFollowingData] = useState<String[] | undefined>([]);
   const [following, setFollowing] = useState(false);
+  const [messageUserData,setMessageUserData] = useState('');
   const [openPost, setOpenPost] = useState(false);
   const [singlePost, setSinglePost] = useState();
   const [editUser, setEditUser] = useState(false);
@@ -32,6 +33,7 @@ function ProfilePage() {
   useEffect(() => {
     if (searchParams) {
       const userData = searchParams?.get('Values');
+      setMessageUserData(userData+'')
       if (userData) {
         UserfindById(userData).then((response) => {
           if (response) {
@@ -80,7 +82,7 @@ function ProfilePage() {
   }
 
   function messageUser() {
-    window.location.href = '/messages'
+    window.location.href = `/messages?userId=${messageUserData}`
   }
 
   return (
@@ -125,7 +127,7 @@ function ProfilePage() {
                   "bg-blue-500 w-20 py-1 text-white font-semibold text-sm rounded block text-center sm:inline-block cursor-pointer"
                 }
                 >{proUser?.followers.includes(user.user?._id + '') ? 'following' : 'follow'}</a>
-                <a onClick={messageUser} className="bg-stone-400 px-3 ml-2  py-1 
+                <a onClick={messageUser} className="bg-stone-400 px-3 ml-2 py-1 
                     text-black font-semibold text-sm rounded block text-center 
                     sm:inline-block cursor-pointer">Message</a>
               </>
@@ -466,6 +468,10 @@ function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
     setOpen(false);
   };
 
+  function EditProfilefun(){
+    window.location.href = '/profile/profileEdit'
+  }
+
   async function BlockUser(userId: string) {
     try {
       const blockUser = await BlockUsers(userId, user.user?._id + '');
@@ -494,7 +500,7 @@ function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
               <ModalBody className="">
                 <button onClick={() => setOpen(true)} className="text-red-600 ">Report</button>
                 <hr className="border-black" />
-                {UserDetails._id === user.user?._id ? <button>Edit Profile</button> : <button onClick={() => BlockUser(UserDetails._id)} className="text-red-600">{userData?.blockedUsers.includes(UserDetails._id) ? "UnBlock" : "Block"}</button>}
+                {UserDetails._id === user.user?._id ? <button onClick={()=>EditProfilefun()} >Edit Profile</button> : <button onClick={() => BlockUser(UserDetails._id)} className="text-red-600">{userData?.blockedUsers.includes(UserDetails._id) ? "UnBlock" : "Block"}</button>}
                 <hr className="border-black" />
               </ModalBody >
               <ModalFooter className='flex flex-col justify-center px-0 py-0'>

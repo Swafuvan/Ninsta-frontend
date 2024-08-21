@@ -12,13 +12,14 @@ export interface LoginUser {
 
 export interface User {
     _id?: string;
-    username: String,
-    email: String,
-    fullName: String,
-    password: String,
+    username: string,
+    email: string,
+    fullName: string,
+    password: string,
     isAdmin: boolean,
-    image: String,
-    bio: String,
+    image: string,
+    bio: string,
+    DOB:string,
     isBlocked: boolean,
     Gender: string,
     blockedUsers:string[],
@@ -45,21 +46,21 @@ export interface forgotPassword {
 
 export interface messages{
     _id?: string,
-    to: String,
-    from: String,
-    message: String,
+    to: string,
+    from: string,
+    message: string,
     seen:Boolean,
     createdAt: Date,
     time:Date,
     File:{
-        fileType: String,
-        link: String,
+        fileType: string,
+        link: string,
     }
 }
 
 export interface userReports{
-    userId: String,
-    reportedBy: String,
-    reason: String,
+    userId: string,
+    reportedBy: string,
+    reason: string,
     solve: Boolean,
 }

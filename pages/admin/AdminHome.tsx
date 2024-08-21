@@ -1,9 +1,27 @@
+'use client'
+import { getUsers } from '@/lib/functions/admin/route';
 import { RootState } from '@/redux/store'
-import React from 'react'
+import { User } from '@/type/users';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function AdminHome() {
-  const admin = useSelector((state:RootState) => state.auth);
+  const admin = useSelector((state: RootState) => state.auth);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+
+  
+
+  useEffect(() => {
+    getUsers().then((res) => {
+      setAllUsers(res?.data.userData);
+      console.log(res);
+    })
+
+    
+  }, []);
+
+  
 
   return (
     <div>
@@ -20,7 +38,7 @@ function AdminHome() {
               <a className="text-blueGray-500 block" href="javascript:;">
                 <div className="items-center flex">
                   <span className="w-12 h-12 text-sm text-white bg-blueGray-300 inline-flex items-center justify-center rounded-full">
-                    <img alt="adminImage" className="w-full rounded-full align-middle border-none shadow-lg" src={admin.user?.image+''} />
+                    <img alt="adminImage" className="w-full rounded-full align-middle border-none shadow-lg" src={admin.user?.image + ''} />
                   </span>
                 </div>
               </a>
@@ -43,8 +61,8 @@ function AdminHome() {
                     <div className="flex-auto p-4">
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">Traffic</h5>
-                          <span className="font-bold text-xl">350,897</span>
+                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">Total Users</h5>
+                          <span className="font-bold text-xl">{allUsers.length}</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-red-500"><i className="far fa-chart-bar"></i></div>
@@ -60,7 +78,7 @@ function AdminHome() {
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                           <h5 className="text-blueGray-400 uppercase font-bold text-xs">NEW USERS</h5>
-                          <span className="font-bold text-xl">2,356</span>
+                          <span className="font-bold text-xl">{allUsers.length}</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-orange-500"><i className="fas fa-chart-pie"></i></div>
@@ -75,8 +93,8 @@ function AdminHome() {
                     <div className="flex-auto p-4">
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">SALES</h5>
-                          <span className="font-bold text-xl">924</span>
+                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">Blocked Users</h5>
+                          <span className="font-bold text-xl">{}</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-pink-500"><i className="fas fa-users"></i></div>
@@ -144,12 +162,12 @@ function AdminHome() {
             </div>
           </div>
           <div className="flex flex-wrap">
-            <div className="w-full xl:w-8/12 px-4">
+            <div className="w-full xl:w-12/12 px-4">
               <div className="relative flex flex-col min-w-0 break-words w-full mb-8 shadow-lg rounded-lg bg-white text-blueGray-700">
                 <div className="px-6 py-4 border-0">
                   <div className="flex flex-wrap items-center">
                     <div className="relative w-full max-w-full flex-grow flex-1">
-                      <h3 className="font-bold text-lg text-blueGray-700">Page visits</h3>
+                      <h3 className="font-bold text-lg text-blueGray-700">New Users</h3>
                     </div>
                   </div>
                 </div>
@@ -157,202 +175,41 @@ function AdminHome() {
                   <table className="items-center w-full bg-transparent border-collapse">
                     <thead>
                       <tr>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Page name</th>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Visitors</th>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Unique Users</th>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Bounce Rate</th>
+                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Index</th>
+                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">User Email</th>
+                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Gender</th>
+                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Block</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">/argon/</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">4,569</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">340</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><i className="fas fa-arrow-up mr-2 text-emerald-500"></i>46,53%</div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">/argon/index.html</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">3,985</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">319</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><i className="fas fa-arrow-down mr-2 text-orange-500"></i>46,53%</div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">/argon/charts.html</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">3,513</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">294</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><i className="fas fa-arrow-down mr-2 text-orange-500"></i>36,49%</div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">/argon/tables.html</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">2,050</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">147</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><i className="fas fa-arrow-up mr-2 text-emerald-500"></i>50,87%</div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">/argon/profile.html</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">1,795</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">190</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><i className="fas fa-arrow-up mr-2 text-red-500"></i>46,53%</div>
-                        </td>
-                      </tr>
+                      {allUsers.map((data:any,index:number) => {
+                        return (
+                          <tr key={index}>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <div className="flex items-center"><span className="ml-3 font-bold NaN">{index+1}</span></div>
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <div className="flex items-center"><span className="ml-3 font-bold NaN">{data.email}</span></div>
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <div className="flex items-center">{data?.Gender}</div>
+                            </td>
+                            <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <div className="flex items-center">{data.isBlocked === true ? "Blocked": "NotBlocked"}</div>
+                            </td>
+                            {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                              <div className="flex items-center"><i className="fas fa-arrow-up mr-2 text-emerald-500"></i></div>
+                            </td> */}
+                          </tr>
+                        )
+                      })
+                      }
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
-            <div className="w-full xl:w-4/12 px-4">
-              <div className="relative flex flex-col min-w-0 break-words w-full mb-8 shadow-lg rounded-lg bg-white text-blueGray-700">
-                <div className="px-6 py-4 border-0">
-                  <div className="flex flex-wrap items-center">
-                    <div className="relative w-full max-w-full flex-grow flex-1">
-                      <h3 className="font-bold text-lg text-blueGray-700">Social traffic</h3>
-                    </div>
-                  </div>
-                </div>
-                <div className="block w-full overflow-x-auto">
-                  <table className="items-center w-full bg-transparent border-collapse">
-                    <thead>
-                      <tr>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Referral</th>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200">Visitors</th>
-                        <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-bold text-left bg-blueGray-100 text-blueGray-500 border-blueGray-200"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">Facebook</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">1,480</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 min-w-140-px">
-                          <div className="flex items-center">
-                            <span className="mr-2">60%</span>
-                            <div className="relative w-full">
-                              <div className="overflow-hidden h-2 text-xs flex rounded bg-red-200">
-                                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-red-500" style={{ width: 60 }}></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">Facebook</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">5,480</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 min-w-140-px">
-                          <div className="flex items-center">
-                            <span className="mr-2">70%</span>
-                            <div className="relative w-full">
-                              <div className="overflow-hidden h-2 text-xs flex rounded bg-emerald-200">
-                                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-emerald-500" style={{ width: 70 }}></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">Google</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">4,807</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 min-w-140-px">
-                          <div className="flex items-center">
-                            <span className="mr-2">80%</span>
-                            <div className="relative w-full">
-                              <div className="overflow-hidden h-2 text-xs flex rounded bg-indigo-200">
-                                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-indigo-500" style={{ width: 80 }}></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">Instagram</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">3,678</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 min-w-140-px">
-                          <div className="flex items-center">
-                            <span className="mr-2">75%</span>
-                            <div className="relative w-full">
-                              <div className="overflow-hidden h-2 text-xs flex rounded bg-lightBlue-200">
-                                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-lightBlue-500" style={{ width: 75 }}></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center"><span className="ml-3 font-bold NaN">Twitter</span></div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                          <div className="flex items-center">2,645	</div>
-                        </td>
-                        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 min-w-140-px">
-                          <div className="flex items-center">
-                            <span className="mr-2">30%</span>
-                            <div className="relative w-full">
-                              <div className="overflow-hidden h-2 text-xs flex rounded bg-amber-200">
-                                <div className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-amber-500" style={{ width: 30 }}></div>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+            
           </div>
           <footer className="block py-4">
             <div className="container mx-auto px-4">

@@ -1,24 +1,27 @@
+'use client';
 import React, { useEffect } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, } from "@nextui-org/react";
 import { ReportPosts, UserFindbyId, userReportAction, UserReports } from '@/lib/functions/admin/route';
 import { AllPostReports } from '@/lib/functions/Posts/route';
 import toast from 'react-hot-toast';
 import { User } from '@/type/users';
+import { useRouter } from 'next/navigation';
 
 
 function ReportModalPage({closeModal,data}:any) {
 
     const [reportedUser, setReportedUser] = React.useState<User>();
-
+    console.log(data)
+    const router = useRouter();
     useEffect(() => {
         if(data.postId){
             UserFindbyId(data.postId.userId).then((res)=>{
-                setReportedUser(res.userData);
+                setReportedUser(res.userData);  
             })
         }
     },[data.postId]);
 
-    console.log(data,'0000000000000000001111111111111111111111111111')
+    console.log(data)
     async function handleReport(data:any){
         const response = await userReportAction(data) 
         console.log(response)
@@ -53,7 +56,7 @@ function ReportModalPage({closeModal,data}:any) {
                                 <ModalHeader className="flex items-center flex-col gap-1"> </ModalHeader>
                                 <ModalBody className="">
                                     <div className='flex flex-col gap-1 items-center'>
-                                        <img src={data?.postId?.Url[0].url} alt="image" className='w-60 h-72' />
+                                        <img src={data?.postId?.Url[0].url } alt="image" className='w-60 h-72' />
                                         <span>Name: {reportedUser?.username}</span>
                                         <span>Email: {reportedUser?.email}</span>
                                         <span className='text-red-600'>Reason: {data?.reason}</span>

@@ -57,7 +57,7 @@ function Notifications() {
                       </div>
                     </div>
                     <div className='ml-2 '>
-                      <span className="font-mono">{`${data.senderId.username} ${data.content}`}</span>
+                      <span className="font-mono"> {data.senderId.username === user.user?.username ? `You ${data.content}` : `${data.senderId.username} ${data.content}`}</span>
                     </div>
                     {data.postId ?
                       <>

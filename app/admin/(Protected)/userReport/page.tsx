@@ -15,7 +15,7 @@ function UserReportPage() {
     useEffect(()=>{
         UserReports().then((res) => {
             setUserReport(res.userReports);
-            console.log('sett')
+            console.log(res.userReports)
         })
     },[]);
 
@@ -68,7 +68,7 @@ function UserReportPage() {
                                     </tr>
                                 </thead>
                                 <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
-                                    {userReport.length === 0 &&
+                                    {userReport && userReport.length === 0 &&
                                         <div className="flex items-center justify-center w-full h-full">
                                             <span className="text-gray-500 dark:text-gray-400">No reports found.</span>
 

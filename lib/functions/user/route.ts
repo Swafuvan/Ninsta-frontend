@@ -1,7 +1,7 @@
 // userRoutes.js
 import { User, forgotPassword } from "@/type/users";
 import { LoginUser, SignupUser, googleUser } from "@/type/users";
-import axiosInstance from "../axiosInterceptor";
+import axiosInstance, { getUserToken } from "../axiosInterceptor";
 import Cookies from 'js-cookie';
 
 const backendURL = 'http://localhost:5000';
@@ -35,6 +35,9 @@ export const UserState = async () => {
 export const BlockUsers = async (userId:string,BlockUserId:string) => {
     try {
         const userBlocking = await axiosInstance.put('/blockUser',{userId,BlockUserId})
+        if (userBlocking) {
+            return userBlocking.data
+        }
     } catch (error) {
         console.log(error);
     }
@@ -106,6 +109,17 @@ export const UserNotification = async (userId:string) => {
     }
 }
 
+export const userReels = async () => {
+    try {
+        const Reels = await axiosInstance.get('/userReels');
+        if(Reels){
+            return Reels.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const fetchLastMessages = async (userId:string) => {
     try {
         const messageData = await axiosInstance.get('/allMessage?userId='+userId);
@@ -117,9 +131,31 @@ export const fetchLastMessages = async (userId:string) => {
     }
 }
 
-export const UserStoryAdding = async (userId:string) => {
+export const UserProfileEdit = async (userId:string,userDetails:any) => {
     try {
-        const AddedStory = await axiosInstance.post('/userStory',userId);
+        const ProfileEdited = await axiosInstance.post('/editProfile',{userId,userDetails},{
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Authorization": getUserToken()
+            }}
+        );
+        if (ProfileEdited) {
+            return ProfileEdited.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserStoryAdding = async (userId:string,story:any,caption:string) => {
+    try {
+        const storyData = {file:story,text:caption,userId:userId} 
+        const AddedStory = await axiosInstance.post('/userStory',{storyData},{
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Authorization": getUserToken()
+            }}
+        );
         if (AddedStory) {
             return AddedStory.data
         }

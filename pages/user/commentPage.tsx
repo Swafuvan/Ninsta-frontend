@@ -145,8 +145,8 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
                         <div className='flex flex-col w-full'>
                             
                             {singlePost?.Url[0]?.fileType === 'video' ? (
-                                <video controls className='w-full h-[350px]'>
-                                    <source src={singlePost.Url[0].url} type="video/mp4" />
+                                <video controls className='w-full h-[350px] object-cover'>
+                                    <source src={singlePost.Url[0].url} className='w-full h-[350px]' type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
                             ) : (

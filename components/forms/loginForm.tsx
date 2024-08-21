@@ -40,14 +40,11 @@ export function LoginForm() {
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
         try {
             const user = await userLogin(values);
-            console.log('Login successful', user);
-            
             if (user.userDetails && user.JWTtoken) {                
-                Cookies.set('userToken',user.JWTtoken)
+                await Cookies.set('userToken',user.JWTtoken);
                 dispatch(setUser(user.userDetails))
                 router.push('/')
             }else {
-                console.log(user.message)
                 setError(user.message)
             }
         } catch (error) {
@@ -65,7 +62,8 @@ export function LoginForm() {
             let data = { email: usersResult?.email, password: usersResult?.sub }
             const UserResult = await userLogin(data)
             if (UserResult) {
-                Cookies.set('userToken', UserResult.data.JWTtoken)
+                Cookies.set('userToken', UserResult.JWTtoken)
+                dispatch(setUser(UserResult.userDetails))
                 router.push('/')
             }
 

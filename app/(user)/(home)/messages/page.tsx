@@ -13,7 +13,6 @@ function MessagesPage() {
     const searchParams = useSearchParams();
     const [noMessaged, setNoMessaged] = useState<User[]>([]);
     const [mobileView, setMobileView] = useState(false);
-    const [Users, setUsers] = useState<messages[]>([]);
     const [messageSide, setMessageSide] = useState<User | null>(null);
     const user = useSelector((state: RootState) => state.auth);
     const socket = useSocket();

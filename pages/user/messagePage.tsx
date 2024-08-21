@@ -32,7 +32,7 @@ function MessagePage({ userDetails, filter }: any) {
     const handleMessage = (newMessage: message) => {
         if (newMessage.to === user.user?._id) {
             newMessage.seen = true;
-            console.log(allMessages,'1212121212121212121');
+            console.log(allMessages, '1212121212121212121');
             setAllMessages((prevMessages) => [...prevMessages, newMessage]);
 
             socket.emit('messages_seen', { to: userDetails._id, from: user.user._id });
@@ -126,10 +126,16 @@ function MessagePage({ userDetails, filter }: any) {
                                 <div className={mesg.to === user.user?._id ? "flex-shrink-0 h-10 w-10 rounded-full bg-gray-300" : ""} ></div>
                                 <div>
                                     <div className={mesg.to === user.user?._id ? 'bg-gray-300 p-2 rounded-bl-lg rounded-full' : 'bg-blue-600 text-white p-2 rounded-full rounded-br-lg '}>
-                                        <p className="text-sm">{mesg.message}</p>
-                                        {
-                                            // <img src={} alt="" />
-                                        }
+                                        {mesg.File && mesg.File.fileType === 'image' ? (
+                                            <img src={mesg.File.Link} alt="Sent Image" className="max-w-xs rounded-lg" />
+                                        ) : mesg.File && mesg.File.fileType === 'audio' ? (
+                                            <audio controls className="w-full">
+                                                <source src={mesg.File.Link} type="audio/mp3" />
+                                                Your browser does not support the audio element.
+                                            </audio>
+                                        ) : (
+                                            <p className="text-sm">{mesg.message}</p>
+                                        )}
                                     </div>
                                     <div className='flex justify-end w-40 '>
                                         <span className="text-xs flex text-gray-500 leading-none ">{moment(mesg.time + '').fromNow()}</span>
