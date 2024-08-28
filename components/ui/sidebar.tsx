@@ -20,16 +20,21 @@ import Logout from '@mui/icons-material/Logout';
 import Image from 'next/image';
 import LogoImg from '../../public/Ninsta Logo.png';
 import { useRouter, usePathname } from 'next/navigation';
-import { logout } from '@/lib/functions/user/route';
 import ModalPage from '@/pages/user/userCreatepage';
+import Cookies from 'js-cookie';
 import SearchBar from '@/pages/user/searchBar';
 
 import { useMediaQuery } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { useSocket } from '../Provider/clientProvider';
 
 export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
     const [openMore, setOpenMore] = React.useState(true);
     const [searchOpen, setSearchOpen] = React.useState(false);
+    const socket = useSocket();
+    const user = useSelector((state:RootState) => state.auth );
 
     const isMobile = useMediaQuery('(max-width: 600px)');
     const isTablet = useMediaQuery('(max-width: 960px)');
@@ -48,7 +53,8 @@ export default function TemporaryDrawer() {
 
     const router = useRouter();
     const handleLogout = () => {
-        logout();
+        Cookies.remove('userToken');
+        socket.emit("disconnectUsers", user.user?._id)
         router.push('/Login');
     };
     const location = usePathname();

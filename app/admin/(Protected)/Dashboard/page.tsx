@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
  import AdminHome from "@/pages/admin/AdminHome"
 

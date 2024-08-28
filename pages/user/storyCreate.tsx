@@ -4,25 +4,42 @@ import { XIcon } from "lucide-react";
 import { postUpload } from "@/lib/functions/Posts/route";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { UserStoryAdding } from "@/lib/functions/user/route";
+import { StoryVideoUpload, UserStoryAdding } from "@/lib/functions/user/route";
+import { uploadToS3Bucket } from "@/helpers/AWS";
 
 export default function StoryCreatePage({ CloseStory, userData }: any) {
 
   const [stories, setStories] = useState<{ file: File, type: string }[]>([]);
   const [content, setContent] = useState('');
+  const [progress,setProgress] = useState(-1);
   //   const [isUploading, setIsUploading] = useState(false);
 
   async function handleFiles(e: any) {
     e.preventDefault();
-    console.log(stories, content, 'plplplpplpllplplpl');
-    const UploadedData = await UserStoryAdding(userData._id,stories,content);
-    if (UploadedData?.status === 200) {
-      toast.success('Post Created Successfully');
-      CloseStory();
-      location.reload()
-    } else {
-      toast.error('Failed to Create Post');
-    }
+    console.log(stories, content,);
+    const storiesData = stories.map(async (story) => {
+      if (story.type === 'image') {
+        const UploadedData = await UserStoryAdding(userData._id, stories, content);
+        if (UploadedData?.status === 200) {
+          toast.success('Story Created Successfully');
+          CloseStory();
+          location.reload()
+        } else {
+          toast.error('Failed to Create Story');
+        }
+      }else{
+        uploadToS3Bucket(story.file,setProgress).then(async (data) => {
+          const uploadVideo = await StoryVideoUpload(data,userData._id,content);
+          if (uploadVideo?.status === 200) {
+            toast.success('Story Created Successfully');
+            CloseStory();
+            location.reload()
+          } else {
+            toast.error('Failed to Create Story');
+          }
+        })
+      }
+    })
   }
 
   function removeFiles(index: any) {
@@ -59,6 +76,7 @@ export default function StoryCreatePage({ CloseStory, userData }: any) {
               <ModalHeader className="flex flex-col border border-b-black">Choose Your Story file</ModalHeader>
               <form onSubmit={(e) => handleFiles(e)}>
                 <ModalBody className="flex justify-between items-center mt-2 p-10">
+                {progress > 0 && <> {progress} % <progress value={progress} /> </>}
                   <svg aria-label="Icon to represent media such as images or videos" fill="currentColor" height="77" role="img" viewBox="0 0 97.6 77.3" width="96">
                     <title>Icon to represent media such as images or videos</title>
                     <path d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z" fill="currentColor"></path>

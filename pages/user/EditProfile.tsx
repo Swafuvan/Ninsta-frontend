@@ -17,7 +17,7 @@ function EditProfilePage() {
     if (user.user) {
       UserfindById(user.user._id).then((datas) => {
         setUserData(datas.userDetail);
-        setProfileImage(datas.userDetail.image);  
+        setProfileImage(datas.userDetail.image);
       });
     }
   }, [user.user]);
@@ -27,7 +27,7 @@ function EditProfilePage() {
       const reader = new FileReader();
       reader.onload = (event: any) => {
         setProfileImage(event.target.result);
-        setUserData((prevUserData:any) => ({
+        setUserData((prevUserData: any) => ({
           ...prevUserData,
           image: event.target.result,
         }));
@@ -41,12 +41,19 @@ function EditProfilePage() {
   }
 
   async function profileSubmit(values: any) {
-    const updatedData = {
-      ...values,
-      image: profileImage, // Include the updated profile image
-    };
-    await UserProfileEdit(user.user?._id + '', updatedData);
-    // Update the profile data in the state if needed
+    // const formData = new FormData();
+    // formData.append('userId', user.user?._id || '');
+    // if (profileImage) {
+    //   formData.append('image', profileImage);
+    // }
+
+    // for (const key in values) {
+    //   formData.append(`userDetails[${key}]`, values[key]);
+    // }
+    console.log(values,profileImage,user.user?._id);
+    const userDetails = await UserProfileEdit(values,profileImage,user.user?._id+'');
+    // setUserData(userDetails.userDatas) 
+
   }
 
   return (
@@ -59,7 +66,7 @@ function EditProfilePage() {
           Gender: userData?.Gender || '',
           DOB: userData?.DOB || '',
         }}
-        enableReinitialize // Allows form to reinitialize when `userData` changes
+        enableReinitialize
         validationSchema={UserProfileValidation}
         onSubmit={profileSubmit}
       >
@@ -78,6 +85,7 @@ function EditProfilePage() {
                   src={profileImage || 'https://via.placeholder.com/100'}
                   alt="Profile Photo"
                   className="w-24 h-24 rounded-full"
+                  
                 />
                 <input
                   type="file"
@@ -108,7 +116,7 @@ function EditProfilePage() {
                   <Field as="textarea" id="bio" name="bio" className="w-full border p-2 rounded-md" rows={3} placeholder="Enter your bio" />
                   <ErrorMessage name="bio" component="div" className="text-red-500" />
                 </div>
-                
+
                 <div>
                   <label className="block text-gray-700" htmlFor="Gender">Gender</label>
                   <Field as="select" id="Gender" name="Gender" className="w-full border p-2 rounded-md">

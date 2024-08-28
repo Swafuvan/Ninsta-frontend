@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from '@/redux/store';
-import { FriendSuggession, UserfindById, UserState } from '@/lib/functions/user/route';
+import { FriendSuggession, messageNotification, UserfindById, UserState } from '@/lib/functions/user/route';
 import { setUser } from '@/redux/userSlice';
 import { useRouter } from 'next/navigation';
 import { adminDetails } from '@/lib/functions/admin/route';
@@ -12,16 +12,23 @@ import { usePathname } from 'next/navigation';
 import { io } from 'socket.io-client';
 import { toast, ToastOptions } from 'react-toastify';
 import moment from 'moment';
+import { ZegoExpressEngine } from 'zego-express-engine-webrtc';
+import { v4 as uuidv4 } from 'uuid';
+import { ContentProps, User } from '@/type/users';
+import { ZIM } from "zego-zim-web";
+import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import dotenv from 'dotenv';
-import { User } from '@/type/users';
 dotenv.config();
+
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
   return (
     <ReduxProvider store={store}>
       <UserProvider>
         <SocketProvider>
-          {children}
+          
+            {children}
+         
         </SocketProvider>
       </UserProvider>
     </ReduxProvider>
@@ -81,6 +88,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
     setSocket(newSocket);
     if (user && user.user) {
       newSocket.emit('join', user.user?._id);
+
     }
 
     newSocket.on('send_message', (data: any) => {
@@ -91,6 +99,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
     });
 
     return () => {
+      newSocket.emit("disconnectUsers", user.user?._id)
       newSocket.close();
     };
   }, [user]);
@@ -107,26 +116,26 @@ export const useSocket = () => useContext(SocketContext);
 const Notification = ({ notification, Close }: { notification: any, Close: () => void }) => {
 
   const [state, setState] = useState(false);
-  const [userData,setUserData] = useState<User>();
+  const [userData, setUserData] = useState<User>();
 
   useEffect(() => {
-    setTimeout(() => { setState(true) },3000)
+    setTimeout(() => { setState(true) }, 3000)
   }, [])
 
-  useEffect(()=>{
-    if(notification.to){
+  useEffect(() => {
+    if (notification.to) {
       UserfindById(notification.to).then((response) => {
-      setUserData(response.userDetail)
+        setUserData(response.userDetail)
       })
     }
-  },[]);
+  }, []);
 
-  if(state) {return <></>}
+  if (state) { return <></> }
 
   return (
     <div className="flex absolute z-50 lg:left-[530px] md:left-[150px] justify-center w-full top-10 items-center p-4 bg-white rounded-lg shadow-xl mx-auto max-w-sm m-10">
       <span
-        onClick={()=>setState(true)}
+        onClick={() => setState(true)}
         className="text-xs cursor-pointer font-bold uppercase px-2 mt-2 mr-2 text-white bg-black border rounded-full absolute top-0 right-0"
       >
         X
@@ -138,13 +147,13 @@ const Notification = ({ notification, Close }: { notification: any, Close: () =>
         {moment(notification.time).fromNow()}
       </span>
 
-      <img onClick={()=>window.location.href = '/messages?userId='+notification.from}
+      <img onClick={() => window.location.href = '/messages?userId=' + notification.from}
         className="h-12 w-12 rounded-full"
         alt="John Doe's avatar"
-        src={userData?.image+''}
+        src={userData?.image + ''}
       />
 
-      <div className="ml-5" onClick={()=>window.location.href = '/messages'}>
+      <div className="ml-5" onClick={() => window.location.href = '/messages'}>
         <h5 className="text-lg font-semibold leading-tight text-gray-900">
           You have a new message!
         </h5>
@@ -153,3 +162,7 @@ const Notification = ({ notification, Close }: { notification: any, Close: () =>
     </div>
   );
 };
+
+
+
+

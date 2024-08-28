@@ -98,6 +98,17 @@ export const AllUsersStory = async (userId:string) => {
     }
 }
 
+export const OwnStory = async (userId:string) => {
+    try {
+        const Story = await axiosInstance.get('/ownStory?userId='+userId);
+        if (Story) {
+            return Story.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const UserNotification = async (userId:string) => {
     try {
         const notifiRes = await axiosInstance.get('/notification?userId='+userId);
@@ -131,14 +142,26 @@ export const fetchLastMessages = async (userId:string) => {
     }
 }
 
-export const UserProfileEdit = async (userId:string,userDetails:any) => {
+export const messageNotification = async (notification:any) => {
     try {
-        const ProfileEdited = await axiosInstance.post('/editProfile',{userId,userDetails},{
-            headers: {
+        const userNotify = await axiosInstance.post('/messageNotifi',{notification});
+        if (userNotify) {
+            return userNotify.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const UserProfileEdit = async (userDetails:any,image:any,userId:string) => {
+    try {
+        const Useredited = {userData:image,userDetails,userId}
+        const ProfileEdited = await axiosInstance.post('/editProfile',{Useredited},{
+            headers:{
                 "Content-Type": "multipart/form-data",
                 "Authorization": getUserToken()
-            }}
-        );
+            }
+        });
         if (ProfileEdited) {
             return ProfileEdited.data
         }
@@ -149,15 +172,26 @@ export const UserProfileEdit = async (userId:string,userDetails:any) => {
 
 export const UserStoryAdding = async (userId:string,story:any,caption:string) => {
     try {
-        const storyData = {file:story,text:caption,userId:userId} 
-        const AddedStory = await axiosInstance.post('/userStory',{storyData},{
+        // const storyData = {file:story,text:caption,userId:userId} 
+        const AddedStory = await axiosInstance.post('/userStory',{StoryData:story,text:caption,userId:userId},{
             headers: {
                 "Content-Type": "multipart/form-data",
                 "Authorization": getUserToken()
             }}
         );
         if (AddedStory) {
-            return AddedStory.data
+            return AddedStory
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const StoryVideoUpload = async (story:string,userId:string,content:string) => {
+    try {
+        const addedVideoStory = await axiosInstance.post('/videoStory',{story,userId,content});
+        if (addedVideoStory) {
+            return addedVideoStory
         }
     } catch (error) {
         console.log(error);
@@ -209,13 +243,6 @@ export const userLogin = async (user: LoginUser): Promise<any> => {
     }
 }
 
-export const logout = () => {
-    try {
-        Cookies.remove('userToken');
-    } catch (error) {
-        console.log(error);
-    }
-}
 
 export const verifyOtp = async (email: string, otp: number) => {
     try {

@@ -1,16 +1,18 @@
-'use client'
+"use client";
+
 import { getUsers } from '@/lib/functions/admin/route';
 import { RootState } from '@/redux/store'
 import { User } from '@/type/users';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { BarChart } from '@mui/x-charts/BarChart';
 
 function AdminHome() {
   const admin = useSelector((state: RootState) => state.auth);
   const [allUsers, setAllUsers] = useState<User[]>([]);
 
-  
+
 
   useEffect(() => {
     getUsers().then((res) => {
@@ -18,10 +20,10 @@ function AdminHome() {
       console.log(res);
     })
 
-    
+
   }, []);
 
-  
+
 
   return (
     <div>
@@ -94,7 +96,7 @@ function AdminHome() {
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                           <h5 className="text-blueGray-400 uppercase font-bold text-xs">Blocked Users</h5>
-                          <span className="font-bold text-xl">{}</span>
+                          <span className="font-bold text-xl">8</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-pink-500"><i className="fas fa-users"></i></div>
@@ -126,7 +128,7 @@ function AdminHome() {
         </div>
         <div className="px-4 md:px-6 mx-auto w-full -mt-24">
           <div className="flex flex-wrap">
-            <div className="w-full xl:w-8/12 px-4">
+            {/* <div className="w-full xl:w-8/12 px-4">
               <div className="relative flex flex-col min-w-0 break-words w-full mb-8 shadow-lg rounded-lg bg-blueGray-800">
                 <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
                   <div className="flex flex-wrap items-center">
@@ -142,8 +144,14 @@ function AdminHome() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full xl:w-4/12 px-4">
+            </div> */}
+            <BarChart
+              xAxis={[{ scaleType: 'band', data: ['group A', 'group B', 'group C', 'group D', 'group E'] }]}
+              series={[{ data: [4, 3, 5, 4, 2] }, { data: [1, 6, 3, 5, 7] }, { data: [2, 5, 6, 3, 4] },]}
+              width={700}
+              height={300}
+            />
+            {/* <div className="w-full xl:w-4/12 px-4">
               <div className="relative flex flex-col min-w-0 break-words w-full mb-8 shadow-lg rounded-lg bg-white">
                 <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
                   <div className="flex flex-wrap items-center">
@@ -159,7 +167,7 @@ function AdminHome() {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-wrap">
             <div className="w-full xl:w-12/12 px-4">
@@ -182,11 +190,11 @@ function AdminHome() {
                       </tr>
                     </thead>
                     <tbody>
-                      {allUsers.map((data:any,index:number) => {
+                      {allUsers.map((data: any, index: number) => {
                         return (
                           <tr key={index}>
                             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                              <div className="flex items-center"><span className="ml-3 font-bold NaN">{index+1}</span></div>
+                              <div className="flex items-center"><span className="ml-3 font-bold NaN">{index + 1}</span></div>
                             </td>
                             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                               <div className="flex items-center"><span className="ml-3 font-bold NaN">{data.email}</span></div>
@@ -195,7 +203,7 @@ function AdminHome() {
                               <div className="flex items-center">{data?.Gender}</div>
                             </td>
                             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                              <div className="flex items-center">{data.isBlocked === true ? "Blocked": "NotBlocked"}</div>
+                              <div className="flex items-center">{data.isBlocked === true ? "Blocked" : "NotBlocked"}</div>
                             </td>
                             {/* <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                               <div className="flex items-center"><i className="fas fa-arrow-up mr-2 text-emerald-500"></i></div>
@@ -209,26 +217,9 @@ function AdminHome() {
                 </div>
               </div>
             </div>
-            
+
           </div>
-          <footer className="block py-4">
-            <div className="container mx-auto px-4">
-              <hr className="mb-4 border-b-1 border-blueGray-200" />
-              <div className="flex flex-wrap items-center md:justify-between justify-center">
-                <div className="w-full md:w-4/12 px-4">
-                  <div className="text-center mb-2 md:text-left md:mb-0"><a href="https://www.creative-tim.com/?ref=npr-footeradmin" target="_blank" className="text-sm text-blueGray-500 font-semibold py-1 text-center md:text-left">Copyright © 2021 Creative Tim</a></div>
-                </div>
-                <div className="w-full md:w-8/12 px-4">
-                  <ul className="flex flex-wrap list-none md:justify-end  justify-center">
-                    <li><a href="https://www.creative-tim.com?ref=npr-footeradmin" target="_blank" className="text-blueGray-700 hover:text-blueGray-900 text-sm font-semibold block py-1 px-3">Creative Tim</a></li>
-                    <li><a href="https://www.creative-tim.com/presentation?ref=npr-footeradmin" target="_blank" className="text-blueGray-700 hover:text-blueGray-900 text-sm font-semibold block py-1 px-3">About Us</a></li>
-                    <li><a href="https://www.creative-tim.com/blog/?ref=npr-footeradmin" target="_blank" className="text-blueGray-700 hover:text-blueGray-900 text-sm font-semibold block py-1 px-3">Blog</a></li>
-                    <li><a href="https://www.creative-tim.com/license?ref=npr-footeradmin" target="_blank" className="text-blueGray-700 hover:text-blueGray-900 text-sm font-semibold block py-1 px-3">Licenses</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </footer>
+
         </div>
       </div>
       {/* </div> */}

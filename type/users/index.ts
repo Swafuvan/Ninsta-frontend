@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface SignupUser {
     username: string;
     email: string;
@@ -9,6 +11,10 @@ export interface LoginUser {
     email: string;
     password: string;
 }
+
+export interface ContentProps {
+    children: ReactNode;
+  }
 
 export interface User {
     _id?: string;
@@ -44,6 +50,18 @@ export interface forgotPassword {
 
 }
 
+export interface Posts {
+    _id?: string,
+    userId: User,
+    Url:{
+        url:string,
+        fileType:string
+    },
+    content: string,
+    visible:boolean,
+    createdAt: Date,
+}
+
 export interface messages{
     _id?: string,
     to: string,
@@ -56,6 +74,16 @@ export interface messages{
         fileType: string,
         link: string,
     }
+}
+
+export interface userStory{
+    user:User,
+    files:{
+        fileURL:string,
+        type:string
+    },
+    caption:string,
+    createdAt:Date
 }
 
 export interface userReports{

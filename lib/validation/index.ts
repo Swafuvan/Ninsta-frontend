@@ -45,7 +45,7 @@ export const UserProfileValidation = Yup.object().shape({
     username: Yup.string()
         .min(3, 'Username must be at least 3 characters')
         .max(15, 'Username should not exceed 15 characters')
-        .matches(/^(?=.*[0-9]{3,6})[a-zA-Z0-9]*$/, 'Username must include at least 3 numbers and not exceed 6 numbers')
+        .matches(/^(?=.*[0-9]{2,6})[a-zA-Z0-9]*$/, 'Username must include at least 2 numbers and not exceed 6 numbers')
         .required('Username is required'),
     fullName: Yup.string()
         .min(3, 'Full name must be at least 3 characters')

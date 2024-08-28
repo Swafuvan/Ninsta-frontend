@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { XIcon } from "lucide-react";
-import { postUpload } from "@/lib/functions/Posts/route";
+import { postUpload, VideoUpload } from "@/lib/functions/Posts/route";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { uploadToS3Bucket } from "@/helpers/AWS";
 
 export default function ModalPage({ handleDrawerOpen }: any) {
 
-  const [files, setFiles] = useState<{file: File, type: string}[]>([]);
+  const [files, setFiles] = useState<{ file: File, type: string }[]>([]);
   const [content, setContent] = useState('');
+  const [progress, setProgress] = useState(-1);
   const [isUploading, setIsUploading] = useState(false);
 
   async function handleFiles(e: any) {
@@ -21,15 +23,36 @@ export default function ModalPage({ handleDrawerOpen }: any) {
       toast.error('At least one file is required.');
       return;
     }
+    console.log(files)
+    const NewFiles = files.map(async (files: any) => {
+      if (files.type.startsWith('video')) {
+        uploadToS3Bucket(files.file, setProgress).then(async (res) => {
+          const UploadData = await VideoUpload(res, content);
+          if (UploadData?.status === 200) {
+            toast.success('Post Created Successfully');
+            handleDrawerOpen();
+            location.reload()
+          } else {
+            toast.error('Failed to Create Post');
+          }
+        })
+      } else {
+        const UploadedData = await postUpload(files, content);
+        if (UploadedData?.status === 200) {
+          toast.success('Post Created Successfully');
+          handleDrawerOpen();
+          location.reload()
+        } else {
+          toast.error('Failed to Create Post');
+        }
+      }
+    })
 
-    const UploadedData = await postUpload(files, content);
+    if (files) {
 
-    if (UploadedData?.status === 200) {
-      toast.success('Post Created Successfully');
-      handleDrawerOpen();
-    } else {
-      toast.error('Failed to Create Post');
     }
+
+
   }
 
   function removeFiles(index: any) {
@@ -45,11 +68,13 @@ export default function ModalPage({ handleDrawerOpen }: any) {
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newFiles = Array.from(e.target.files!).map((file: File) => {
       const fileType = file.type.startsWith('image') ? 'image' : 'video';
+
       return { file, type: fileType };
     });
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   }
-  
+
+
   return (
     <>
       <Modal
@@ -66,6 +91,18 @@ export default function ModalPage({ handleDrawerOpen }: any) {
               <ModalHeader className="flex flex-col border border-b-black">Choose Your file</ModalHeader>
               <form onSubmit={(e) => handleFiles(e)}>
                 <ModalBody className="flex justify-between items-center mt-2 p-10">
+                  {progress > 0 && (
+                    <>
+                      <span className="mb-2 text-sm font-medium text-gray-700">{progress}%</span>
+                      <progress
+                        value={progress}
+                        max="100"
+                        className="w-full h-4 bg-gray-200 rounded-lg overflow-hidden appearance-none"
+                      >
+                        {progress}%
+                      </progress>
+                    </>
+                  )}
                   <svg aria-label="Icon to represent media such as images or videos" fill="currentColor" height="77" role="img" viewBox="0 0 97.6 77.3" width="96">
                     <title>Icon to represent media such as images or videos</title>
                     <path d="M16.3 24h.3c2.8-.2 4.9-2.6 4.8-5.4-.2-2.8-2.6-4.9-5.4-4.8s-4.9 2.6-4.8 5.4c.1 2.7 2.4 4.8 5.1 4.8zm-2.4-7.2c.5-.6 1.3-1 2.1-1h.2c1.7 0 3.1 1.4 3.1 3.1 0 1.7-1.4 3.1-3.1 3.1-1.7 0-3.1-1.4-3.1-3.1 0-.8.3-1.5.8-2.1z" fill="currentColor"></path>
@@ -74,7 +111,7 @@ export default function ModalPage({ handleDrawerOpen }: any) {
                   </svg>
                   <label>Select Photos or Videos here</label>
                   <input onClick={(e) => e.stopPropagation()} onChange={onChange}
-                   type="file" multiple name="PostUpload" id="PostUpload" accept="image/*,video/*" />
+                    type="file" multiple name="PostUpload" id="PostUpload" accept="image/*,video/*" />
                   <div className="flex flex-wrap gap-4">
                     {files.length > 0 && files.map((item: any, idx: number) => (
                       <div key={idx} className="relative w-20 h-20 border border-gray-300 rounded overflow-hidden">
@@ -83,19 +120,19 @@ export default function ModalPage({ handleDrawerOpen }: any) {
                           onClick={() => removeFiles(idx)}
                         />
                         {item.type === "image" && (
-                            <img
-                              src={URL.createObjectURL(item.file)}
-                              alt="Preview"
-                              className="object-cover w-full h-full"
-                            />
-                          )}
-                          {item.type === "video" && (
-                            <video
-                              src={URL.createObjectURL(item.file)}
-                              onClick={(e) => e.stopPropagation()}
-                              className="object-cover w-full h-full"
-                            />
-                          )}
+                          <img
+                            src={URL.createObjectURL(item.file)}
+                            alt="Preview"
+                            className="object-cover w-full h-full"
+                          />
+                        )}
+                        {item.type === "video" && (
+                          <video
+                            src={URL.createObjectURL(item.file)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="object-cover w-full h-full"
+                          />
+                        )}
                       </div>
                     ))}
                   </div>

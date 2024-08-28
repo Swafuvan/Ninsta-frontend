@@ -16,7 +16,17 @@ export const postUpload = async (file: any, text: string) => {
     } catch (error) {
         console.log(error);
     }
+}
 
+export const VideoUpload = async (data:string,text:string) => {
+    try {
+        const UploadedRes = await axiosInstance.post('/uploadVideos',{data,text});
+        if (UploadedRes) {
+            return UploadedRes
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export const ExplorePosts = async () => {

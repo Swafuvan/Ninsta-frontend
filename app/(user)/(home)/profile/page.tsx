@@ -60,9 +60,13 @@ function ProfilePage() {
 
   async function followTheUser() {
     const following = await FollowUsers(user.user?._id + '', proUser);
-    if (following) {
-
+    const userDatas = {...proUser}
+    if (userDatas?.followers?.includes(user.user?._id+'')) {
+      userDatas.followers = userDatas.followers.filter((data:any) => data !== user.user?._id);
+    }else{
+      userDatas?.followers?.push(user.user?._id+'');
     }
+    setProUser(userDatas as User);
   }
 
   function FollowersList() {

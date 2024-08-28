@@ -1,21 +1,20 @@
-'use client'
-import { AllUserData, FriendSuggession, UserfindById, userHome, FollowUsers, AllUsersStory } from '@/lib/functions/user/route';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+"use client";
+import { AllUserData, FriendSuggession, UserfindById,  FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
+import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import Cookies from 'js-cookie'
-import { setUser } from '@/redux/userSlice';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
-import { DotIcon, Users } from 'lucide-react';
-import { User } from '@/type/users';
-import { CommentPost, getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
+import { User, userStory } from '@/type/users';
+import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
 import CommentsPage from './commentPage';
 import PostEditModal from './PostEditModal';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component'
 import StoryCreatePage from './storyCreate';
 import moment from 'moment';
+import StoryShowPage from './storyShow';
 
 function HomePage() {
 
@@ -24,14 +23,18 @@ function HomePage() {
   const user = useSelector((state: RootState) => state.auth);
   // console.log(user.user,"what is thia");
 
-  const [Posts, setPosts] = useState<any[]>([])
+  const [Posts, setPosts] = useState<any[]>([]);
+  const [allUsersData, setAllUsersData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [report, setReport] = React.useState(false);
   const [singlePost, setSinglePost] = useState([]);
-  const [suggession, setSuggession] = useState([]);
+  const [suggession, setSuggession] = useState<User[]>([]);
   const [likedUser, setlikedUser] = useState(false)
   const [UserStory, setUserStory] = useState([]);
   const [addStory, setAddStory] = useState(false);
+  const [showStory, setShowStory] = useState(false);
+  const [ownStoryData , setOwnStoryData] = useState<userStory>()
+  const isMobile = window.innerWidth <= 750;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClickOpen = () => {
@@ -48,6 +51,10 @@ function HomePage() {
         console.log(datas)
         setSuggession(datas.suggessions);
       })
+      AllUserData(user.user._id).then((dataa) => {
+        console.log(dataa)
+        setAllUsersData(dataa.UserDetails);
+      })
     }
   }, [user.user?._id]);
 
@@ -56,10 +63,12 @@ function HomePage() {
       if (user.user?._id) {
         AllUsersStory(user.user?._id + '').then((result) => {
           console.log(result);
-          setUserStory(result)
+          setUserStory(result.userDetail)
+        })
+        OwnStory(user.user._id).then((resp) => {
+          setOwnStoryData(resp.userOwnStory)
         })
       }
-
     }
   }, [user.user?._id])
 
@@ -119,7 +128,7 @@ function HomePage() {
         setPosts(updatedPost);
         toast.success('post saved');
       } else {
-        
+
         toast.error("Post Did't Saved")
       }
     } catch (error) {
@@ -135,10 +144,18 @@ function HomePage() {
     setlikedUser(false);
   }
 
-  async function FollowUser(follower: any) {
+  async function FollowUser(follower: any, index: number) {
     try {
       const followUser = await FollowUsers(user.user?._id + '', follower);
-      console.log(followUser);
+      const updatedSuggession = [...suggession];
+      const userSuggession = suggession.findIndex((data: any) => data._id === follower._id);
+      console.log(userSuggession);
+      if (followUser && !updatedSuggession[userSuggession].followers.includes(user.user?._id + '')) {
+        updatedSuggession[userSuggession].followers.push(user.user?._id + '');
+      } else {
+        updatedSuggession[userSuggession].followers = updatedSuggession[userSuggession].followers.filter((item: any) => item !== user.user?._id + '');
+      }
+      setSuggession(updatedSuggession);
     } catch (error) {
       console.log(error);
     }
@@ -148,6 +165,28 @@ function HomePage() {
     setAddStory(false);
   }
 
+  const ownUserStoryData = user.user
+  function StoryShowing(){
+    setShowStory(false);
+  }
+
+  // const [scrollLeft, setScrollLeft] = useState(0);
+  // const scrollRef = useRef(null);
+
+  // const handleScroll = (event:any) => {
+  //   setScrollLeft(event.target.scrollLeft);
+  // };
+
+  // const handlePrevClick = () => {
+  //   scrollRef?.current?.scrollLeft -= 150; 
+  // };
+
+  // const handleNextClick = () => {
+  //   scrollRef?.current?.scrollLeft += 150; 
+  // };
+
+  // const showNavigationButtons = allUsersData.length > 7;
+
   return (
     <div className='flex justify-center md:ml-44 '>
       {/* Left side (Stories and Posts) */}
@@ -155,9 +194,9 @@ function HomePage() {
         <div className="z-10 p-3 ml-9">
           <ul className="flex space-x-2 ">
             <li className="flex flex-col items-center space-y-1 ">
-              <div className="relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full">
+              <div className={ownStoryData? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                 <a href="#" className="block bg-white p-1 rounded-full transform transition z-0 hover:-rotate-6">
-                  <img className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
+                  <img onClick={()=>{setShowStory(true)}} className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
                 </a>
                 <button
                   onClick={() => setAddStory(true)}
@@ -169,64 +208,45 @@ function HomePage() {
               </div>
               <a href="#">{user.user?.username}</a>
             </li>
+            {UserStory.length > 0 ? (
+              UserStory.slice(0, isMobile ? 4 : 7).map((story: any, index: number) => {
+                return (
+                  <li key={index} className="flex flex-col items-center space-y-1 ">
+                    <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
+                      <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
+                        <img onClick={()=>setShowStory(true)} className="w-12 h-12 rounded-full" src={story.user.image} alt="post" />
+                      </a>
+                    </div>
+                    <a className='pl-1 w-20 truncate text-gray-800' href="#">
+                      {story.user.username}
+                    </a>
+                    
+                  </li>
+                );
+              })
+            ) : (
+              allUsersData &&
+              allUsersData.slice(0, isMobile ? 4 : 7).map((data: any, index: number) => {
+                return (
+                  <li key={index} className="flex flex-col items-center space-y-1 ">
+                    <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
+                      <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
+                        <img onClick={() => setAddStory(true)} className="w-12 h-12 rounded-full" src={data.image} alt="post" />
+                      </a>
+                    </div>
+                    <a className='pl-2 w-20 truncate text-gray-800 ' href="#">
+                      {data.username}
+                      </a>
+                  </li>
+                );
+              })
+            )}
 
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/lZWWYcCRpYT6aU6HyKEGyjFAKnk5Ik1fEIYWJi3VvDE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/cGl4YWJheS5jb20v/cGhvdG8vMjAxNi8x/MS8yMy8xNy8yNS93/b21hbi0xODUzOTM5/XzY0MC5qcGc" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_two</a>
-            </li>
-
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://imgs.search.brave.com/V1J51pIvfHGATMCKjKhMkr1MGp49ebOJtCVf2_hsVbI/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTM2/NTYwNjYzNy9waG90/by9zaG90LW9mLWEt/eW91bmctYnVzaW5l/c3N3b21hbi11c2lu/Zy1hLWRpZ2l0YWwt/dGFibGV0LXdoaWxl/LWF0LXdvcmsuanBn/P3M9NjEyeDYxMiZ3/PTAmaz0yMCZjPUtV/alZsb0JVWHRjWnpO/akd5eWlSRmxwbFZ1/dVBFNlRhcDNPTDZo/X3hJNWs9" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_three</a>
-            </li>
-
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_four</a>
-            </li>
-
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_four</a>
-            </li>
-
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/photo-1473830394358-91588751b241?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_four</a>
-            </li>
-            <li className="flex flex-col items-center space-y-1 ">
-              <div className="bg-gradient-to-tr from-yellow-400 to-purple-600 p-1 rounded-full">
-                <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                  <img className="w-12 h-12 rounded-full" src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="cute User" />
-                </a>
-              </div>
-              <a href="#">User_four</a>
-            </li>
-           
           </ul>
         </div>
 
         {/* Posts component */}
+        {showStory && <StoryShowPage StoryShowing={StoryShowing} ownUserStoryData={ownUserStoryData} /> }
         {addStory && <StoryCreatePage userData={user.user} CloseStory={CloseStory} />}
         {report && <PostEditModal singlePost={singlePost} PostEdits={PostEdits} />}
         {likedUser && <LikedUser singlePost={singlePost} ShowLikers={ShowLikers} />}
@@ -281,7 +301,7 @@ function HomePage() {
                     </div>
                     {/* {item.saved.savedBy === user.user?._id ? */}
                     <svg onClick={() => handleSavePost(item)}
-                      aria-label="Save" fill="currentColor" className='cursor-pointer' height="24" role="img" viewBox="0 0 24 24" width="24"><title>Save</title><polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" stroke-linejoin="round" stroke-width="2"></polygon></svg>
+                      aria-label="Save" fill="currentColor" className='cursor-pointer' height="24" role="img" viewBox="0 0 24 24" width="24"><title>Save</title><polygon fill="none" points="20 21 12 13.44 4 21 4 3 20 3 20 21" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></polygon></svg>
                     {/* : */}
                     {/* <svg aria-label="Remove" fill="currentColor" height="24" role="img" viewBox="0 0 24 24" width="24"><title>Remove</title><path d="M20 22a.999.999 0 0 1-.687-.273L12 14.815l-7.313 6.912A1 1 0 0 1 3 21V3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1Z"></path></svg> */}
                     {/* }  */}
@@ -306,8 +326,8 @@ function HomePage() {
         <div className="top-8 right-28 bg-white rounded-lg shadow-md p-4">
           <h2 className="text-xl font-semibold mb-4">Suggestions For You</h2>
           <ul className="space-y-4">
-            {suggession.sort(() => 0.5 - Math.random()) 
-              .slice(0, 3) 
+            {suggession.sort(() => 0.5 - Math.random())
+              .slice(0, 3)
               .map((res: any, index: number) => {
                 return (
                   <li key={index} className="flex items-center justify-between">
@@ -318,7 +338,7 @@ function HomePage() {
                         <p className="text-sm text-gray-600">Followed by friends</p>
                       </div>
                     </div>
-                    <button onClick={() => FollowUser(res)} className={res.followers.includes(user.user?._id) ? 'bg-slate-200 text-black px-3 py-2 rounded-full' : "bg-blue-500 text-white px-4 py-2 rounded-full"}>
+                    <button onClick={() => FollowUser(res, index)} className={res.followers.includes(user.user?._id) ? 'bg-slate-200 text-black px-3 py-2 rounded-full' : "bg-blue-500 text-white px-4 py-2 rounded-full"}>
                       {res.followers.includes(user.user?._id) ? 'following' : 'follow'}
                     </button>
                   </li>
@@ -328,7 +348,7 @@ function HomePage() {
           </ul>
         </div>
       </div>
-    </div>
+    </div >
   )
 }
 

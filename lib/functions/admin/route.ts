@@ -82,6 +82,14 @@ export const userReportAction = async (data:any) => {
     }
 }
 
+export const UserAllDetails = async () => {
+    try {
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const UserPostReport = async () => {
     try {
         const userPostReports = await axiosInstance.get('/userPostReports')
