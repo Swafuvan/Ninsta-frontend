@@ -76,10 +76,10 @@ export default function TemporaryDrawer() {
     return (
         <aside
             id="logo-sidebar"
-            className="fixed justify-start items-start top-0 left-0 z-40 h-screen pt-20 transition-transform bg-white sm:w-auto md:w-auto "
+            className="sm:ml-16 fixed justify-start items-start top-0 left-0 z-40 h-screen pt-20 transition-transform bg-white sm:w-auto md:w-auto "
             aria-label="Sidebar"
         >
-            <div className="h-full px-3  pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
                 <div className='fixed top-8 left-2'>
                     <Box sx={{ maxWidth: 200, minWidth: 20 }} role="presentation">

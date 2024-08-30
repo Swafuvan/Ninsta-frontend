@@ -95,7 +95,7 @@ function MessagesPage() {
                                     if (mobileView) setMobileView(true);
                                 }}>
                                     <button className="flex items-center w-full px-4 py-2 select-none hover:bg-gray-100 focus:outline-none">
-                                        <img className="w-12 mr-3 rounded-full border" src={val?.image + ''} alt={val?.username + ''} />
+                                        <img className="w-10 mr-3 rounded-full border" src={val?.image + ''} alt={val?.username + ''} />
                                         <div className="transform translate-y-0.5 text-left">
                                             <h3 className="leading-4">{val?.username}</h3>
                                             <span className="text-xs text-gray-500">...</span>

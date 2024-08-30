@@ -29,7 +29,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.5",
-    "@zegocloud/zego-uikit-prebuilt": "^2.5.0",
+    "@zegocloud/zego-uikit-prebuilt": "^2.8.0",
     "apexcharts": "^3.49.1",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
@@ -65,8 +65,8 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^10.0.0",
     "yup": "^1.4.0",
-    "zego-express-engine-webrtc": "^3.4.0",
-    "zego-zim-web": "^2.5.0",
+    "zego-express-engine-webrtc": "^3.6.0",
+    "zego-zim-web": "^2.17.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

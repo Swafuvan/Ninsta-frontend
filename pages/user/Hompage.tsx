@@ -33,8 +33,10 @@ function HomePage() {
   const [UserStory, setUserStory] = useState([]);
   const [addStory, setAddStory] = useState(false);
   const [showStory, setShowStory] = useState(false);
+  const [storyUser,setStoryUser] = useState('');
   const [ownStoryData , setOwnStoryData] = useState<userStory>()
-  const isMobile = window.innerWidth <= 750;
+  const isMobile = window.innerWidth <= 600;
+  const isTablet = window.innerWidth > 600 && window.innerWidth <= 900;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClickOpen = () => {
@@ -128,7 +130,6 @@ function HomePage() {
         setPosts(updatedPost);
         toast.success('post saved');
       } else {
-
         toast.error("Post Did't Saved")
       }
     } catch (error) {
@@ -165,7 +166,7 @@ function HomePage() {
     setAddStory(false);
   }
 
-  const ownUserStoryData = user.user
+
   function StoryShowing(){
     setShowStory(false);
   }
@@ -196,7 +197,7 @@ function HomePage() {
             <li className="flex flex-col items-center space-y-1 ">
               <div className={ownStoryData? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                 <a href="#" className="block bg-white p-1 rounded-full transform transition z-0 hover:-rotate-6">
-                  <img onClick={()=>{setShowStory(true)}} className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
+                  <img onClick={()=>{setStoryUser(user?.user?._id+''),setShowStory(true)}} className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
                 </a>
                 <button
                   onClick={() => setAddStory(true)}
@@ -209,12 +210,12 @@ function HomePage() {
               <a href="#">{user.user?.username}</a>
             </li>
             {UserStory.length > 0 ? (
-              UserStory.slice(0, isMobile ? 4 : 7).map((story: any, index: number) => {
+              UserStory.slice(0, isMobile ? 3 : isTablet ? 4 : 7).map((story: any, index: number) => {
                 return (
                   <li key={index} className="flex flex-col items-center space-y-1 ">
                     <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                       <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                        <img onClick={()=>setShowStory(true)} className="w-12 h-12 rounded-full" src={story.user.image} alt="post" />
+                        <img onClick={()=>{setStoryUser(story.user._id),setShowStory(true)}} className="w-12 h-12 rounded-full" src={story.user.image} alt="post" />
                       </a>
                     </div>
                     <a className='pl-1 w-20 truncate text-gray-800' href="#">
@@ -231,7 +232,7 @@ function HomePage() {
                   <li key={index} className="flex flex-col items-center space-y-1 ">
                     <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                       <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                        <img onClick={() => setAddStory(true)} className="w-12 h-12 rounded-full" src={data.image} alt="post" />
+                        <img onClick={() =>{setStoryUser(data?._id),setShowStory(true)}} className="w-12 h-12 rounded-full" src={data.image} alt="post" />
                       </a>
                     </div>
                     <a className='pl-2 w-20 truncate text-gray-800 ' href="#">
@@ -246,7 +247,7 @@ function HomePage() {
         </div>
 
         {/* Posts component */}
-        {showStory && <StoryShowPage StoryShowing={StoryShowing} ownUserStoryData={ownUserStoryData} /> }
+        {showStory && <StoryShowPage StoryShowing={StoryShowing} storyUser={storyUser} /> }
         {addStory && <StoryCreatePage userData={user.user} CloseStory={CloseStory} />}
         {report && <PostEditModal singlePost={singlePost} PostEdits={PostEdits} />}
         {likedUser && <LikedUser singlePost={singlePost} ShowLikers={ShowLikers} />}

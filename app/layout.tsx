@@ -1,5 +1,4 @@
 "use client";
-
 import { Inter as FontSans } from "next/font/google"
 import { cn } from "@/lib/utils"
 import "./globals.css";
@@ -16,7 +15,7 @@ const fontSans = FontSans({
   variable: "--font-sans",
 })
 
-export default function RootLayout({ children }: Readonly<{
+export default function RootLayout({ children, }: Readonly<{
   children: React.ReactNode;
 }>) {
 
@@ -33,7 +32,7 @@ export default function RootLayout({ children }: Readonly<{
           <main className="flex-grow">
             <ClientProvider>
             <Toaster position="top-center" />
-            <ToastContainer />
+            <ToastContainer  />
               {children}
             </ClientProvider>
           </main>

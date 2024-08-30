@@ -12,23 +12,19 @@ import { usePathname } from 'next/navigation';
 import { io } from 'socket.io-client';
 import { toast, ToastOptions } from 'react-toastify';
 import moment from 'moment';
-import { ZegoExpressEngine } from 'zego-express-engine-webrtc';
 import { v4 as uuidv4 } from 'uuid';
 import { ContentProps, User } from '@/type/users';
-import { ZIM } from "zego-zim-web";
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import dotenv from 'dotenv';
 dotenv.config();
-
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
   return (
     <ReduxProvider store={store}>
       <UserProvider>
         <SocketProvider>
-          
+          <ZegoCloudProvider>
             {children}
-         
+          </ZegoCloudProvider>
         </SocketProvider>
       </UserProvider>
     </ReduxProvider>
@@ -73,6 +69,7 @@ const SocketContext = createContext<any>(null);
 function SocketProvider({ children }: { children: ReactNode }) {
   const user = useSelector((state: RootState) => state.auth);
   const [socket, setSocket] = useState<any>(null);
+  const [zp, setZP] = useState<any>();
 
   const Close = (toastId: React.ReactText) => {
     toast.dismiss(toastId);
@@ -86,10 +83,36 @@ function SocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const newSocket: any = io(process.env.Socket_URL || 'http://localhost:5000');
     setSocket(newSocket);
+
     if (user && user.user) {
       newSocket.emit('join', user.user?._id);
 
+      (async () => {
+        const { ZegoUIKitPrebuilt } = await import('@zegocloud/zego-uikit-prebuilt')
+        const { ZIM } = await import('zego-zim-web')
+        const { ZegoExpressEngine } = await import('zego-express-engine-webrtc')
+
+        const userID = user?.user?._id + '';
+        const userName = user.user?.username;
+        const appID = Number(process.env.NEXT_PUBLIC_ZEGOCLOUD_APP_ID);
+        const serverSecret = process.env.NEXT_PUBLIC_ZEGOCLOUD_SECRET_ID + "";
+        const roomId = uuidv4();
+        const TOKEN = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId, userID, userName);
+        console.log(TOKEN, appID, serverSecret, roomId, userID, userName)
+        const zp = ZegoUIKitPrebuilt.create(TOKEN);
+        console.log(zp)
+        zp.addPlugins({ ZIM });
+        zp.setCallInvitationConfig({
+          ringtoneConfig: {
+            incomingCallUrl: 'https://res.cloudinary.com/dyh7c1wtm/video/upload/v1717999547/rrr_uixgh2.mp3',
+            outgoingCallUrl: 'https://res.cloudinary.com/dyh7c1wtm/video/upload/v1718002692/beggin_edited_kgcew8.mp3'
+          }
+        })
+        setZP(zp);
+      })();
+
     }
+
 
     newSocket.on('send_message', (data: any) => {
       const toastId = toast(
@@ -105,7 +128,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   return (
-    <SocketContext.Provider value={{ socket }}>
+    <SocketContext.Provider value={{ socket, zp }}>
       {children}
     </SocketContext.Provider>
   );
@@ -165,4 +188,83 @@ const Notification = ({ notification, Close }: { notification: any, Close: () =>
 
 
 
+
+export const LiveContext = createContext<any>({
+  zg: null,
+  setZg: () => { }
+});
+
+export const useZego = () => useContext(LiveContext);
+
+export const ZegoCloudProvider = ({ children }: ContentProps) => {
+  const user = useSelector((state: RootState) => state.auth);
+  const [zg, setZg] = useState<any>(null);
+  const userData = user.user
+
+  useEffect(() => {
+    console.log(userData, "this is the user");
+
+    const initZego = async () => {
+      if (userData && userData._id) {
+        const appID = Number(process.env.NEXT_PUBLIC_ZEGOCLOUD_APP_ID);
+        const server = process.env.NEXT_PUBLIC_ZEGOCLOUD_SECRET_ID + "";
+
+        (async () => {
+          const { ZegoExpressEngine } = await import('zego-express-engine-webrtc')
+          const zgInstance = new ZegoExpressEngine(appID, server);
+          if (zgInstance.setLogConfig) {
+            zgInstance.setLogConfig({
+              logLevel: 'disable'
+            });
+          } else {
+            console.warn("setLogConfig is not available. Check the ZegoExpressEngine documentation for log configuration.");
+          }
+
+          setZg(zgInstance);
+
+
+          zgInstance.on('roomStateUpdate', (roomID, state, errorCode, extendedData) => {
+            if (state === 'DISCONNECTED') {
+              alert("Disconnected");
+            } else if (state === 'CONNECTING') {
+
+            } else if (state === 'CONNECTED') {
+
+            }
+          });
+
+          zgInstance.on('roomUserUpdate', (roomID, updateType, userList) => {
+            console.warn(
+              `roomUserUpdate: room ${roomID}, user ${updateType === 'ADD' ? 'added' : 'left'} `,
+              JSON.stringify(userList),
+            );
+          });
+
+          zgInstance.on('roomStreamUpdate', async (roomID, updateType, streamList, extendedData) => {
+            if (updateType === 'ADD') {
+
+            } else if (updateType === 'DELETE') {
+
+            }
+          });
+
+        })();
+      }
+    };
+
+    initZego();
+  }, [userData]);
+
+
+
+
+  const liveContextValue: any = { zg, setZg };
+
+
+  return (
+    <LiveContext.Provider value={liveContextValue}>
+      {children}
+    </LiveContext.Provider>
+  );
+};
 

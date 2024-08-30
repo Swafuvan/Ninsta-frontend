@@ -155,13 +155,16 @@ export const messageNotification = async (notification:any) => {
 
 export const UserProfileEdit = async (userDetails:any,image:any,userId:string) => {
     try {
-        const Useredited = {userData:image,userDetails,userId}
-        const ProfileEdited = await axiosInstance.post('/editProfile',{Useredited},{
+        const formData = new FormData();
+        formData.append('userDetails', JSON.stringify(userDetails));
+        formData.append('userData', image); 
+        formData.append('userId', userId);
+        const ProfileEdited = await axiosInstance.post('/editProfile',formData,{
             headers:{
                 "Content-Type": "multipart/form-data",
                 "Authorization": getUserToken()
             }
-        });
+        })
         if (ProfileEdited) {
             return ProfileEdited.data
         }

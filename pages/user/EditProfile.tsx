@@ -41,19 +41,10 @@ function EditProfilePage() {
   }
 
   async function profileSubmit(values: any) {
-    // const formData = new FormData();
-    // formData.append('userId', user.user?._id || '');
-    // if (profileImage) {
-    //   formData.append('image', profileImage);
-    // }
-
-    // for (const key in values) {
-    //   formData.append(`userDetails[${key}]`, values[key]);
-    // }
     console.log(values,profileImage,user.user?._id);
     const userDetails = await UserProfileEdit(values,profileImage,user.user?._id+'');
-    // setUserData(userDetails.userDatas) 
-
+    setUserData(userDetails.userDatas) 
+    window.location.href = '/profile'
   }
 
   return (
