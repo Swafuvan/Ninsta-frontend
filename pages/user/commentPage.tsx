@@ -1,3 +1,4 @@
+"use client"
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -157,7 +158,7 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
                             {commentData && commentData.length > 0 ?
                                 commentData.map((data: any, inx: number) => {
                                     return (
-                                        <li className="ml-2 mb-1 list-none" >
+                                        <li key={inx} className="ml-2 mb-1 list-none" >
                                             <div className="flex items-center space-x-3">
                                                 <div className="flex-shrink-0">
                                                     <img className="w-9 h-9 rounded-full" src={data?.userId?.image} alt="image" />
