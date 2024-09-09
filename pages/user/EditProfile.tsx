@@ -7,7 +7,7 @@ import { UserfindById, UserProfileEdit } from '@/lib/functions/user/route';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { User } from '@/type/users';
-
+  
 function EditProfilePage() {
   const user = useSelector((state: RootState) => state.auth);
   const [profileImage, setProfileImage] = useState<string>();
