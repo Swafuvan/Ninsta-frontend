@@ -20,7 +20,7 @@ function ProfilePage() {
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
   const [followingData, setFollowingData] = useState<String[] | undefined>([]);
   const [following, setFollowing] = useState(false);
-  const [messageUserData,setMessageUserData] = useState('');
+  const [messageUserData, setMessageUserData] = useState('');
   const [openPost, setOpenPost] = useState(false);
   const [singlePost, setSinglePost] = useState();
   const [editUser, setEditUser] = useState(false);
@@ -33,7 +33,7 @@ function ProfilePage() {
   useEffect(() => {
     if (searchParams) {
       const userData = searchParams?.get('Values');
-      setMessageUserData(userData+'')
+      setMessageUserData(userData + '')
       if (userData) {
         UserfindById(userData).then((response) => {
           if (response) {
@@ -60,11 +60,11 @@ function ProfilePage() {
 
   async function followTheUser() {
     const following = await FollowUsers(user.user?._id + '', proUser);
-    const userDatas = {...proUser}
-    if (userDatas?.followers?.includes(user.user?._id+'')) {
-      userDatas.followers = userDatas.followers.filter((data:any) => data !== user.user?._id);
-    }else{
-      userDatas?.followers?.push(user.user?._id+'');
+    const userDatas = { ...proUser }
+    if (userDatas?.followers?.includes(user.user?._id + '')) {
+      userDatas.followers = userDatas.followers.filter((data: any) => data !== user.user?._id);
+    } else {
+      userDatas?.followers?.push(user.user?._id + '');
     }
     setProUser(userDatas as User);
   }
@@ -204,7 +204,7 @@ function ProfilePage() {
                     uppercase tracking-widest font-semibold text-xs text-gray-600
                     border-t">
             {/* <!-- posts tab is active --> */}
-            <li className={reels === false ? "md:border-t md:border-gray-700 md:-mt-px md:text-gray-700" : "flex p-3 cursor-pointer"}>
+            <li className={reels === false ? "md:border-t md:border-gray-700 md:-mt-px md:text-gray-700" : "flex p-0 cursor-pointer"}>
               <a className=" flex p-3" href="/profile">
                 <i className="fas mt-0.5 fa-th-large text-xl md:text-xs">
                   <svg aria-label="" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><rect fill="none" height="18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" width="18" x="3" y="3"></rect><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="9.015" x2="9.015" y1="3" y2="21"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="14.985" x2="14.985" y1="3" y2="21"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="21" x2="3" y1="9.015" y2="9.015"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="21" x2="3" y1="14.985" y2="14.985"></line></svg>
@@ -212,12 +212,14 @@ function ProfilePage() {
                 <span className="hidden md:inline">post</span>
               </a>
             </li>
-            <li className={reels === true ? "flex p-3 cursor-pointer" : "md:border-t md:border-gray-700 md:-mt-px flex md:text-gray-700"} onClick={() => setReels(true)}
+            <li className={reels === true ? "md:border-t md:border-gray-700 md:-mt-px md:text-gray-700" : "flex p-0 cursor-pointer"} onClick={() => setReels(true)}
             >
-              <i className="far mt-0.5 fa-square text-xl md:text-xs">
-                <svg aria-label="" className="x1lliihq x1n2onr6 x1roi4f4" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fillRule="evenodd"></path></svg>
-              </i>
-              <span className="hidden md:inline">Reels</span>
+              <a className=" flex p-3" href="#">
+                <i className="far mt-0.5 fa-square text-xl md:text-xs">
+                  <svg aria-label="" className="x1lliihq x1n2onr6 x1roi4f4" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><line fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" x1="2.049" x2="21.95" y1="7.002" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="13.504" x2="16.362" y1="2.001" y2="7.002"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="7.207" x2="10.002" y1="2.11" y2="7.002"></line><path d="M2 12.001v3.449c0 2.849.698 4.006 1.606 4.945.94.908 2.098 1.607 4.946 1.607h6.896c2.848 0 4.006-.699 4.946-1.607.908-.939 1.606-2.096 1.606-4.945V8.552c0-2.848-.698-4.006-1.606-4.945C19.454 2.699 18.296 2 15.448 2H8.552c-2.848 0-4.006.699-4.946 1.607C2.698 4.546 2 5.704 2 8.552Z" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"></path><path d="M9.763 17.664a.908.908 0 0 1-.454-.787V11.63a.909.909 0 0 1 1.364-.788l4.545 2.624a.909.909 0 0 1 0 1.575l-4.545 2.624a.91.91 0 0 1-.91 0Z" fillRule="evenodd"></path></svg>
+                </i>
+                <span className="hidden md:inline">Reels</span>
+              </a>
             </li>
             <li>
               <a className="flex p-3" href="/saved">
@@ -240,7 +242,7 @@ function ProfilePage() {
           <div className="flex flex-wrap -mx-px md:-mx-3">
             {posts?.length > 0 ? posts && posts.map((data: any, index) => {
               return (
-                <div className="w-1/3 p-px md:px-3">
+                <div key={index} className="w-1/3 p-px md:px-3">
                   {/* <!-- post 1--> */}
                   <a href="#">
                     <article onClick={() => { setOpenPost(true), setSinglePost(data) }} className="post bg-gray-100 text-white relative pb-full md:mb-6">
@@ -472,7 +474,7 @@ function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
     setOpen(false);
   };
 
-  function EditProfilefun(){
+  function EditProfilefun() {
     window.location.href = '/profile/profileEdit'
   }
 
@@ -504,7 +506,7 @@ function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
               <ModalBody className="">
                 <button onClick={() => setOpen(true)} className="text-red-600 ">Report</button>
                 <hr className="border-black" />
-                {UserDetails._id === user.user?._id ? <button onClick={()=>EditProfilefun()} >Edit Profile</button> : <button onClick={() => BlockUser(UserDetails._id)} className="text-red-600">{userData?.blockedUsers.includes(UserDetails._id) ? "UnBlock" : "Block"}</button>}
+                {UserDetails._id === user.user?._id ? <button onClick={() => EditProfilefun()} >Edit Profile</button> : <button onClick={() => BlockUser(UserDetails._id)} className="text-red-600">{userData?.blockedUsers.includes(UserDetails._id) ? "UnBlock" : "Block"}</button>}
                 <hr className="border-black" />
               </ModalBody >
               <ModalFooter className='flex flex-col justify-center px-0 py-0'>

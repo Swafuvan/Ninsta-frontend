@@ -19,7 +19,6 @@ function AdminUserManagement({ columns, initialData, currentPage, totalPages, ha
     }, [initialData]);
 
     async function onBlockToggle(email: string, isBlocked: boolean) {
-        // Update local state
         const updatedData = data.map(item => {
             if (item.email === email) {
                 return { ...item, isBlocked: !isBlocked };
@@ -37,7 +36,6 @@ function AdminUserManagement({ columns, initialData, currentPage, totalPages, ha
         }
     }
 
-    // Calculate start and end index for pagination
     const startIndex = (currentPage - 1) * 8;
     const endIndex = startIndex + 8;
 

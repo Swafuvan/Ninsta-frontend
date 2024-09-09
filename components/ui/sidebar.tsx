@@ -33,7 +33,7 @@ export default function TemporaryDrawer() {
     const [open, setOpen] = React.useState(false);
     const [openMore, setOpenMore] = React.useState(true);
     const [searchOpen, setSearchOpen] = React.useState(false);
-    const socket = useSocket();
+    const {socket} = useSocket();
     const user = useSelector((state:RootState) => state.auth );
 
     const isMobile = useMediaQuery('(max-width: 600px)');
@@ -53,8 +53,8 @@ export default function TemporaryDrawer() {
 
     const router = useRouter();
     const handleLogout = () => {
-        Cookies.remove('userToken');
         socket.emit("disconnectUsers", user.user?._id)
+        Cookies.remove('userToken');
         router.push('/Login');
     };
     const location = usePathname();
@@ -79,7 +79,7 @@ export default function TemporaryDrawer() {
             className="sm:ml-16 fixed justify-start items-start top-0 left-0 z-40 h-screen pt-20 transition-transform bg-white sm:w-auto md:w-auto "
             aria-label="Sidebar"
         >
-            <div className="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+            <div className="h-full pb-4 overflow-y-auto bg-white dark:bg-gray-800">
 
                 <div className='fixed top-8 left-2'>
                     <Box sx={{ maxWidth: 200, minWidth: 20 }} role="presentation">
@@ -87,7 +87,7 @@ export default function TemporaryDrawer() {
                             <img onClick={() => window.location.href = '/'} src='/ninsta-favicon.png' className='w-10 cursor-pointer md:max-w-none' alt='logo' />
                             :
                             <Image onClick={() => window.location.href = '/'} src={LogoImg} width={120} alt='logoImage' className="cursor-pointer hidden md:inline ms-3" />}
-                        <List className={location?.includes('/messages') ? 'w-12' : ''} >
+                        <List className={location?.includes('/messages') ? 'w-12' : 'w-14'} >
                             {['Home', 'Search', 'Explore', 'Reels', 'Messages', 'Notifications', 'Create', 'Profile', 'More'].map((text) => (
                                 <a href={text === 'Home' ? '/' : text === 'Create' ? '#' : text === 'More' ? '#' : text === 'Search' ? '#' : `/${text.toLowerCase()}`} key={text}>
                                     <ListItem disablePadding >

@@ -8,7 +8,7 @@ import { User } from '@/type/users';
 import { useRouter } from 'next/navigation';
 
 
-function ReportModalPage({closeModal,data}:any) {
+function ReportUserModalPage({closeModal,data}:any) {
 
     const [reportedUser, setReportedUser] = React.useState<User>();
     console.log(data)
@@ -23,7 +23,7 @@ function ReportModalPage({closeModal,data}:any) {
 
     console.log(data)
     async function handleReport(data:any){
-        const response = await ReportPosts(data) 
+        const response = await userReportAction(data) 
         console.log(response)
         if(response?.userReports){
             if(response?.userReports?.solve === false){
@@ -56,9 +56,9 @@ function ReportModalPage({closeModal,data}:any) {
                                 <ModalHeader className="flex items-center flex-col gap-1"> </ModalHeader>
                                 <ModalBody className="">
                                     <div className='flex flex-col gap-1 items-center'>
-                                        <img src={data?.postId?.Url[0].url } alt="image" className='w-60 h-72' />
-                                        <span>Name: {reportedUser?.username}</span>
-                                        <span>Email: {reportedUser?.email}</span>
+                                        <img src={data?.userId?.image } alt="image" className='w-60 h-72' />
+                                        <span>Name: {data?.userId?.username}</span>
+                                        <span>Email: {data?.userId?.email}</span>
                                         <span className='text-red-600'>Reason: {data?.reason}</span>
                                     </div>
                                 </ModalBody >
@@ -72,7 +72,6 @@ function ReportModalPage({closeModal,data}:any) {
                                     <Button className='Button border bg-black text-white border-black rounded-md' onPress={closeModal}>
                                         Close
                                     </Button>
-
                                 </ModalFooter>
                             </>
                         )}
@@ -83,4 +82,4 @@ function ReportModalPage({closeModal,data}:any) {
     )
 }
 
-export default ReportModalPage
+export default ReportUserModalPage

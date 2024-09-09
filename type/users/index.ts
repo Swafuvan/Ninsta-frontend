@@ -30,7 +30,8 @@ export interface User {
     Gender: string,
     blockedUsers:string[],
     following:string[],
-    followers:string[]
+    followers:string[],
+    createdAt:string
 }
 
 

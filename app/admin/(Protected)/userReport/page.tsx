@@ -1,6 +1,7 @@
 'use client'
 import { UserReports } from '@/lib/functions/admin/route';
 import ReportModalPage from '@/pages/admin/ReportModal';
+import ReportUserModalPage from '@/pages/admin/ReportUserModal';
 import { RootState } from '@/redux/store';
 import { userReports } from '@/type/users';
 import React, { useEffect, useState } from 'react'
@@ -50,7 +51,6 @@ function UserReportPage() {
                             <table className="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600">
                                 <thead className="bg-gray-100 dark:bg-gray-700">
                                     <tr>
-
                                         <th scope="col" className="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
                                             Name
                                         </th>
@@ -71,14 +71,13 @@ function UserReportPage() {
                                     {userReport && userReport.length === 0 &&
                                         <div className="flex items-center justify-center w-full h-full">
                                             <span className="text-gray-500 dark:text-gray-400">No reports found.</span>
-
                                         </div>
                                     }
                                     {userReport && userReport.length > 0 && userReport.map((data:any, idx:number) => {
                                         return (
                                             <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                                                 <td className="flex items-center p-4 mr-12 space-x-6 whitespace-nowrap">
-                                                    <img className="w-10 h-10 rounded-full" src={data?.userId?.image+''} alt=" avatar" />
+                                                    <img className="w-10 h-10 rounded-full" src={data?.reportedBy?.image+''} alt=" avatar" />
                                                     <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                                                         <div className="text-base font-semibold text-gray-900 dark:text-white">{data?.reportedBy?.username}</div>
                                                         <div className="text-sm font-normal text-gray-500 dark:text-gray-400">{data?.reportedBy?.email}</div>
@@ -97,7 +96,7 @@ function UserReportPage() {
                                                         Action
                                                     </button>
                                                 </td>
-                                                {openAction === idx && <ReportModalPage closeModal={closeModal} data={data} />}
+                                                {openAction === idx && <ReportUserModalPage closeModal={closeModal} data={data} />}
                                             </tr>
                                         )
                                     })}

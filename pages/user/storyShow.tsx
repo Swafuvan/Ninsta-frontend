@@ -90,7 +90,7 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
                       <img
                         src={ownStory.files[0].fileURL}
                         alt=""
-                        className="object-cover max-h-full w-full"
+                        className="object-cover h-full w-full"
                       />
                       {/* <div className="w-full flex flex-col bg-no-repeat"
                         style={{ backgroundImage: `url(${ownStory?.files[0]?.fileURL})` }}>
@@ -133,29 +133,30 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 // import { FaPaperPlane } from "react-icons/fa";
 
 // export function Story() {
-//     return (
-//         <div className="w-full flex items-center justify-center h-screen max-h-[90%] border-error">
-//             <div className="w-full h-[95%] max-w-sm bg-foreground xl:max-w-md border-separate border-black shadow-md shadow-background rounded-md">
-//                 <div className="w-full h-[90%] bg-background rounded-t-md">
-//                     <img src="/Desktop.png" className="w-full h-full p-1 rounded-md border-separate border-error border-2" alt="" />
-//                 </div>
-//                 <div className="w-full h-full bg- max-h-[10%]">
-//                     <div className="w-full px-4 h-full flex flex-row items-center justify-center gap-2">
-//                         <div className="w-20 flex items-center justify-center flex-shrink-0 h-full">
-//                             <button className="rounded-md p-2 w-auto bg-background"><TbHeart className="text-[25px] text-error" /></button>
-//                         </div>
-//                         <div className="w-full h-full p-1 relative flex items-center justify-center">
-//                             <input type="text" className="w-full h-full rounded-md px-3 font-semibold" />
-//                             <button className="absolute right-4 rounded-md h-8 w-8 bg-error flex items-center justify-center">
-//                                 <FaPaperPlane />
-//                             </button>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
+//   return (
+//     <div className="w-full flex items-center justify-center h-screen max-h-[90%] border-error">
+//       <div className="w-full h-[95%] max-w-sm bg-foreground xl:max-w-md border-separate border-black shadow-md shadow-background rounded-md">
+//         <div className="w-full h-[90%] bg-background rounded-t-md">
+//           <img src="/Desktop.png" className="w-full h-full p-1 rounded-md border-separate border-error border-2" alt="" />
 //         </div>
-//     )
+//         <div className="w-full h-full bg- max-h-[10%]">
+//           <div className="w-full px-4 h-full flex flex-row items-center justify-center gap-2">
+//             <div className="w-20 flex items-center justify-center flex-shrink-0 h-full">
+//               <button className="rounded-md p-2 w-auto bg-background"><TbHeart className="text-[25px] text-error" /></button>
+//             </div>
+//             <div className="w-full h-full p-1 relative flex items-center justify-center">
+//               <input type="text" className="w-full h-full rounded-md px-3 font-semibold" />
+//               <button className="absolute right-4 rounded-md h-8 w-8 bg-error flex items-center justify-center">
+//                 <FaPaperPlane />
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
 // }
+
 
 // export function StoryshjowPage({ StoryShowing, ownUserStoryData }: any) {
 
@@ -163,8 +164,6 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 //   const [userStory, setUserStory] = useState<userStory[]>([]);
 //   const [loading, setLoading] = useState(false);
 //   const [isPaused, setIsPaused] = useState(false);
-//   //   const [next, setNext] = useState(false);
-//   //   const [previous, setPrevious] = useState(false);
 //   const [ownStory, setOwnStory] = useState<any>();
 
 
@@ -183,12 +182,10 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 //   function getStoriesObject() {
 //     let allStories = [];
 
-//     // Add current user's story first if it exists
 //     if (ownStory) {
 //       allStories.push({
 //         content: (props: any) => (
 //           <div key={"ownStory"} className="story-container bg-black w-screen h-screen flex items-start justify-center">
-//             {/* Your current user's story UI */}
 //             <div className="w-full h-full bg-black max-w-screen-md flex items-center justify-center flex-col bg-center bg-no-repeat"
 //               style={{ backgroundImage: `url(${ownStory.files.fileURL})` }}>
 //               <div className="mt-12 caption text-5xl font-bold" style={{ color: "white" }}>{ownStory.caption}</div>
@@ -198,14 +195,12 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 //       });
 //     }
 
-//     // Add other users' stories
 //     const otherStories = userStory.map((story, index) => {
 //       return {
-//         content: (props) => (
+//         content: (props:any) => (
 //           <div key={index} className="story-container bg-black w-screen h-screen flex items-start justify-center">
-//             {/* Other user's story UI */}
 //             <div className="w-full h-full bg-black max-w-screen-md flex items-center justify-center flex-col bg-center bg-no-repeat"
-//               style={{ backgroundImage: `url(${story.files[0].fileURL})` }}>
+//               style={{ backgroundImage: `url(${story.files[0]?.fileURL})` }}>
 //               <div className="mt-12 caption text-5xl font-bold" style={{ color: "white" }}>{story.caption}</div>
 //             </div>
 //           </div>
@@ -213,7 +208,6 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 //       };
 //     });
 
-//     // Combine current user and other users' stories
 //     allStories = [...allStories, ...otherStories];
 
 //     return allStories;
@@ -271,25 +265,25 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 //           </div>
 
 //           <div></div>
-{/* <div className="w-96">
-              <div className="relative w-full min-w-[200px] h-14  bg-white shadow-2xl">
-                <div className="absolute grid w-5 h-5 place-items-center text-blue-500 top-2/4 right-3 -translate-y-2/4">
-                  <i className="fa fa-paper-plane" aria-hidden="true"></i>
-                </div>
-                <input
-                  className="peer w-full h-full bg-transparent text-black font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] !pr-9 border-blue-gray-200 focus:border-gray-900"
-                  placeholder=" "
-                />
-                <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:flex-grow before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-black peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
-                  Send Reply...
-                </label>
-              </div>
-            </div> */}
-{/* </div>
-      </div>
-    </div>
-  )
-} */}
+//           <div className="w-96">
+//             <div className="relative w-full min-w-[200px] h-14  bg-white shadow-2xl">
+//               <div className="absolute grid w-5 h-5 place-items-center text-blue-500 top-2/4 right-3 -translate-y-2/4">
+//                 <i className="fa fa-paper-plane" aria-hidden="true"></i>
+//               </div>
+//               <input
+//                 className="peer w-full h-full bg-transparent text-black font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] !pr-9 border-blue-gray-200 focus:border-gray-900"
+//                 placeholder=" "
+//               />
+//               <label className="flex w-full h-full select-none pointer-events-none absolute left-0 font-normal !overflow-visible truncate peer-placeholder-shown:text-blue-gray-500 leading-tight peer-focus:leading-tight peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500 transition-all -top-1.5 peer-placeholder-shown:text-sm text-[11px] peer-focus:text-[11px] before:content[' '] before:block before:flex-grow before:box-border before:w-2.5 before:h-1.5 before:mt-[6.5px] before:mr-1 peer-placeholder-shown:before:border-transparent before:rounded-tl-md before:border-t peer-focus:before:border-t-2 before:border-l peer-focus:before:border-l-2 before:pointer-events-none before:transition-all peer-disabled:before:border-transparent after:content[' '] after:block after:flex-grow after:box-border after:w-2.5 after:h-1.5 after:mt-[6.5px] after:ml-1 peer-placeholder-shown:after:border-transparent after:rounded-tr-md after:border-t peer-focus:after:border-t-2 after:border-r peer-focus:after:border-r-2 after:pointer-events-none after:transition-all peer-disabled:after:border-transparent peer-placeholder-shown:leading-[3.75] text-black peer-focus:text-gray-900 before:border-blue-gray-200 peer-focus:before:!border-gray-900 after:border-blue-gray-200 peer-focus:after:!border-gray-900">
+//                 Send Reply...
+//               </label>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
 
 

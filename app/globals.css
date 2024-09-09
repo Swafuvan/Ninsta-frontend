@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 .input-no-spinner {
   -moz-appearance: textfield;
   appearance: none;

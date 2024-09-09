@@ -35,8 +35,8 @@ function HomePage() {
   const [showStory, setShowStory] = useState(false);
   const [storyUser,setStoryUser] = useState('');
   const [ownStoryData , setOwnStoryData] = useState<userStory>()
-  const isMobile = window.innerWidth <= 600;
-  const isTablet = window.innerWidth > 600 && window.innerWidth <= 900;
+  const isMobile = window.innerWidth <= 680;
+  const isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClickOpen = () => {
@@ -220,10 +220,9 @@ function HomePage() {
                     </div>
                     <a className='pl-1 w-20 truncate text-gray-800' href="#">
                       {story.user.username}
-                    </a>
-                    
+                    </a> 
                   </li>
-                );
+                )
               })
             ) : (
               allUsersData &&

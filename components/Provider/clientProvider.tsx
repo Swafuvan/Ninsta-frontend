@@ -98,9 +98,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
         const serverSecret = process.env.NEXT_PUBLIC_ZEGOCLOUD_SECRET_ID + "";
         const roomId = uuidv4();
         const TOKEN = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomId, userID, userName);
-        console.log(TOKEN, appID, serverSecret, roomId, userID, userName)
         const zp = ZegoUIKitPrebuilt.create(TOKEN);
-        console.log(zp)
         zp.addPlugins({ ZIM });
         zp.setCallInvitationConfig({
           ringtoneConfig: {
@@ -202,7 +200,6 @@ export const ZegoCloudProvider = ({ children }: ContentProps) => {
   const userData = user.user
 
   useEffect(() => {
-    console.log(userData, "this is the user");
 
     const initZego = async () => {
       if (userData && userData._id) {

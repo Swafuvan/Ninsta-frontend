@@ -53,15 +53,15 @@ function Notifications() {
                   <div key={index} className="flex justify-between px-5 py-2 bg-white items-center gap-1 rounded-lg border border-gray-100 my-3">
                     <div className="relative w-16 h-16 rounded-full hover:bg-red-700 bg-gradient-to-r from-purple-400 via-blue-500 to-red-400 ">
                       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-14 h-14 bg-gray-200 rounded-full border-2 border-white ">
-                        <img className="w-full h-full object-cover rounded-full" src={data.senderId.image} alt="" />
+                        <img className="w-full h-full object-cover rounded-full" src={data?.senderId?.image} alt="" />
                       </div>
                     </div>
                     <div className='ml-2 '>
                       {
                         data.type === 'message' ?
-                          <span className="font-mono">{data.senderId.username === user.user?.username ? `You ${data.content}` : `${data.senderId.username} send message *${data.content}*`}</span>
+                          <span className="font-mono">{data?.senderId?.username === user?.user?.username ? `You ${data.content}` : `${data?.senderId?.username} send message *${data.content}*`}</span>
                           :
-                          <span className="font-mono"> {data.senderId.username === user.user?.username ? `You ${data.content}` : `${data.senderId.username} ${data.content}`}</span>
+                          <span className="font-mono"> {data?.senderId?.username === user?.user?.username ? `You ${data.content}` : `${data?.senderId?.username} ${data.content}`}</span>
                       }
                     </div>
                     {data.postId ?
@@ -86,8 +86,8 @@ function Notifications() {
                     }
                     <>
                       {data.type === 'follow' ?
-                        <button className={data.senderId.following.includes(user.user?._id) ? 'bg-gray-300 text-black rounded-full px-3 py-1.5' : 'bg-blue-500 text-white rounded-full px-3 py-1.5'}>
-                          {data.senderId.following.includes(user.user?._id) ? 'following' : 'follow'}
+                        <button className={data?.senderId?.following.includes(user.user?._id) ? 'bg-gray-300 text-black rounded-full px-3 py-1.5' : 'bg-blue-500 text-white rounded-full px-3 py-1.5'}>
+                          {data?.senderId?.following.includes(user.user?._id) ? 'following' : 'follow'}
                         </button>
                         :
                         data.type === 'message' ?
@@ -138,7 +138,7 @@ function Notifications() {
                         </div>
                       </div>
                       <button onClick={() => FollowUser(res)} className={res.followers.includes(user.user?._id) ? 'bg-slate-200 text-black px-3 py-2 rounded-full' : "bg-blue-500 text-white px-4 py-2 rounded-full"}>
-                        {res.followers.includes(user.user?._id) ? 'following' : 'follow'}
+                        {res?.followers.includes(user.user?._id) ? 'following' : 'follow'}
                       </button>
                     </li>
 

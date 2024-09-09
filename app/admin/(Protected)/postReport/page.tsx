@@ -1,6 +1,7 @@
 'use client'
 import { UserFindbyId, UserPostReport } from '@/lib/functions/admin/route'
 import ReportModalPage from '@/pages/admin/ReportModal';
+import PostEditModal from '@/pages/user/PostEditModal';
 import React, { useEffect, useState } from 'react'
 
 
@@ -77,7 +78,7 @@ function PostReports() {
                                         return (
                                             <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-700">
                                                 <td className="flex items-center p-4 mr-12 space-x-6 whitespace-nowrap">
-                                                    <img className="w-10 h-10 rounded-full" src={data?.postId?.Url[0].url} alt=" avatar" />
+                                                    <img className="w-10 h-10 rounded-full" src={data?.reportedBy?.image} alt=" avatar" />
                                                     <div className="text-sm font-normal text-gray-500 dark:text-gray-400">
                                                         <div className="text-base font-semibold text-gray-900 dark:text-white">{data?.reportedBy?.fullName}</div>
                                                         <div className="text-sm font-normal text-gray-500 dark:text-gray-400">{data?.reportedBy?.email}</div>
