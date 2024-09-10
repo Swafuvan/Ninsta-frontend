@@ -99,7 +99,7 @@ function Notifications() {
                             </button>
                           </>
                           :
-                          ''
+                          <></>
                       }
                     </>
                   </div>
@@ -110,7 +110,6 @@ function Notifications() {
             <>
               <div>
                 <div className="text-center">
-
                   <p className="mt-2 text-xl text-gray-700">No Notifications Found</p>
                 </div>
               </div>
@@ -118,7 +117,6 @@ function Notifications() {
           }
 
         </div>
-        {/* suggetion */}
 
         <div className="hidden md:block w-96 ml-16 h-screen p-8 overflow-y-auto bg-white">
           <div className="top-8 right-28 bg-white rounded-lg shadow-md p-4">
@@ -141,17 +139,13 @@ function Notifications() {
                         {res?.followers.includes(user.user?._id) ? 'following' : 'follow'}
                       </button>
                     </li>
-
                   )
                 })}
-
             </ul>
           </div>
         </div>
       </div>
     </div>
-
-    // <div !--component -- >
 
   )
 }

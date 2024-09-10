@@ -570,7 +570,7 @@ function ChildModal({ handleClose, UserDetails }: any) {
                 <hr className="border-black" />
                 <Button onClick={(e) => handleReports(e, "Violence or dangerous organizations")}>Violence or dangerous organizations</Button>
                 <hr className="border-black" />
-                <Button onClick={(e) => handleReports(e, "It is spam")}>It's spam</Button>
+                <Button onClick={(e) => handleReports(e, "It is spam")}>Its spam</Button>
                 <hr className="border-black" />
                 <Button onClick={(e) => handleReports(e, "Nudity or sexual activity")}>Nudity or sexual activity</Button>
                 <hr className="border-black" />

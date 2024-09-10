@@ -1,7 +1,7 @@
 import { LoginUser, User } from "@/type/users";
 import axiosInstance from "./adminAxiosInterceptor";
 
-const adminUrl = 'http://localhost:5000/admin';
+// const adminUrl = 'http://localhost:5000/admin';
 
 export const AdminLogin = async (user: LoginUser): Promise<any> => {
     try {

@@ -1,3 +1,4 @@
+'use client'
 import EditProfilePage from '@/pages/user/EditProfile'
 import React from 'react'
 

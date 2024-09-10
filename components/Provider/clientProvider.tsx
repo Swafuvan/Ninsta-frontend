@@ -1,7 +1,6 @@
 "use client";
-
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
+import { createContext, ReactNode, useContext, useEffect, useState, Suspense } from 'react';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from '@/redux/store';
 import { FriendSuggession, messageNotification, UserfindById, UserState } from '@/lib/functions/user/route';
 import { setUser } from '@/redux/userSlice';
@@ -15,19 +14,23 @@ import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { ContentProps, User } from '@/type/users';
 import dotenv from 'dotenv';
+import LoadingPage from '../ui/loading';
 dotenv.config();
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
   return (
-    <ReduxProvider store={store}>
+
+    <Provider store={store}>
       <UserProvider>
-        <SocketProvider>
-          <ZegoCloudProvider>
-            {children}
-          </ZegoCloudProvider>
-        </SocketProvider>
+        <Suspense fallback={<LoadingPage />}>
+          <SocketProvider>
+            <ZegoCloudProvider>
+              {children}
+            </ZegoCloudProvider>
+          </SocketProvider>
+        </Suspense>
       </UserProvider>
-    </ReduxProvider>
+    </Provider>
   );
 }
 

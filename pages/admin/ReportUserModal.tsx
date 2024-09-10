@@ -57,7 +57,7 @@ function ReportUserModalPage({closeModal,data}:any) {
                                 <ModalBody className="">
                                     <div className='flex flex-col gap-1 items-center'>
                                         <img src={data?.userId?.image } alt="image" className='w-60 h-72' />
-                                        <span>Name: {data?.userId?.username}</span>
+                                        <span>Account username : {data?.userId?.username}</span>
                                         <span>Email: {data?.userId?.email}</span>
                                         <span className='text-red-600'>Reason: {data?.reason}</span>
                                     </div>
@@ -66,9 +66,7 @@ function ReportUserModalPage({closeModal,data}:any) {
                                     <Button onClick={()=>handleReport(data)} className='border bg-gray-500 border-black rounded-md'>
                                         {data.solve === true ? "UnBlock" : "Block"}
                                     </Button>
-                                    {/* <Button onClick={()=>CancelTheReport(data)} className='border bg-slate-300 border-black rounded-md'>
-                                        Cancel
-                                    </Button> */}
+                                    
                                     <Button className='Button border bg-black text-white border-black rounded-md' onPress={closeModal}>
                                         Close
                                     </Button>

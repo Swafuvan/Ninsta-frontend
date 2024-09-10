@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { PostReports } from "@/lib/functions/Posts/route";
@@ -103,7 +104,7 @@ function ChildModal({ handleClose,singlePost }: any) {
                                 <hr className="border-black" />
                                 <Button onClick={(e) => handleReports(e, "Violence or dangerous organizations")}>Violence or dangerous organizations</Button>
                                 <hr className="border-black" />
-                                <Button onClick={(e) => handleReports(e, "It's spam")}>It's spam</Button>
+                                <Button onClick={(e) => handleReports(e, "It's spam")}>Its spam</Button>
                                 <hr className="border-black" />
                                 <Button onClick={(e) => handleReports(e, "Nudity or sexual activity")}>Nudity or sexual activity</Button>
                                 <hr className="border-black" />

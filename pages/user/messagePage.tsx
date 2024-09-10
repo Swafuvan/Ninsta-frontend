@@ -1,10 +1,8 @@
 "use client";
-
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
 import { RootState } from '@/redux/store';
-import dynamic from 'next/dynamic'
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";

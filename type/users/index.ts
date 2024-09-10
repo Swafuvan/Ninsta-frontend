@@ -31,7 +31,7 @@ export interface User {
     blockedUsers:string[],
     following:string[],
     followers:string[],
-    createdAt:string
+    createdAt?:string
 }
 
 

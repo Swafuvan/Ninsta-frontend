@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { BarChart } from '@mui/x-charts/BarChart';
 
 function AdminHome() {
+  // const reduxContext = useRedux
   const admin = useSelector((state: RootState) => state.auth);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [newUsers, setNewUsers] = useState<User[]>([]);
@@ -151,7 +152,7 @@ function AdminHome() {
                       </tr>
                     </thead>
                     <tbody>
-                      {allUsers.map((data: any, index: number) => {
+                      {allUsers.length>0 && allUsers?.map((data: any, index: number) => {
                         return (
                           <tr key={index}>
                             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

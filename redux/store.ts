@@ -5,6 +5,7 @@ import { userSlice } from "./userSlice";
 
 export const store = configureStore({
   reducer: { auth: userSlice.reducer },
+  preloadedState: { auth: userSlice.getInitialState() },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
 });

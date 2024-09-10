@@ -57,7 +57,7 @@ function ReportModalPage({closeModal,data}:any) {
                                 <ModalBody className="">
                                     <div className='flex flex-col gap-1 items-center'>
                                         <img src={data?.postId?.Url[0].url } alt="image" className='w-60 h-72' />
-                                        <span>Name: {reportedUser?.username}</span>
+                                        <span>Posted User: {reportedUser?.username}</span>
                                         <span>Email: {reportedUser?.email}</span>
                                         <span className='text-red-600'>Reason: {data?.reason}</span>
                                     </div>

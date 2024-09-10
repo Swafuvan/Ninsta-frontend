@@ -2,9 +2,9 @@
 import { AllUserData, FriendSuggession, UserfindById,  FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
 import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
-import { RootState } from '@/redux/store';
+import { RootState, useAppSelector } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
@@ -15,13 +15,17 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import StoryCreatePage from './storyCreate';
 import moment from 'moment';
 import StoryShowPage from './storyShow';
+import LoadingPage from '@/components/ui/loading';
 
 function HomePage() {
 
   const router = useRouter();
-  const dispatch = useDispatch()
-  const user = useSelector((state: RootState) => state.auth);
-  // console.log(user.user,"what is thia");
+  const STATE = useAppSelector((state:RootState)=>state)
+  console.log(STATE)
+  if(!STATE) {
+    return <LoadingPage/>
+  }
+  const user = useAppSelector((state: RootState) => state.auth);
 
   const [Posts, setPosts] = useState<any[]>([]);
   const [allUsersData, setAllUsersData] = useState([]);
@@ -37,7 +41,7 @@ function HomePage() {
   const [ownStoryData , setOwnStoryData] = useState<userStory>()
   const isMobile = window.innerWidth <= 680;
   const isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleClickOpen = () => {
     setOpen(false);

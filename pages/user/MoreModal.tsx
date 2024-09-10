@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MoreModalPage({handleClose}:any) {
+function MoreModalPage() {
     
     return (
         <div>

@@ -8,7 +8,7 @@ export const getUserToken = () => {
 }
 
 const axiosInstance = axios.create({
-    baseURL: process.env.baseURL ||'http://localhost:5000',
+    baseURL: process.env.NEXT_PUBLIC_baseURL ||'http://localhost:5000',
     timeout: 10000,
     headers: {
         'Content-Type': 'application/json',

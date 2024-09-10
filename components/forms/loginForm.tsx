@@ -120,7 +120,7 @@ export function LoginForm() {
                             </Button>
                         </div>
                         <p className="text-small-regular text-light-2 text-center mt-2">
-                            Don't have an account?
+                            Dont have an account?
                             <Link href="/signup" className="text-small-semibold ml-1" style={{ color: 'navy' }}>Sign up</Link>
                         </p>
                         <p className="text-small-regular text-light-2 text-center mt-3">

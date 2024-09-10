@@ -4,7 +4,7 @@ import { LoginUser, SignupUser, googleUser } from "@/type/users";
 import axiosInstance, { getUserToken } from "../axiosInterceptor";
 import Cookies from 'js-cookie';
 
-const backendURL = 'http://localhost:5000';
+// const backendURL = 'http://localhost:5000';
 
 export const userHome = async (user: any) => {
     try {
@@ -214,7 +214,6 @@ export const AllUserData = async (userId: any) => {
 
 export const createUserAccount = async (user: SignupUser): Promise<User | null> => {
     try {
-        console.log(backendURL + '/signup', user);
         const response = await axiosInstance.post('/signup', user);
         if (response.data) {
             return response.data;

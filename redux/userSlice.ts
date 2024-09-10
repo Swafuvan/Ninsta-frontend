@@ -21,7 +21,7 @@ const initialState: UserState = {
 };
 
 export const createUserAsync = createAsyncThunk(
-  'user/signup',
+  'auth/signup',
   async (values: {email: string; password: string ,username:string}) => {
     try {
       const newUser : User|null = await createUserAccount(values);
@@ -34,7 +34,7 @@ export const createUserAsync = createAsyncThunk(
 
 // Async thunk for user login
 export const checkingUserAsync = createAsyncThunk(
-  'user/Login',
+  'auth/Login',
   async (values: { email: string; password: string }) => {
     try {
       const userDetail: User = await userLogin(values);
@@ -46,7 +46,7 @@ export const checkingUserAsync = createAsyncThunk(
 );
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: 'auth',
   initialState,
   reducers: {
     setUser(state, action: PayloadAction<User>) {
