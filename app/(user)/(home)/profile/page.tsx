@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { RootState } from '@/redux/store';
+import { RootState, useAppSelector } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { UserPosts } from '@/lib/functions/Posts/route';
 import { useSearchParams } from 'next/navigation';
@@ -11,10 +11,16 @@ import MoreIcon from '@mui/icons-material/MoreHoriz';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import toast from 'react-hot-toast';
 import CommentsPage from '@/pages/user/commentPage';
+import LoadingPage from '@/components/ui/loading';
 
 
 function ProfilePage() {
 
+  const STATE = useAppSelector((state: RootState) => state)
+  if (!STATE) {
+    return <LoadingPage />
+  }
+  const user = useAppSelector((state: RootState) => state.auth);
   const searchParams = useSearchParams();
   const [followers, setFollowers] = useState(false);
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
@@ -27,7 +33,6 @@ function ProfilePage() {
   const [reels, setReels] = useState(false);
   const [posts, setPosts] = useState([]);
   const [proUser, setProUser] = useState<User>()
-  const user = useSelector((state: RootState) => state.auth);
 
 
   useEffect(() => {
@@ -49,7 +54,7 @@ function ProfilePage() {
         if (user.user?._id) {
           UserPosts(user.user?._id).then((Userpost) => {
             setPosts(Userpost.UserPostData ?? [])
-            // setProUser(Userpost.UserPostData[0].userId)
+
             setProUser(user.user as User)
           })
         }
@@ -238,7 +243,6 @@ function ProfilePage() {
                   </li> */}
           </ul>
           {/* <!-- flexbox grid --> */}
-
           <div className="flex flex-wrap -mx-px md:-mx-3">
             {posts?.length > 0 ? posts && posts.map((data: any, index) => {
               return (
@@ -255,7 +259,6 @@ function ProfilePage() {
                       ) : (
                         <img src={data.Url[0].url} className="w-full h-full absolute left-0 top-0 object-cover" alt="post" />
                       )}
-
                       <i className="fas fa-square absolute right-0 top-0 m-1"></i>
                       {/* <!-- overlay--> */}
                       <div className="overlay bg-gray-800 bg-opacity-25 w-full h-full absolute 
@@ -265,10 +268,7 @@ function ProfilePage() {
                           <span className="p-2">
                             <i className="fas fa-heart"></i>
                             {data?.likes.length + ''} likes
-
                           </span>
-
-
                         </div>
                       </div>
 
@@ -283,10 +283,9 @@ function ProfilePage() {
             </>
             }
           </div>
-
         </div>
       </div>
-    </main>
+    </main >
 
   )
 }

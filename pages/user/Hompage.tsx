@@ -21,7 +21,6 @@ function HomePage() {
 
   const router = useRouter();
   const STATE = useAppSelector((state:RootState)=>state)
-  console.log(STATE)
   if(!STATE) {
     return <LoadingPage/>
   }

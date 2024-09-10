@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { XIcon } from "lucide-react";
 import { postUpload, VideoUpload } from "@/lib/functions/Posts/route";
@@ -12,7 +12,6 @@ export default function ModalPage({ handleDrawerOpen }: any) {
   const [files, setFiles] = useState<{ file: File, type: string }[]>([]);
   const [content, setContent] = useState('');
   const [progress, setProgress] = useState(-1);
-  const [isUploading, setIsUploading] = useState(false);
 
   async function handleFiles(e: any) {
     e.preventDefault();
@@ -66,7 +65,7 @@ export default function ModalPage({ handleDrawerOpen }: any) {
     console.log('text', content);
   }
 
-  function onChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function onChange(e: ChangeEvent<HTMLInputElement>) {
     const newFiles = Array.from(e.target.files!).map((file: File) => {
       const fileType = file.type.startsWith('image') ? 'image' : 'video';
 

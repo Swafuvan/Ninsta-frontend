@@ -1,5 +1,5 @@
 "use client"
-import * as React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
@@ -25,14 +25,14 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 export default function CommentsPage({ handleClickOpen, singlePost }: any) {
 
-    const [comment, setComment] = React.useState('');
-    const [reply, setReply] = React.useState('');
-    const [commentData, setCommentData] = React.useState<any[]>([])
-    const [clickedReply, setClickedReply] = React.useState<number[]>([])
-    const [showEmojiPicker, setShowEmojiPicker] = React.useState(false);
+    const [comment, setComment] = useState('');
+    const [reply, setReply] = useState('');
+    const [commentData, setCommentData] = useState<any[]>([])
+    const [clickedReply, setClickedReply] = useState<number[]>([])
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const user = useSelector((state: RootState) => state.auth);
 
-    const emojiPickerRef = React.useRef<HTMLDivElement>(null);
+    const emojiPickerRef = useRef<HTMLDivElement>(null);
 
     const handleEmojiSelect = (emoji: any) => {
         setComment(comment + emoji.native);
@@ -40,7 +40,7 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
 
 
 
-    React.useEffect(() => {
+    useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
                 setShowEmojiPicker(false)
@@ -52,7 +52,7 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
         };
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (singlePost) {
             console.log(singlePost)
             const commentdetails = comments(singlePost?._id).then(async (data) => {

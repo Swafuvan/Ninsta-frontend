@@ -1,4 +1,5 @@
-import * as React from 'react';
+"use client"
+import React, { forwardRef, Fragment, ReactElement, Ref } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -10,11 +11,11 @@ import { TransitionProps } from '@mui/material/transitions';
 import { UserBlocked } from '@/lib/functions/admin/route';
 import toast from 'react-hot-toast';
 
-const Transition = React.forwardRef(function Transition(
+const Transition = forwardRef(function Transition(
     props: TransitionProps & {
-        children: React.ReactElement<any, any>;
+        children: ReactElement<any, any>;
     },
-    ref: React.Ref<unknown>,
+    ref: Ref<unknown>,
 ) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -43,7 +44,7 @@ export default function AlertDialogSlide({ handleConfirmClose, singleUser, onBlo
 
 
     return (
-        <React.Fragment>
+        <Fragment>
             <Dialog
                 open={true}
                 TransitionComponent={Transition}
@@ -62,6 +63,6 @@ export default function AlertDialogSlide({ handleConfirmClose, singleUser, onBlo
                     <Button onClick={handleAction}>{singleUser?.isBlocked === true ? "UnBlock" : "Block"}</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+        </Fragment>
     );
 }

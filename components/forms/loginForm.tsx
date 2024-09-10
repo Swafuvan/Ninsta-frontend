@@ -1,5 +1,5 @@
 "use client";
-import * as React from "react"
+import React, { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import NinstaLogo from '../../public/Ninsta Logo.png'
@@ -23,10 +23,10 @@ interface LoginFormValues {
 }
 
 export function LoginForm() {
-    const [loading, setLoading] = React.useState(true);
+    const [loading, setLoading] = useState(true);
     const router = useRouter();
     const dispatch = useDispatch();
-    const [passwordVisible, setPasswordVisible] = React.useState(false); 
+    const [passwordVisible, setPasswordVisible] = useState(false); 
 
     React.useLayoutEffect(() => {
         const token = Cookies.get('userToken');

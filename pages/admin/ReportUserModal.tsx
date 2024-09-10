@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, } from "@nextui-org/react";
 import { ReportPosts, UserFindbyId, userReportAction, UserReports } from '@/lib/functions/admin/route';
 import { AllPostReports } from '@/lib/functions/Posts/route';
@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 function ReportUserModalPage({closeModal,data}:any) {
 
-    const [reportedUser, setReportedUser] = React.useState<User>();
+    const [reportedUser, setReportedUser] = useState<User>();
     console.log(data)
     const router = useRouter();
     useEffect(() => {

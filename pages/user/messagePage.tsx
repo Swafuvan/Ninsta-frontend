@@ -2,13 +2,14 @@
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
-import { RootState } from '@/redux/store';
+import { RootState, useAppSelector } from '@/redux/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { User } from '@/type/users';
+import LoadingPage from '@/components/ui/loading';
 
 
 interface message {
@@ -25,9 +26,14 @@ interface message {
 }
 
 function MessagePage({ userDetails, filter }: any) {
+
+    const STATE = useAppSelector((state: RootState) => state)
+    if (!STATE) {
+        return <LoadingPage />
+    }
+    const user = useAppSelector((state: RootState) => state.auth);
     const [message, setMessage] = useState('');
     const [allMessages, setAllMessages] = useState<message[]>([]);
-    const user = useSelector((state: RootState) => state.auth);
     const chatRef = useRef<any>();
     const { socket, zp } = useSocket();
     // const [zp, setZP] = useState<any>();
