@@ -9,9 +9,9 @@ import { RootState } from '@/redux/store';
 import { User } from '@/type/users';
   
 function EditProfilePage() {
-  const user = useSelector((state: RootState) => state.auth);
   const [profileImage, setProfileImage] = useState<string>();
   const [userData, setUserData] = useState<User>();
+  const user = useSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (user.user) {

@@ -7,9 +7,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function SavedPage() {
-    const user = useSelector((state: RootState) => state.auth);
     const [savePost, setSavePost] = useState(false);
     const [allSavePost, setAllSavePost] = useState([]);
+    const user = useSelector((state: RootState) => state.auth);
 
     useEffect(() => {
         if (user.user?._id) {

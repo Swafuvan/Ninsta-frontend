@@ -9,9 +9,9 @@ import { useSelector } from 'react-redux';
 
 function UserReportPage() {
 
-    const user = useSelector((state:RootState) => state.auth);
     const [openAction,setOpenAction] = useState(-1);
     const [userReport,setUserReport] = useState<userReports[]>([]);
+    const user = useSelector((state:RootState) => state.auth);
 
     useEffect(()=>{
         UserReports().then((res) => {

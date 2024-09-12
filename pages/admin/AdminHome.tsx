@@ -10,11 +10,11 @@ import { BarChart } from '@mui/x-charts/BarChart';
 
 function AdminHome() {
   // const reduxContext = useRedux
-  const admin = useSelector((state: RootState) => state.auth);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [newUsers, setNewUsers] = useState<User[]>([]);
   const [blockedUsers, setBlockedUsers] = useState<User[]>([]);
-  const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>(Array(12).fill(0)); // Array to hold user counts for each month
+  const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>(Array(12).fill(0)); 
+  const admin = useSelector((state: RootState) => state.auth);
 
 
 

@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import React, { useState, useEffect } from 'react';
 import { User } from '@/type/users';
 import { UserBlocked } from '@/lib/functions/admin/route';
@@ -52,7 +52,7 @@ function AdminUserManagement({ columns, initialData, currentPage, totalPages, ha
                 <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                     <tr>
                         <th className='py-3 px-6 text-left'>SlNo</th>
-                        {columns.length>0 && columns?.map((column, index) => (
+                        {columns?.length>0 && columns?.map((column, index) => (
                             <th key={index} className="py-3 text-left">
                                 {column}
                             </th>

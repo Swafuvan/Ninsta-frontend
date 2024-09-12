@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
-import { RootState, useAppSelector } from '@/redux/store';
+import useAppSelector,{ RootState } from '@/redux/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";
@@ -27,27 +28,15 @@ interface message {
 
 function MessagePage({ userDetails, filter }: any) {
 
-    const STATE = useAppSelector((state: RootState) => state)
-    if (!STATE) {
-        return <LoadingPage />
-    }
     const user = useAppSelector((state: RootState) => state.auth);
+    const STATE = useAppSelector((state: RootState) => state)
     const [message, setMessage] = useState('');
     const [allMessages, setAllMessages] = useState<message[]>([]);
     const chatRef = useRef<any>();
     const { socket, zp } = useSocket();
     // const [zp, setZP] = useState<any>();
-
-
-
-    const handleMessage = (newMessage: message) => {
-        if (newMessage.to === user.user?._id) {
-            newMessage.seen = true;
-            setAllMessages((prevMessages) => [...prevMessages, newMessage]);
-            socket.emit('messages_seen', { to: userDetails._id, from: user.user._id });
-        }
-    };
-
+    
+    
     useEffect(() => {
         if (socket && user.user) {
             socket.on('send_message', handleMessage);
@@ -55,7 +44,7 @@ function MessagePage({ userDetails, filter }: any) {
             return () => socket.off();
         }
     }, [socket, user.user]);
-
+    
     useEffect(() => {
         if (user.user?._id && userDetails._id) {
             userChats(userDetails._id, user.user?._id + '').then((Chats) => {
@@ -63,12 +52,25 @@ function MessagePage({ userDetails, filter }: any) {
             });
         }
     }, [user.user?._id, userDetails]);
-
+    
     useEffect(() => {
         if (chatRef.current) {
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
         }
     }, [allMessages]);
+
+    if (!STATE) {
+        return <LoadingPage />
+    }
+   
+    
+    const handleMessage = (newMessage: message) => {
+        if (newMessage.to === user.user?._id) {
+            newMessage.seen = true;
+            setAllMessages((prevMessages) => [...prevMessages, newMessage]);
+            socket.emit('messages_seen', { to: userDetails._id, from: user.user._id });
+        }
+    };
 
     const handleSeenConfirmation = ({ messageIds }: { from: string; to: string; messageIds: string[] }) => {
         setAllMessages((prevs) => {

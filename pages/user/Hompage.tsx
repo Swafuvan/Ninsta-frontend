@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { AllUserData, FriendSuggession, UserfindById,  FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
 import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
-import { RootState, useAppSelector } from '@/redux/store';
+import useAppSelector,{ RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
@@ -18,13 +19,6 @@ import StoryShowPage from './storyShow';
 import LoadingPage from '@/components/ui/loading';
 
 function HomePage() {
-
-  const router = useRouter();
-  const STATE = useAppSelector((state:RootState)=>state)
-  if(!STATE) {
-    return <LoadingPage/>
-  }
-  const user = useAppSelector((state: RootState) => state.auth);
 
   const [Posts, setPosts] = useState<any[]>([]);
   const [allUsersData, setAllUsersData] = useState([]);
@@ -40,15 +34,15 @@ function HomePage() {
   const [ownStoryData , setOwnStoryData] = useState<userStory>()
   const isMobile = window.innerWidth <= 680;
   const isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
-  // const fileInputRef = useRef<HTMLInputElement | null>(null);
+  // const fileInputRef = useRef<HTMLInputElement | null>(null);\
 
-  const handleClickOpen = () => {
-    setOpen(false);
-  };
-
-  async function PostEdits() {
-    setReport(false)
+  const router = useRouter();
+  
+  const STATE = useAppSelector((state:RootState)=>state)
+  if(!STATE) {
+    return <LoadingPage/>
   }
+  const user = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (user.user?._id) {
@@ -97,6 +91,15 @@ function HomePage() {
     }
   }, [])
 
+  
+
+  const handleClickOpen = () => {
+    setOpen(false);
+  };
+
+  async function PostEdits() {
+    setReport(false)
+  }
 
   async function UserLike(post: any) {
     try {
