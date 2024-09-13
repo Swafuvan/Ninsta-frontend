@@ -2,7 +2,7 @@
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
-import useAppSelector, { RootState } from '@/redux/store';
+import useAppSelector, { RootState, store } from '@/redux/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";
@@ -27,8 +27,7 @@ interface message {
 
 function MessagePage({ userDetails, filter }: any) {
 
-    // const user = useAppSelector((state: RootState) => state.auth);
-    // const STATE = useAppSelector((state: RootState) => state)
+    const user = store.getState().auth
     const [message, setMessage] = useState('');
     const [allMessages, setAllMessages] = useState<message[]>([]);
     const chatRef = useRef<any>();
@@ -40,33 +39,7 @@ function MessagePage({ userDetails, filter }: any) {
         zp = some.zp
     }
     // const [zp, setZP] = useState<any>();
-
-    // if (!STATE) {
-    //     return <LoadingPage />
-    // }
-    const user = {
-        user:
-        {
-            _id: "66e0277f8d01f0c076e47199",
-            fullName: "user",
-            email: "jabbar123@gmail.com",
-            username: "jabbar23",
-            password: "$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
-            isAdmin: false,
-            DOB: "",
-            bio: "Hi Guys i am started Ninsta",
-            image: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
-            Gender: "Default",
-            isBlocked: false,
-            following: [],
-            followers: [],
-            blockedUsers: [''],
-            createdAt: '2024-09-10T11:03:27.450+00:00',
-            updatedAt: '2024-09-10T11:09:39.323+00:00',
-            __v: 0,
-            OTP: "825893"
-        }
-    }
+ 
 
     useEffect(() => {
         if (socket && user.user) {
@@ -184,6 +157,8 @@ function MessagePage({ userDetails, filter }: any) {
             console.error("Invalid target user data");
         }
     }
+
+    
 
     return (
         <div className="lg:col-span-2 h-screen w-full sm:w-full overflow-hidden md:w-2/3 lg:w-3/4">

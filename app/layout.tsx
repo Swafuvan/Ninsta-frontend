@@ -23,9 +23,9 @@ export default function RootLayout({ children, }: Readonly<{
       )}>
         <div >
           <main className="flex-grow">
+            <ClientProvider>
             <Toaster position="top-center" />
             <ToastContainer />
-            <ClientProvider>
               {children}
             </ClientProvider>
           </main>

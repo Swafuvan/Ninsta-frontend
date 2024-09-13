@@ -1,3 +1,5 @@
+"use client";
+
 import { createSlice, PayloadAction, createAsyncThunk, } from '@reduxjs/toolkit';
 import {RootState} from './store';
 import { createUserAccount, userLogin } from '../lib/functions/user/route'; 

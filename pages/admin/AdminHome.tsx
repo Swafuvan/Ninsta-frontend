@@ -1,7 +1,7 @@
 "use client";
 
 import { getUsers } from '@/lib/functions/admin/route';
-import useAppSelector, { RootState } from '@/redux/store'
+import useAppSelector, { RootState, store } from '@/redux/store'
 import { User } from '@/type/users';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
@@ -14,28 +14,8 @@ function AdminHome() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [newUsers, setNewUsers] = useState<User[]>([]);
   const [blockedUsers, setBlockedUsers] = useState<User[]>([]);
-  const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>(Array(12).fill(0));
-  // const STATE = useAppSelector((state: RootState) => state)
-  // const admin = useAppSelector((state: RootState) => state.auth);
-  const admin = { user:
-    {_id:"66e0277f8d01f0c076e47199",
-    fullName:"user",
-    email:"jabbar123@gmail.com",
-    username:"jabbar23",
-    password:"$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
-    isAdmin:false,
-    DOB:"",
-    bio:"Hi Guys i am started Ninsta",
-    image:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
-    Gender:"Default",
-    isBlocked:false,
-    following:[],
-    followers:[],
-    blockedUsers:[],
-    createdAt:'2024-09-10T11:03:27.450+00:00',
-    updatedAt:'2024-09-10T11:09:39.323+00:00',
-    __v:0,
-    OTP:"825893"}}
+  const admin = store.getState().auth
+
   
   
   useEffect(() => {
@@ -51,15 +31,11 @@ function AdminHome() {
     });
   }, []);
   
-  // if (!STATE) {
-  //   return <LoadingPage />
-  // }
-
+  
   const Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   return (
     <div>
-
       <div className="relative md:ml-64 bg-blueGray-100 overflow-x-hidden">
         <nav className="absolute top-0 left-0 w-full z-10 bg-white lg:flex-row lg:flex-nowrap lg:justify-start flex items-center py-1 px-4 lg:bg-transparent">
           <div className="w-full mx-aut0 items-center flex justify-between lg:flex-nowrap flex-wrap lg:px-6 px-4">

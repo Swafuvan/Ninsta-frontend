@@ -1,6 +1,7 @@
 'use client'
-import TemporaryDrawer from "@/components/ui/sidebar";
-import HomePage from "@/pages/user/Hompage";
+import dynamic from "next/dynamic"
+const TemporaryDrawer = dynamic(()=>import("@/components/ui/sidebar"),{ssr:false});
+const HomePage =  dynamic(()=>import("@/pages/user/Hompage"),{ssr:false});
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
@@ -27,7 +28,7 @@ export default function Home() {
     fetchUserData()
   }, [])
 
-  if (loading) { return <LoadingPage/> }
+  if (loading) { return <LoadingPage /> }
 
   return (
     <>

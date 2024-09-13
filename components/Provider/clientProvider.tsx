@@ -19,17 +19,16 @@ dotenv.config();
 
 export default function ClientProvider({ children }: { children: ReactNode }) {
   return (
-
     <Provider store={store}>
-      <UserProvider>
-        <Suspense fallback={<LoadingPage />}>
+      <Suspense fallback={<LoadingPage />}>
+        <UserProvider>
           <SocketProvider>
             <ZegoCloudProvider>
               {children}
             </ZegoCloudProvider>
           </SocketProvider>
-        </Suspense>
-      </UserProvider>
+        </UserProvider>
+      </Suspense>
     </Provider>
   );
 }
