@@ -5,14 +5,36 @@ import { Input } from "@/components/ui/input";
 import { UserProfileValidation } from '@/lib/validation';
 import { UserfindById, UserProfileEdit } from '@/lib/functions/user/route';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import useAppSelector, { RootState } from '@/redux/store';
 import { User } from '@/type/users';
-  
+import LoadingPage from '@/components/ui/loading';
+
 function EditProfilePage() {
   const [profileImage, setProfileImage] = useState<string>();
   const [userData, setUserData] = useState<User>();
-  const user = useSelector((state: RootState) => state.auth);
+  // const STATE = useAppSelector((state: RootState) => state)
+  // const user = useAppSelector((state: RootState) => state.auth);
+  const user = { user:
+    {_id:"66e0277f8d01f0c076e47199",
+    fullName:"user",
+    email:"jabbar123@gmail.com",
+    username:"jabbar23",
+    password:"$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+    isAdmin:false,
+    DOB:"",
+    bio:"Hi Guys i am started Ninsta",
+    image:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+    Gender:"Default",
+    isBlocked:false,
+    following:[],
+    followers:[],
+    blockedUsers:[],
+    createdAt:'2024-09-10T11:03:27.450+00:00',
+    updatedAt:'2024-09-10T11:09:39.323+00:00',
+    __v:0,
+    OTP:"825893"}}
 
+  
   useEffect(() => {
     if (user.user) {
       UserfindById(user.user._id).then((datas) => {
@@ -21,6 +43,10 @@ function EditProfilePage() {
       });
     }
   }, [user.user]);
+  
+  // if (!STATE) {
+  //   return <LoadingPage />
+  // }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -41,9 +67,9 @@ function EditProfilePage() {
   }
 
   async function profileSubmit(values: any) {
-    console.log(values,profileImage,user.user?._id);
-    const userDetails = await UserProfileEdit(values,profileImage,user.user?._id+'');
-    setUserData(userDetails.userDatas) 
+    console.log(values, profileImage, user.user?._id);
+    const userDetails = await UserProfileEdit(values, profileImage, user.user?._id + '');
+    setUserData(userDetails.userDatas)
     window.location.href = '/profile'
   }
 
@@ -76,7 +102,7 @@ function EditProfilePage() {
                   src={profileImage || 'https://via.placeholder.com/100'}
                   alt="Profile Photo"
                   className="w-24 h-24 rounded-full"
-                  
+
                 />
                 <input
                   type="file"

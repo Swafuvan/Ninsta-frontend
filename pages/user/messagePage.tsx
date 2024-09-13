@@ -3,7 +3,7 @@
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
-import useAppSelector,{ RootState } from '@/redux/store';
+import useAppSelector, { RootState } from '@/redux/store';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";
@@ -28,15 +28,47 @@ interface message {
 
 function MessagePage({ userDetails, filter }: any) {
 
-    const user = useAppSelector((state: RootState) => state.auth);
-    const STATE = useAppSelector((state: RootState) => state)
+    // const user = useAppSelector((state: RootState) => state.auth);
+    // const STATE = useAppSelector((state: RootState) => state)
     const [message, setMessage] = useState('');
     const [allMessages, setAllMessages] = useState<message[]>([]);
     const chatRef = useRef<any>();
-    const { socket, zp } = useSocket();
+    const some = useSocket();
+    let socket: any = null
+    let zp: any = null
+    if (some) {
+        socket = some?.socket
+        zp = some.zp
+    }
     // const [zp, setZP] = useState<any>();
-    
-    
+
+    // if (!STATE) {
+    //     return <LoadingPage />
+    // }
+    const user = {
+        user:
+        {
+            _id: "66e0277f8d01f0c076e47199",
+            fullName: "user",
+            email: "jabbar123@gmail.com",
+            username: "jabbar23",
+            password: "$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+            isAdmin: false,
+            DOB: "",
+            bio: "Hi Guys i am started Ninsta",
+            image: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+            Gender: "Default",
+            isBlocked: false,
+            following: [],
+            followers: [],
+            blockedUsers: [''],
+            createdAt: '2024-09-10T11:03:27.450+00:00',
+            updatedAt: '2024-09-10T11:09:39.323+00:00',
+            __v: 0,
+            OTP: "825893"
+        }
+    }
+
     useEffect(() => {
         if (socket && user.user) {
             socket.on('send_message', handleMessage);
@@ -44,7 +76,7 @@ function MessagePage({ userDetails, filter }: any) {
             return () => socket.off();
         }
     }, [socket, user.user]);
-    
+
     useEffect(() => {
         if (user.user?._id && userDetails._id) {
             userChats(userDetails._id, user.user?._id + '').then((Chats) => {
@@ -52,18 +84,16 @@ function MessagePage({ userDetails, filter }: any) {
             });
         }
     }, [user.user?._id, userDetails]);
-    
+
     useEffect(() => {
         if (chatRef.current) {
             chatRef.current.scrollTop = chatRef.current.scrollHeight;
         }
     }, [allMessages]);
 
-    if (!STATE) {
-        return <LoadingPage />
-    }
-   
-    
+
+
+
     const handleMessage = (newMessage: message) => {
         if (newMessage.to === user.user?._id) {
             newMessage.seen = true;
@@ -115,12 +145,12 @@ function MessagePage({ userDetails, filter }: any) {
         )
 
         const targetUser = {
-            userID: userData._id,
-            userName: userData.username,
-            image: userData.image,
+            userID: userData?._id,
+            userName: userData?.username,
+            image: userData?.image,
         };
 
-        if (targetUser.userID && targetUser.userName && targetUser.image) {
+        if (targetUser.userID && targetUser?.userName && targetUser?.image) {
             const data = {
                 callees: [targetUser],
                 callType: ZegoUIKitPrebuilt.InvitationTypeVoiceCall,
@@ -138,12 +168,12 @@ function MessagePage({ userDetails, filter }: any) {
         )
 
         const targetUser = {
-            userID: userData._id,
-            userName: userData.username,
-            image: userData.image,
+            userID: userData?._id,
+            userName: userData?.username,
+            image: userData?.image,
         };
 
-        if (targetUser.userID && targetUser.userName && targetUser.image) {
+        if (targetUser.userID && targetUser?.userName && targetUser?.image) {
             const data = {
                 callees: [targetUser],
                 callType: ZegoUIKitPrebuilt.InvitationTypeVideoCall,
@@ -161,8 +191,8 @@ function MessagePage({ userDetails, filter }: any) {
             <div className="w-full " id='Calling'>
                 <div className="relative flex items-center p-3 border-b border-gray-300">
                     <div className='flex flex-row w-full'>
-                        <img className="object-cover w-10 h-10 rounded-full" src={userDetails.image} alt="username" />
-                        <span className="block ml-2 font-bold text-gray-600">{userDetails.username}</span>
+                        <img className="object-cover w-10 h-10 rounded-full" src={userDetails?.image} alt="username" />
+                        <span className="block ml-2 font-bold text-gray-600">{userDetails?.username}</span>
                         <span className="absolute w-3 h-3 bg-green-600 rounded-full left-10 top-3"></span>
                         <div className='flex w-full justify-end'>
                             <FaPhone className='mr-3  mt-2 cursor-pointer' onClick={() => AudioCallingUser(userDetails)} />

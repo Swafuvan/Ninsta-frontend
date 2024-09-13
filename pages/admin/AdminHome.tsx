@@ -1,23 +1,43 @@
 "use client";
 
 import { getUsers } from '@/lib/functions/admin/route';
-import { RootState } from '@/redux/store'
+import useAppSelector, { RootState } from '@/redux/store'
 import { User } from '@/type/users';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { BarChart } from '@mui/x-charts/BarChart';
+import LoadingPage from '@/components/ui/loading';
 
 function AdminHome() {
   // const reduxContext = useRedux
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [newUsers, setNewUsers] = useState<User[]>([]);
   const [blockedUsers, setBlockedUsers] = useState<User[]>([]);
-  const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>(Array(12).fill(0)); 
-  const admin = useSelector((state: RootState) => state.auth);
-
-
-
+  const [newUsersByMonth, setNewUsersByMonth] = useState<number[]>(Array(12).fill(0));
+  // const STATE = useAppSelector((state: RootState) => state)
+  // const admin = useAppSelector((state: RootState) => state.auth);
+  const admin = { user:
+    {_id:"66e0277f8d01f0c076e47199",
+    fullName:"user",
+    email:"jabbar123@gmail.com",
+    username:"jabbar23",
+    password:"$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+    isAdmin:false,
+    DOB:"",
+    bio:"Hi Guys i am started Ninsta",
+    image:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+    Gender:"Default",
+    isBlocked:false,
+    following:[],
+    followers:[],
+    blockedUsers:[],
+    createdAt:'2024-09-10T11:03:27.450+00:00',
+    updatedAt:'2024-09-10T11:09:39.323+00:00',
+    __v:0,
+    OTP:"825893"}}
+  
+  
   useEffect(() => {
     getUsers().then((res) => {
       const users = res?.data?.userData || [];
@@ -30,6 +50,10 @@ function AdminHome() {
       setNewUsers(newUsers);
     });
   }, []);
+  
+  // if (!STATE) {
+  //   return <LoadingPage />
+  // }
 
   const Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -152,7 +176,7 @@ function AdminHome() {
                       </tr>
                     </thead>
                     <tbody>
-                      {allUsers.length>0 && allUsers?.map((data: any, index: number) => {
+                      {allUsers.length > 0 && allUsers?.map((data: any, index: number) => {
                         return (
                           <tr key={index}>
                             <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">

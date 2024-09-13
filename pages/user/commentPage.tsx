@@ -13,8 +13,9 @@ import { CommentLike, CommentPost, CommentReplies, comments } from '@/lib/functi
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import useAppSelector, { RootState } from '@/redux/store';
 import { UserfindById } from '@/lib/functions/user/route';
+import LoadingPage from '@/components/ui/loading';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -30,16 +31,35 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
     const [commentData, setCommentData] = useState<any[]>([])
     const [clickedReply, setClickedReply] = useState<number[]>([])
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const user = useSelector((state: RootState) => state.auth);
+    // const STATE = useAppSelector((state: RootState) => state)
+    // const user = useAppSelector((state: RootState) => state.auth);
+    const user = { user:
+        {_id:"66e0277f8d01f0c076e47199",
+        fullName:"user",
+        email:"jabbar123@gmail.com",
+        username:"jabbar23",
+        password:"$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+        isAdmin:false,
+        DOB:"",
+        bio:"Hi Guys i am started Ninsta",
+        image:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+        Gender:"Default",
+        isBlocked:false,
+        following:[],
+        followers:[],
+        blockedUsers:[],
+        createdAt:'2024-09-10T11:03:27.450+00:00',
+        updatedAt:'2024-09-10T11:09:39.323+00:00',
+        __v:0,
+        OTP:"825893"}}
 
     const emojiPickerRef = useRef<HTMLDivElement>(null);
-
+    
     const handleEmojiSelect = (emoji: any) => {
         setComment(comment + emoji.native);
     };
-
-
-
+    
+    
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
@@ -51,7 +71,7 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
-
+    
     useEffect(() => {
         if (singlePost) {
             console.log(singlePost)
@@ -66,7 +86,10 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
             })
         }
     }, [])
-
+    
+    // if (!STATE) {
+    //     return <LoadingPage />
+    // }
     async function uploadReply(data: any) {
 
         console.log(data, reply)
@@ -144,19 +167,19 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
                 <DialogContent dividers >
                     <div className='flex flex-row w-full'>
                         <div className='flex flex-col w-full'>
-                            
+
                             {singlePost?.Url[0]?.fileType === 'video' ? (
                                 <video controls className='w-full h-[350px] object-cover'>
-                                    <source src={singlePost.Url[0].url} className='w-full h-[350px]' type="video/mp4" />
+                                    <source src={singlePost?.Url[0]?.url} className='w-full h-[350px]' type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
                             ) : (
-                                <img className='w-full h-[350px]' src={singlePost.Url[0].url} alt="post" />
+                                <img className='w-full h-[350px]' src={singlePost?.Url[0]?.url} alt="post" />
                             )}
                         </div>
                         <div className='flex flex-col w-full'>
-                            {commentData && commentData.length > 0 ?
-                                commentData.map((data: any, inx: number) => {
+                            {commentData && commentData?.length > 0 ?
+                                commentData?.map((data: any, inx: number) => {
                                     return (
                                         <li key={inx} className="ml-2 mb-1 list-none" >
                                             <div className="flex items-center space-x-3">
@@ -244,7 +267,7 @@ export default function CommentsPage({ handleClickOpen, singlePost }: any) {
                                     <path d="M15.83 10.997a1.167 1.167 0 1 0 1.167 1.167 1.167 1.167 0 0 0-1.167-1.167Zm-6.5 1.167a1.167 1.167 0 1 0-1.166 1.167 1.167 1.167 0 0 0 1.166-1.167Zm5.163 3.24a3.406 3.406 0 0 1-4.982.007 1 1 0 1 0-1.557 1.256 5.397 5.397 0 0 0 8.09 0 1 1 0 0 0-1.55-1.263ZM12 .503a11.5 11.5 0 1 0 11.5 11.5A11.513 11.513 0 0 0 12 .503Zm0 21a9.5 9.5 0 1 1 9.5-9.5 9.51 9.51 0 0 1-9.5 9.5Z"></path>
                                 </svg>
                                 <form className='pt-1 pb-2 w-full h-12' onSubmit={(e) => CommentPosted(e)}>
-                                    <input type='text' name='comment' onChange={(e)=>setComment(e.target.value)} value={comment} id='comment' className='pt-1 pb-3 border-none outline-none w-full' placeholder='Write a comment...' />
+                                    <input type='text' name='comment' onChange={(e) => setComment(e.target.value)} value={comment} id='comment' className='pt-1 pb-3 border-none outline-none w-full' placeholder='Write a comment...' />
                                 </form>
                             </div>
 

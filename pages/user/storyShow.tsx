@@ -3,18 +3,40 @@ import React, { useEffect, useRef, useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { AllUsersStory, OwnStory } from "@/lib/functions/user/route";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import useAppSelector, { RootState } from "@/redux/store";
 import { motion } from "framer-motion";
 import { User, userStory } from "@/type/users";
 import { FaPaperPlane, FaHeart } from "react-icons/fa";
+import LoadingPage from "@/components/ui/loading";
 
 
 export default function StoryShowPage({ StoryShowing, storyUser }: any) {
 
   const [progress, setProgress] = useState(0); // State for progress bar
   const [ownStory, setOwnStory] = useState<any>();
-  const user = useSelector((state: RootState) => state.auth);
   const videoRef = useRef<HTMLVideoElement>(null);
+  // const STATE = useAppSelector((state: RootState) => state)
+  // const user = useAppSelector((state: RootState) => state.auth);
+  
+  const user = { user:
+    {_id:"66e0277f8d01f0c076e47199",
+    fullName:"user",
+    email:"jabbar123@gmail.com",
+    username:"jabbar23",
+    password:"$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+    isAdmin:false,
+    DOB:"",
+    bio:"Hi Guys i am started Ninsta",
+    image:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+    Gender:"Default",
+    isBlocked:false,
+    following:[],
+    followers:[],
+    blockedUsers:[],
+    createdAt:'2024-09-10T11:03:27.450+00:00',
+    updatedAt:'2024-09-10T11:09:39.323+00:00',
+    __v:0,
+    OTP:"825893"}}
 
   useEffect(() => {
     if (user.user?._id) {
@@ -24,14 +46,14 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
       })
     }
   }, [user.user?._id]);
-
+  
   useEffect(() => {
     let timer: NodeJS.Timeout;
-
+    
     if (ownStory) {
       // Calculate story duration (10s for images)
       const duration = ownStory.files[0].type === 'image' ? 10000 : Number(videoRef.current?.duration) * 1000 || 10000;
-
+      
       if (ownStory.files[0].type === 'image') {
         timer = setTimeout(() => {
           StoryShowing(false);
@@ -42,7 +64,7 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
         const interval = setInterval(() => {
           setProgress((prev) => prev + 1);
         }, 100); // 100 updates in 10 seconds
-
+        
         return () => {
           clearTimeout(timer);
           clearInterval(interval);
@@ -56,12 +78,12 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
             const progressValue = (video.currentTime / video.duration) * 100;
             setProgress(progressValue);
           }, 100); // Update progress during video playback
-
+          
           timer = setTimeout(() => {
             video.pause();
             StoryShowing();
           }, duration);
-
+          
           return () => {
             clearTimeout(timer);
             clearInterval(interval);
@@ -70,11 +92,10 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
       }
     }
   }, [ownStory, StoryShowing]);
-
-  function redirectToHome() {
-    // window.location.href = '/';
-  }
-
+  
+  // if (!STATE) {
+  //   return <LoadingPage />
+  // }
 
   return (
     <>

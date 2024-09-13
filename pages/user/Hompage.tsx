@@ -1,11 +1,11 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
-import { AllUserData, FriendSuggession, UserfindById,  FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
+import { AllUserData, FriendSuggession, UserfindById, FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
 import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
-import useAppSelector,{ RootState } from '@/redux/store';
+import useAppSelector, { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
@@ -30,19 +30,49 @@ function HomePage() {
   const [UserStory, setUserStory] = useState([]);
   const [addStory, setAddStory] = useState(false);
   const [showStory, setShowStory] = useState(false);
-  const [storyUser,setStoryUser] = useState('');
-  const [ownStoryData , setOwnStoryData] = useState<userStory>()
-  const isMobile = window.innerWidth <= 680;
-  const isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
+  const [storyUser, setStoryUser] = useState('');
+  const [ownStoryData, setOwnStoryData] = useState<userStory>()
+
+  let isMobile = false
+  let isTablet = false
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      isMobile = window.innerWidth <= 680;
+      isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
+    }
+  }, [])
   // const fileInputRef = useRef<HTMLInputElement | null>(null);\
 
   const router = useRouter();
-  
-  const STATE = useAppSelector((state:RootState)=>state)
-  if(!STATE) {
-    return <LoadingPage/>
+  const user = {
+    user:
+    {
+      _id: "66e0277f8d01f0c076e47199",
+      fullName: "user",
+      email: "jabbar123@gmail.com",
+      username: "jabbar23",
+      password: "$2a$12$qNKeAZVFsFvQsVVHTaWa3OtDhHGF5kHiG2dVl3EOMMFXRLGrZKq/W",
+      isAdmin: false,
+      DOB: "",
+      bio: "Hi Guys i am started Ninsta",
+      image: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar…",
+      Gender: "Default",
+      isBlocked: false,
+      following: [],
+      followers: [],
+      blockedUsers: [],
+      createdAt: '2024-09-10T11:03:27.450+00:00',
+      updatedAt: '2024-09-10T11:09:39.323+00:00',
+      __v: 0,
+      OTP: "825893"
+    }
   }
-  const user = useAppSelector((state: RootState) => state.auth);
+
+  // const STATE = useAppSelector((state:RootState)=>state)
+  // if(!STATE) {
+  //   return <LoadingPage/>
+  // }
+  // const user = useAppSelector((state: RootState) => state.auth);
 
   useEffect(() => {
     if (user.user?._id) {
@@ -91,7 +121,7 @@ function HomePage() {
     }
   }, [])
 
-  
+
 
   const handleClickOpen = () => {
     setOpen(false);
@@ -144,7 +174,9 @@ function HomePage() {
   }
 
   function handleSuggession(user: any) {
-    window.location.href = `/profile?Values=${user._id}`
+    if (typeof window !== "undefined") {
+      window.location.href = `/profile?Values=${user._id}`
+    }
   }
 
   function ShowLikers(likes: any) {
@@ -173,7 +205,7 @@ function HomePage() {
   }
 
 
-  function StoryShowing(){
+  function StoryShowing() {
     setShowStory(false);
   }
 
@@ -201,9 +233,9 @@ function HomePage() {
         <div className="z-10 p-3 ml-9">
           <ul className="flex space-x-2 ">
             <li className="flex flex-col items-center space-y-1 ">
-              <div className={ownStoryData? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
+              <div className={ownStoryData ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                 <a href="#" className="block bg-white p-1 rounded-full transform transition z-0 hover:-rotate-6">
-                  <img onClick={()=>{setStoryUser(user?.user?._id+''),setShowStory(true)}} className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
+                  <img onClick={() => { setStoryUser(user?.user?._id + ''), setShowStory(true) }} className="z-10 w-12 h-12 rounded-full" src={user.user?.image + ""} alt="cute User" />
                 </a>
                 <button
                   onClick={() => setAddStory(true)}
@@ -219,14 +251,14 @@ function HomePage() {
               UserStory.slice(0, isMobile ? 3 : isTablet ? 4 : 7).map((story: any, index: number) => {
                 return (
                   <li key={index} className="flex flex-col items-center space-y-1 ">
-                    <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
+                    <div className={UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                       <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                        <img onClick={()=>{setStoryUser(story.user._id),setShowStory(true)}} className="w-12 h-12 rounded-full" src={story.user.image} alt="post" />
+                        <img onClick={() => { setStoryUser(story.user._id), setShowStory(true) }} className="w-12 h-12 rounded-full" src={story.user.image} alt="post" />
                       </a>
                     </div>
                     <a className='pl-1 w-20 truncate text-gray-800' href="#">
                       {story.user.username}
-                    </a> 
+                    </a>
                   </li>
                 )
               })
@@ -235,14 +267,14 @@ function HomePage() {
               allUsersData.slice(0, isMobile ? 4 : 7).map((data: any, index: number) => {
                 return (
                   <li key={index} className="flex flex-col items-center space-y-1 ">
-                    <div className={ UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
+                    <div className={UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
                       <a href="#" className="block bg-white p-1 rounded-full transform transition hover:-rotate-6">
-                        <img onClick={() =>{setStoryUser(data?._id),setShowStory(true)}} className="w-12 h-12 rounded-full" src={data.image} alt="post" />
+                        <img onClick={() => { setStoryUser(data?._id), setShowStory(true) }} className="w-12 h-12 rounded-full" src={data.image} alt="post" />
                       </a>
                     </div>
                     <a className='pl-2 w-20 truncate text-gray-800 ' href="#">
                       {data.username}
-                      </a>
+                    </a>
                   </li>
                 );
               })
@@ -252,7 +284,7 @@ function HomePage() {
         </div>
 
         {/* Posts component */}
-        {showStory && <StoryShowPage StoryShowing={StoryShowing} storyUser={storyUser} /> }
+        {showStory && <StoryShowPage StoryShowing={StoryShowing} storyUser={storyUser} />}
         {addStory && <StoryCreatePage userData={user.user} CloseStory={CloseStory} />}
         {report && <PostEditModal singlePost={singlePost} PostEdits={PostEdits} />}
         {likedUser && <LikedUser singlePost={singlePost} ShowLikers={ShowLikers} />}
