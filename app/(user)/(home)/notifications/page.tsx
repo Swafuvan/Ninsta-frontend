@@ -1,6 +1,6 @@
 'use client'
 import { FollowUsers, FriendSuggession, UserfindById, UserNotification } from '@/lib/functions/user/route';
-import { RootState, store } from '@/redux/store'
+import {  store } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 

@@ -2,16 +2,15 @@
 import { UserReports } from '@/lib/functions/admin/route';
 import ReportModalPage from '@/pages/admin/ReportModal';
 import ReportUserModalPage from '@/pages/admin/ReportUserModal';
-import { RootState } from '@/redux/store';
+import { store } from '@/redux/store';
 import { userReports } from '@/type/users';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
 
 function UserReportPage() {
 
     const [openAction,setOpenAction] = useState(-1);
     const [userReport,setUserReport] = useState<userReports[]>([]);
-    const user = useSelector((state:RootState) => state.auth);
+    const user = store.getState().auth
 
     useEffect(()=>{
         UserReports().then((res) => {

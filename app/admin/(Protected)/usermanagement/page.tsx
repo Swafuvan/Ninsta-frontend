@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react';
 import AdminUserManagement from '@/pages/admin/AdminUserManagement'; 
 import { getUsers } from '@/lib/functions/admin/route'; 
 import { User } from '@/type/users';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import {  store } from '@/redux/store';
 
 const columns = ['Name', 'Email', 'Gender'];
 const usersPerPage = 8; 
@@ -12,7 +11,7 @@ const usersPerPage = 8;
 function UserManagement() {
     const [data, setData] = useState<User[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const admin = useSelector((state:RootState) => state.auth);
+    const admin = store.getState().auth
 
     useEffect(() => {
         

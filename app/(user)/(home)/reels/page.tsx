@@ -2,10 +2,9 @@
 import { likePost, SavePosts } from "@/lib/functions/Posts/route";
 import { userReels } from "@/lib/functions/user/route";
 import CommentsPage from "@/pages/user/commentPage";
-import { RootState } from "@/redux/store";
+import { store } from "@/redux/store";
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 
 const ReelsComponent = ({ reels }: any) => {
   const [allReels, setAllReels] = useState<any>([]);
@@ -15,7 +14,7 @@ const ReelsComponent = ({ reels }: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [open,setOpen] = useState(false);
   const [singlePost,setSinglePost] = useState();
-  const user = useSelector((state: RootState) => state.auth);
+  const user = store.getState().auth
 
   const fetchReels = async () => {
     try {

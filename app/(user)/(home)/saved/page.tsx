@@ -2,14 +2,13 @@
 
 import { savedPosts } from '@/lib/functions/user/route';
 import CommentsPage from '@/pages/user/commentPage';
-import { RootState } from '@/redux/store'
+import { store } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function SavedPage() {
     const [savePost, setSavePost] = useState(false);
     const [allSavePost, setAllSavePost] = useState([]);
-    const user = useSelector((state: RootState) => state.auth);
+    const user = store.getState().auth
 
     useEffect(() => {
         if (user.user?._id) {

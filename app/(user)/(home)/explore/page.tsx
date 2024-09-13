@@ -2,7 +2,7 @@
 
 import { ExplorePosts } from '@/lib/functions/Posts/route';
 import ExplorePage from '@/pages/user/explorePage'
-import { RootState, store } from '@/redux/store';
+import {  store } from '@/redux/store';
 import React, { useEffect, useState } from 'react'
 
 function Page() {

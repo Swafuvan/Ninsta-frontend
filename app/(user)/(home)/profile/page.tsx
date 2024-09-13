@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import useAppSelector, { RootState, store } from '@/redux/store';
+import useAppSelector, { store } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { UserPosts } from '@/lib/functions/Posts/route';
 import { useSearchParams } from 'next/navigation';
@@ -292,7 +292,7 @@ export default ProfilePage
 
 function FollowersLists({ FollowersList, followerData }: any) {
 
-  const user = useSelector((state: RootState) => state.auth)
+  const user = store.getState().auth
   const [follower, setFollower] = useState<User[]>([]);
 
   useEffect(() => {
@@ -375,7 +375,7 @@ function FollowersLists({ FollowersList, followerData }: any) {
 }
 
 function FollowingLists({ FollowingList, followingData }: any) {
-  const user = useSelector((state: RootState) => state.auth)
+  const user = store.getState().auth
   const [following, setFollowing] = useState<User[]>([]);
 
   useEffect(() => {
@@ -457,7 +457,7 @@ function FollowingLists({ FollowingList, followingData }: any) {
 function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState<User>();
-  const user = useSelector((state: RootState) => state.auth);
+  const user = store.getState().auth
 
   useEffect(() => {
     if (user.user)
@@ -522,7 +522,7 @@ function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
 function ChildModal({ handleClose, UserDetails }: any) {
 
   const [otherInput, setOtherInput] = useState(false);
-  const user = useSelector((state: RootState) => state.auth);
+  const user = store.getState().auth
 
 
   async function handleReports(e: any, reportType?: string) {
