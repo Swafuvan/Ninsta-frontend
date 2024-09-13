@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';

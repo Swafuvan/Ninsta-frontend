@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 import { AllUserData, FriendSuggession, UserfindById, FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
 import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
