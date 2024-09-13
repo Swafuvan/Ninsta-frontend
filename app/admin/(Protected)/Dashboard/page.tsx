@@ -1,8 +1,6 @@
 
 import LoadingPage from "@/components/ui/loading"
-import dynamic from "next/dynamic"
-const AdminHome = dynamic(() => import("@/pages/admin/AdminHome"), { ssr: false })
-
+import AdminHome from "@/pages/admin/AdminHome"
 import { Suspense } from "react"
 
 function Dashboardpage() {

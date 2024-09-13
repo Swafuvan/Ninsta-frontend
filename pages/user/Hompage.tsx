@@ -8,14 +8,12 @@ import useAppSelector, { RootState, store } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
-const StoryShowPage = dynamic(() => import('./storyShow'), { ssr: false });
-const StoryCreatePage = dynamic(() => import('./storyCreate'), { ssr: false });
-const PostEditModal = dynamic(() => import('./PostEditModal'), { ssr: false });
+import StoryShowPage from './storyShow'; 
+import StoryCreatePage from './storyCreate'; 
+import PostEditModal from './PostEditModal';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component'
 import moment from 'moment';
-import LoadingPage from '@/components/ui/loading';
-import dynamic from 'next/dynamic';
 import CommentsPage from './commentPage';
 
 const HomePage = () => {

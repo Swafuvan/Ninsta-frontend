@@ -1,7 +1,6 @@
 'use client'
-import dynamic from "next/dynamic"
-const TemporaryDrawer = dynamic(()=>import("@/components/ui/sidebar"),{ssr:false});
-const HomePage =  dynamic(()=>import("@/pages/user/Hompage"),{ssr:false});
+import TemporaryDrawer from "@/components/ui/sidebar"; 
+import HomePage from "@/pages/user/Hompage"; 
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
