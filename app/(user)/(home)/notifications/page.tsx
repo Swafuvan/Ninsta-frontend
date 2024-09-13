@@ -1,12 +1,12 @@
 'use client'
 import { FollowUsers, FriendSuggession, UserfindById, UserNotification } from '@/lib/functions/user/route';
-import { RootState } from '@/redux/store'
+import { RootState, store } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 function Notifications() {
 
-  const user = useSelector((state: RootState) => state.auth);
+  const user = store.getState().auth
   const [userdData, setUserData] = useState([]);
   const [suggession, setSuggession] = useState([]);
 

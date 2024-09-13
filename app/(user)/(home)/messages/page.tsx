@@ -2,7 +2,7 @@
 import { AllUserData, fetchLastMessages, UserfindById } from '@/lib/functions/user/route';
 import { useSocket } from '@/components/Provider/clientProvider';
 import MessagePage from '@/pages/user/messagePage';
-import { RootState } from '@/redux/store';
+import { RootState, store } from '@/redux/store';
 import { messages, User } from '@/type/users';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ function MessagesPage() {
     const [noMessaged, setNoMessaged] = useState<User[]>([]);
     const [mobileView, setMobileView] = useState(false);
     const [messageSide, setMessageSide] = useState<User | null>(null);
-    const user = useSelector((state: RootState) => state.auth);
+    const user = store.getState().auth
     const socket = useSocket();
 
     useEffect(() => {

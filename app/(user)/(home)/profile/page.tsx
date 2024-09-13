@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import useAppSelector, { RootState } from '@/redux/store';
+import useAppSelector, { RootState, store } from '@/redux/store';
 import { useSelector } from 'react-redux';
 import { UserPosts } from '@/lib/functions/Posts/route';
 import { useSearchParams } from 'next/navigation';
@@ -16,8 +16,6 @@ import LoadingPage from '@/components/ui/loading';
 
 function ProfilePage() {
 
-  const user = useAppSelector((state: RootState) => state.auth);
-  const STATE = useAppSelector((state: RootState) => state)
   const searchParams = useSearchParams();
   const [followers, setFollowers] = useState(false);
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
@@ -30,6 +28,7 @@ function ProfilePage() {
   const [reels, setReels] = useState(false);
   const [posts, setPosts] = useState([]);
   const [proUser, setProUser] = useState<User>()
+  const user = store.getState().auth
 
   useEffect(() => {
     if (searchParams) {
@@ -58,10 +57,6 @@ function ProfilePage() {
     }
 
   }, [searchParams, user.user]);
-
-  if (!STATE) {
-    return <LoadingPage />
-  }
 
   async function followTheUser() {
     const following = await FollowUsers(user.user?._id + '', proUser);
