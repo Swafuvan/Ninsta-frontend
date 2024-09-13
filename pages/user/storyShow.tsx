@@ -128,7 +128,7 @@ export default function StoryShowPage({ StoryShowing, storyUser }: any) {
                         </div>
                       </div>
                     ) : (
-                      <div className="w-full h-fit flex justify-center">
+                      <div className="w-full h-[80%] flex justify-center">
                         <video ref={videoRef} src={ownStory.files[0].fileURL} className="object-cover h-full w-full" />
                       </div>
                     )}
