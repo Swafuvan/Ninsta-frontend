@@ -1,21 +1,17 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Typography from '@mui/material/Typography';
 import { CommentLike, CommentPost, CommentReplies, comments } from '@/lib/functions/Posts/route';
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
-import { useSelector } from 'react-redux';
-import useAppSelector, { RootState, store } from '@/redux/store';
+import { store } from '@/redux/store';
 import { UserfindById } from '@/lib/functions/user/route';
-import LoadingPage from '@/components/ui/loading';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiPaper-root': {

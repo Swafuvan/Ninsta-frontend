@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { AllUsersStory, OwnStory } from "@/lib/functions/user/route";
 import { useSelector } from "react-redux";
-import useAppSelector, { RootState, store } from "@/redux/store";
+import  { store } from "@/redux/store";
 import { motion } from "framer-motion";
 import { User, userStory } from "@/type/users";
 import { FaPaperPlane, FaHeart } from "react-icons/fa";

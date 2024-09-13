@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react"
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
-import useAppSelector, { RootState, store } from '@/redux/store';
+import { store } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
@@ -370,7 +370,7 @@ export default HomePage
 
 function LikedUser({ ShowLikers, singlePost }: any) {
 
-  const user = useSelector((state: RootState) => state.auth);
+  const user = store.getState().auth
   const [LikedUsers, setLikedUsers] = useState<User[]>([]);
   console.log(singlePost)
 

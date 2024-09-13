@@ -1,13 +1,11 @@
 'use client'
-import LoadingPage from '@/components/ui/loading';
 import { UserSearch } from '@/lib/functions/user/route';
-import useAppSelector, { RootState, store } from '@/redux/store';
+import { store } from '@/redux/store';
 import { User } from '@/type/users';
 import { TextField } from '@mui/material';
 import { Link } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 
 function SearchBarPage({ handleSearchClick }: any) {
     const [query, setQuery] = useState('');

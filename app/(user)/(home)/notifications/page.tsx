@@ -1,8 +1,7 @@
 'use client'
-import { FollowUsers, FriendSuggession, UserfindById, UserNotification } from '@/lib/functions/user/route';
+import { FollowUsers, FriendSuggession, UserNotification } from '@/lib/functions/user/route';
 import {  store } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 function Notifications() {
 

@@ -4,8 +4,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import { Input } from "@/components/ui/input";
 import { UserProfileValidation } from '@/lib/validation';
 import { UserfindById, UserProfileEdit } from '@/lib/functions/user/route';
-import { useSelector } from 'react-redux';
-import useAppSelector, { RootState, store } from '@/redux/store';
+import { store } from '@/redux/store';
 import { User } from '@/type/users';
 
 function EditProfilePage() {

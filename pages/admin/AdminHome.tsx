@@ -1,13 +1,11 @@
 "use client";
 
 import { getUsers } from '@/lib/functions/admin/route';
-import useAppSelector, { RootState, store } from '@/redux/store'
+import { store } from '@/redux/store'
 import { User } from '@/type/users';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { BarChart } from '@mui/x-charts/BarChart';
-import LoadingPage from '@/components/ui/loading';
 
 function AdminHome() {
   // const reduxContext = useRedux

@@ -2,14 +2,12 @@
 import { useSocket } from '@/components/Provider/clientProvider';
 import { userChats } from '@/lib/functions/user/route';
 import { FaPhone, FaVideo } from 'react-icons/fa';
-import useAppSelector, { RootState, store } from '@/redux/store';
+import { store } from '@/redux/store';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { BiCheckDouble } from "react-icons/bi";
 import toast from 'react-hot-toast';
 import moment from 'moment';
 import { User } from '@/type/users';
-import LoadingPage from '@/components/ui/loading';
 
 
 interface message {

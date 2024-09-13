@@ -1,11 +1,10 @@
 'use client'
-import { AllUserData, fetchLastMessages, UserfindById } from '@/lib/functions/user/route';
+import { AllUserData, UserfindById } from '@/lib/functions/user/route';
 import { useSocket } from '@/components/Provider/clientProvider';
 import MessagePage from '@/pages/user/messagePage';
 import { store } from '@/redux/store';
 import { messages, User } from '@/type/users';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { useSearchParams } from 'next/navigation';
 

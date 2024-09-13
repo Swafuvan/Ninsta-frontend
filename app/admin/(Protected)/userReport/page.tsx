@@ -1,6 +1,5 @@
 'use client'
 import { UserReports } from '@/lib/functions/admin/route';
-import ReportModalPage from '@/pages/admin/ReportModal';
 import ReportUserModalPage from '@/pages/admin/ReportUserModal';
 import { store } from '@/redux/store';
 import { userReports } from '@/type/users';

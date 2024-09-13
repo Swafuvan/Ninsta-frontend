@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
 import { XIcon } from "lucide-react";
-import { postUpload } from "@/lib/functions/Posts/route";
-import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { StoryVideoUpload, UserStoryAdding } from "@/lib/functions/user/route";
 import { uploadToS3Bucket } from "@/helpers/AWS";

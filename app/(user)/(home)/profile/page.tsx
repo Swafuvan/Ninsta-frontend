@@ -1,17 +1,15 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import useAppSelector, { store } from '@/redux/store';
-import { useSelector } from 'react-redux';
+import { store } from '@/redux/store';
 import { UserPosts } from '@/lib/functions/Posts/route';
 import { useSearchParams } from 'next/navigation';
 import { BlockUsers, FollowUsers, UserfindById, UserReports } from '@/lib/functions/user/route';
 import { User } from '@/type/users';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button} from "@nextui-org/react";
 import toast from 'react-hot-toast';
 import CommentsPage from '@/pages/user/commentPage';
-import LoadingPage from '@/components/ui/loading';
 
 
 function ProfilePage() {
