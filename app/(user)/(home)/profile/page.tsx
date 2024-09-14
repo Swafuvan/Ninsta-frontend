@@ -29,7 +29,6 @@ function ProfilePage() {
   const [proUser, setProUser] = useState<User>()
 
   useEffect(() => {
-    if (searchParams) {
       const userData = searchParams?.get('Values');
       setMessageUserData(userData + '')
       if (userData) {
@@ -52,7 +51,6 @@ function ProfilePage() {
           })
         }
       }
-    }
 
   }, [searchParams, user.user]);
 
