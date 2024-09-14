@@ -83,7 +83,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const newSocket: any = io(process.env.Socket_URL || 'http://localhost:5000');
+    const newSocket: any = io(process.env.NEXT_PUBLIC_Socket_URL || 'http://localhost:5000');
     setSocket(newSocket);
 
     if (user && user.user) {
