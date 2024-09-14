@@ -15,6 +15,7 @@ import CommentsPage from '@/pages/user/commentPage';
 function ProfilePage() {
 
   const searchParams = useSearchParams();
+  const user = store.getState()?.auth
   const [followers, setFollowers] = useState(false);
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
   const [followingData, setFollowingData] = useState<String[] | undefined>([]);
@@ -26,7 +27,6 @@ function ProfilePage() {
   const [reels, setReels] = useState(false);
   const [posts, setPosts] = useState([]);
   const [proUser, setProUser] = useState<User>()
-  const user = store.getState().auth
 
   useEffect(() => {
     if (searchParams) {
@@ -39,14 +39,14 @@ function ProfilePage() {
               console.log(res);
               setPosts(res.UserPostData ?? []);
               console.log(res.UserPostData[0]?.userId);
-              setProUser(response.userDetail)
+              setProUser(response?.userDetail)
             })
           }
         })
       } else {
         if (user.user?._id) {
-          UserPosts(user.user?._id).then((Userpost) => {
-            setPosts(Userpost.UserPostData ?? [])
+          UserPosts(user?.user?._id).then((Userpost) => {
+            setPosts(Userpost?.UserPostData ?? [])
 
             setProUser(user.user as User)
           })
@@ -290,7 +290,7 @@ export default ProfilePage
 
 function FollowersLists({ FollowersList, followerData }: any) {
 
-  const user = store.getState().auth
+  const user = store.getState()?.auth
   const [follower, setFollower] = useState<User[]>([]);
 
   useEffect(() => {
@@ -455,7 +455,7 @@ function FollowingLists({ FollowingList, followingData }: any) {
 function EditOptionDiv({ EditOptionClose, UserDetails }: any) {
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState<User>();
-  const user = store.getState().auth
+  const user = store.getState()?.auth
 
   useEffect(() => {
     if (user.user)
