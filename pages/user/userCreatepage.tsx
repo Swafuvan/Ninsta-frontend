@@ -41,7 +41,6 @@ export default function ModalPage({ handleDrawerOpen }: any) {
         if (UploadedData?.status === 200) {
           toast.success('Post Created Successfully');
           handleDrawerOpen();
-          location.reload()
         } else {
           toast.error('Failed to Create Post');
         }

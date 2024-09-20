@@ -3,6 +3,7 @@ import { User, forgotPassword } from "@/type/users";
 import { LoginUser, SignupUser, googleUser } from "@/type/users";
 import axiosInstance, { getUserToken } from "../axiosInterceptor";
 import Cookies from 'js-cookie';
+import toast from "react-hot-toast";
 
 // const backendURL = 'http://localhost:5000';
 
@@ -22,6 +23,7 @@ export const UserState = async () => {
         if (userDetails) {
             console.log(userDetails)
             if (userDetails.status === 217) {
+                toast.error('Sorry You are Blocked some Reason')
                 Cookies.remove('userToken')
                 return { data: null }
             }
@@ -29,6 +31,17 @@ export const UserState = async () => {
         }
     } catch (error) {
         console.log(error);
+    }
+}
+
+export const AllUserMessage = async (userId:string) => {
+    try {
+        const allMessage = await axiosInstance.get('allUserMessage?userId='+userId)
+        if(allMessage){
+            return allMessage.data
+        }
+    } catch (error) {
+        console.log(error)
     }
 }
 

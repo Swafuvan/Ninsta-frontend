@@ -5,13 +5,13 @@ import React, { useEffect, useState } from 'react'
 
 function Notifications() {
 
-  const user = store.getState().auth
+  const user = store.getState()?.auth
   const [userdData, setUserData] = useState([]);
   const [suggession, setSuggession] = useState([]);
 
   useEffect(() => {
     if (user.user?._id) {
-      console.log(user.user._id)
+      console.log(user.user?._id)
       UserNotification(user.user?._id + '').then((res) => {
         console.log(res);
         setUserData(res.userResult);
@@ -24,7 +24,7 @@ function Notifications() {
         })
       })
     }
-  }, [user.user]);
+  }, [user.user?._id]);
 
   function handleSuggession(user: any) {
     window.location.href = `/profile?Values=${user._id}`

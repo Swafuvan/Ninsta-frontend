@@ -32,6 +32,7 @@ export interface User {
     following:string[],
     followers:string[],
     createdAt?:string
+    message?:string
 }
 
 

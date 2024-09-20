@@ -2,11 +2,10 @@
 import { createContext, ReactNode, useContext, useEffect, useState, Suspense } from 'react';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import { RootState, store } from '@/redux/store';
-import { FriendSuggession, messageNotification, UserfindById, UserState } from '@/lib/functions/user/route';
+import { UserfindById, UserState } from '@/lib/functions/user/route';
 import { setUser } from '@/redux/userSlice';
 import { useRouter } from 'next/navigation';
 import { adminDetails } from '@/lib/functions/admin/route';
-import { NextUIProvider } from '@nextui-org/react';
 import { usePathname } from 'next/navigation';
 import { io } from 'socket.io-client';
 import { toast, ToastOptions } from 'react-toastify';

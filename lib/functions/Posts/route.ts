@@ -86,6 +86,30 @@ export const CommentPost = async (PostDetails: any, comment: any, userId: any) =
     }
 }
 
+export const deletePost = async (postData:string) => {
+    try {
+        const deletedPost = await axiosInstance.delete('/deletePost',{
+            params:{postData}
+        });
+        if (deletedPost) {
+            return deletedPost
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const editPostData = async (postData:any,Changed:string) => {
+    try {
+        const editedPost = await axiosInstance.put('/editPost',{postData,Changed});
+        if (editedPost) {
+            return editedPost.data
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const getPosts = async () => {
     try {
         const PostDetails = await axiosInstance.get('/allPosts')

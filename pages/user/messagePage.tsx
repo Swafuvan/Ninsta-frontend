@@ -69,6 +69,7 @@ function MessagePage({ userDetails, filter }: any) {
             newMessage.seen = true;
             setAllMessages((prevMessages) => [...prevMessages, newMessage]);
             socket.emit('messages_seen', { to: userDetails._id, from: user.user._id });
+            filter()
         }
     };
 

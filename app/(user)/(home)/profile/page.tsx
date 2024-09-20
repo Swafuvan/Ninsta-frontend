@@ -46,13 +46,12 @@ function ProfilePage() {
         if (user.user?._id) {
           UserPosts(user?.user?._id).then((Userpost) => {
             setPosts(Userpost?.UserPostData ?? [])
-
             setProUser(user.user as User)
           })
         }
       }
 
-  }, [searchParams, user.user]);
+  }, [searchParams, user.user?._id]);
 
   async function followTheUser() {
     const following = await FollowUsers(user.user?._id + '', proUser);
@@ -200,7 +199,7 @@ function ProfilePage() {
                     uppercase tracking-widest font-semibold text-xs text-gray-600
                     border-t">
             {/* <!-- posts tab is active --> */}
-            <li className={reels === false ? "md:border-t md:border-gray-700 md:-mt-px md:text-gray-700" : "flex p-0 cursor-pointer"}>
+            <li onClick={() => setReels(false)} className={reels === false ? "md:border-t md:border-gray-700 md:-mt-px md:text-gray-700" : "flex p-0 cursor-pointer"}>
               <a className=" flex p-3" href="/profile">
                 <i className="fas mt-0.5 fa-th-large text-xl md:text-xs">
                   <svg aria-label="" className="x1lliihq x1n2onr6 x5n08af" fill="currentColor" height="12" role="img" viewBox="0 0 24 24" width="12"><title></title><rect fill="none" height="18" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" width="18" x="3" y="3"></rect><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="9.015" x2="9.015" y1="3" y2="21"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="14.985" x2="14.985" y1="3" y2="21"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="21" x2="3" y1="9.015" y2="9.015"></line><line fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" x1="21" x2="3" y1="14.985" y2="14.985"></line></svg>

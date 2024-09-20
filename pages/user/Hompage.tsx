@@ -8,8 +8,8 @@ import { store } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 import { User, userStory } from '@/type/users';
 import { getPosts, likePost, SavePosts } from '@/lib/functions/Posts/route';
-import StoryShowPage from './storyShow'; 
-import StoryCreatePage from './storyCreate'; 
+import StoryShowPage from './storyShow';
+import StoryCreatePage from './storyCreate';
 import PostEditModal from './PostEditModal';
 import toast from 'react-hot-toast';
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -47,6 +47,27 @@ const HomePage = () => {
   const user = store.getState().auth
 
   useEffect(() => {
+    if (Cookies.get('userToken')) {
+      if (user?.user?._id) {
+        getPosts().then(async (response) => {
+          if (response) {
+            console.log(response)
+            const { allPost } = response
+            for (const data of allPost) {
+              data.userDetails = (await UserfindById(data.userId))?.userDetail
+            }
+            await setPosts(allPost);
+          }
+        })
+        console.log(user)
+
+      } else {
+        router.push('/Login')
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     if (user?.user?._id) {
       FriendSuggession(user.user?._id + '').then((datas) => {
         console.log(datas)
@@ -72,28 +93,6 @@ const HomePage = () => {
       }
     }
   }, [user?.user?._id])
-
-  useEffect(() => {
-    if (Cookies.get('userToken')) {
-      getPosts().then(async (response) => {
-        if (response) {
-          console.log(response)
-          const { allPost } = response
-          for (const data of allPost) {
-            data.userDetails = (await UserfindById(data.userId))?.userDetail
-          }
-          console.log(allPost)
-          await setPosts(allPost);
-        }
-      })
-      console.log(user)
-
-    } else {
-      router.push('/Login')
-    }
-  }, [])
-
-
 
   const handleClickOpen = () => {
     setOpen(false);
@@ -181,22 +180,6 @@ const HomePage = () => {
     setShowStory(false);
   }
 
-  // const [scrollLeft, setScrollLeft] = useState(0);
-  // const scrollRef = useRef(null);
-
-  // const handleScroll = (event:any) => {
-  //   setScrollLeft(event.target.scrollLeft);
-  // };
-
-  // const handlePrevClick = () => {
-  //   scrollRef?.current?.scrollLeft -= 150; 
-  // };
-
-  // const handleNextClick = () => {
-  //   scrollRef?.current?.scrollLeft += 150; 
-  // };
-
-  // const showNavigationButtons = allUsersData.length > 7;
 
   return (
     <div className='flex justify-center md:ml-44 '>
