@@ -12,6 +12,17 @@ export const AdminLogin = async (user: LoginUser): Promise<any> => {
     }
 }
 
+export const getAllPost = async () => {
+    try {
+        const allPost = await axiosInstance.get('/allUserPost');
+        if(allPost){
+            return allPost.data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const getUsers = async () => {
     try {
         const userMangement = await axiosInstance.get(`/userManagement`);

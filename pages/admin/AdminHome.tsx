@@ -1,8 +1,8 @@
 "use client";
 
-import { getUsers } from '@/lib/functions/admin/route';
+import { getAllPost, getUsers } from '@/lib/functions/admin/route';
 import { store } from '@/redux/store'
-import { User } from '@/type/users';
+import { Posts, User } from '@/type/users';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { BarChart } from '@mui/x-charts/BarChart';
@@ -10,26 +10,37 @@ import { BarChart } from '@mui/x-charts/BarChart';
 function AdminHome() {
   // const reduxContext = useRedux
   const [allUsers, setAllUsers] = useState<User[]>([]);
-  const [newUsers, setNewUsers] = useState<User[]>([]);
-  const [blockedUsers, setBlockedUsers] = useState<User[]>([]);
+  const [newUsers, setNewUsers] = useState<number[]>([]);
+  const [allPost, setAllPost] = useState<number[]>([]);
   const admin = store.getState().auth
 
-  
-  
+
+
   useEffect(() => {
     getUsers().then((res) => {
       const users = res?.data?.userData || [];
       setAllUsers(users);
       const blocked = users.filter((user: User) => user.isBlocked === true);
-      setBlockedUsers(blocked);
-      const newUsers = users.filter((user: User) => {
-        return moment(user.createdAt).isAfter(moment().subtract(30, 'days'));
-      });
-      setNewUsers(newUsers);
+      // setBlockedUsers(blocked);    
+      const newUser = new Array(12).fill(0)
+      for (const data of users) {
+        const month = new Date(data.createdAt).getMonth() 
+        newUser[month] = newUser[month] + 1
+      }
+      setNewUsers(newUser);
+
     });
+    getAllPost().then((resp) => {
+      const post = new Array(12).fill(0);
+      for (const data of resp.allUserPost) {
+        const month = new Date(data.createdAt).getMonth() 
+        post[month] = post[month] + 1
+      }
+      setAllPost(post)
+    })
   }, []);
-  
-  
+
+
   const Months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   return (
@@ -85,7 +96,7 @@ function AdminHome() {
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
                           <h5 className="text-blueGray-400 uppercase font-bold text-xs">NEW USERS</h5>
-                          <span className="font-bold text-xl">{newUsers?.length}</span>
+                          <span className="font-bold text-xl">{newUsers[new Date().getMonth() + 1]}</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-orange-500"><i className="fas fa-chart-pie"></i></div>
@@ -100,8 +111,8 @@ function AdminHome() {
                     <div className="flex-auto p-4">
                       <div className="flex flex-wrap">
                         <div className="relative w-full pr-4 max-w-full flex-grow flex-1">
-                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">Blocked Users</h5>
-                          <span className="font-bold text-xl">{blockedUsers?.length}</span>
+                          <h5 className="text-blueGray-400 uppercase font-bold text-xs">Total Users Posts</h5>
+                          <span className="font-bold text-xl">{allPost?.length}</span>
                         </div>
                         <div className="relative w-auto pl-4 flex-initial">
                           <div className="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-pink-500"><i className="fas fa-users"></i></div>
@@ -118,16 +129,16 @@ function AdminHome() {
         </div>
         <div className="px-4 md:px-6 mx-auto w-full -mt-24">
           <div className="flex flex-wrap">
-            <BarChart
+            {newUsers.length > 0 && <BarChart
               xAxis={[{ scaleType: 'band', data: Months }]}
               series={[
-                { data: Months.map(() => newUsers.length), label: 'New Users' },
-                { data: Months.map(() => allUsers.length), label: 'Total Users' },
-                { data: Months.map(() => blockedUsers.length), label: 'Blocked Users' }
+                { data: newUsers, label: 'New Users' },
+                // { data: Months.map(() => allUsers.length), label: 'Total Users' },
+                { data: allPost, label: 'Total Post' }
               ]}
               width={900}
               height={300}
-            />
+            />}
           </div>
           <div className="flex flex-wrap">
             <div className="w-full xl:w-12/12 px-4">
