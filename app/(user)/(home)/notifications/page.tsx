@@ -45,9 +45,9 @@ function Notifications() {
 
       <div className='grid grid-flow-col justify-between'>
         <div className="max-w-xl mt-5 items-center h-screen md:ml-4 lg:ml-48 overflow-hidden">
-          {userdData.length > 0 ?
+          {userdData?.length > 0 ?
             <>
-              {userdData && userdData.map((data: any, index: number) => {
+              {userdData && userdData?.map((data: any, index: number) => {
                 return (
                   <div key={index} className="flex justify-between px-5 py-2 bg-white items-center gap-1 rounded-lg border border-gray-100 my-3">
                     <div className="relative w-16 h-16 rounded-full hover:bg-red-700 bg-gradient-to-r from-purple-400 via-blue-500 to-red-400 ">
@@ -85,8 +85,8 @@ function Notifications() {
                     }
                     <>
                       {data.type === 'follow' ?
-                        <button className={data?.senderId?.following.includes(user.user?._id) ? 'bg-gray-300 text-black rounded-full px-3 py-1.5' : 'bg-blue-500 text-white rounded-full px-3 py-1.5'}>
-                          {data?.senderId?.following.includes(user.user?._id) ? 'following' : 'follow'}
+                        <button className={data?.senderId?.following.includes(user?.user?._id) ? 'bg-gray-300 text-black rounded-full px-3 py-1.5' : 'bg-blue-500 text-white rounded-full px-3 py-1.5'}>
+                          {data?.senderId?.following?.includes(user?.user?._id) ? 'following' : 'follow'}
                         </button>
                         :
                         data.type === 'message' ?
@@ -121,9 +121,9 @@ function Notifications() {
           <div className="top-8 right-28 bg-white rounded-lg shadow-md p-4">
             <h2 className="text-xl font-semibold mb-4">Suggestions For You</h2>
             <ul className="space-y-4">
-              {suggession && suggession.sort(() => 0.5 - Math.random())
-                .slice(0, 4)
-                .map((res: any, index: number) => {
+              {suggession && suggession?.sort(() => 0.5 - Math?.random())
+                ?.slice(0, 4)
+                ?.map((res: any, index: number) => {
                   return (
                     <li key={index} className="flex items-center justify-between">
 
@@ -134,8 +134,8 @@ function Notifications() {
                           <p className="text-sm text-gray-600">Followed by friends</p>
                         </div>
                       </div>
-                      <button onClick={() => FollowUser(res)} className={res.followers.includes(user.user?._id) ? 'bg-slate-200 text-black px-3 py-2 rounded-full' : "bg-blue-500 text-white px-4 py-2 rounded-full"}>
-                        {res?.followers.includes(user.user?._id) ? 'following' : 'follow'}
+                      <button onClick={() => FollowUser(res)} className={res?.followers?.includes(user?.user?._id) ? 'bg-slate-200 text-black px-3 py-2 rounded-full' : "bg-blue-500 text-white px-4 py-2 rounded-full"}>
+                        {res?.followers?.includes(user.user?._id) ? 'following' : 'follow'}
                       </button>
                     </li>
                   )
