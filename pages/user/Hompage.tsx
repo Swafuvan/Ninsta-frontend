@@ -64,7 +64,7 @@ const HomePage = () => {
       } else {
         router.push('/Login')
       }
-    }else{
+    } else {
       router.push('/Login');
     }
   }, [])
@@ -416,14 +416,20 @@ function LikedUser({ ShowLikers, singlePost }: any) {
 
                         </div>
                       </div>
-                      <button onClick={() => FollowUser(res)} className=
-                        {res?.userDetails?.followers.includes(user.user?._id) ?
-                          'bg-slate-200 text-black px-3 py-2 rounded-full'
-                          :
-                          "bg-blue-500 text-white px-4 py-2 rounded-full"}
-                      >
-                        {res?.userDetails?.followers.includes(user.user?._id) ? 'following' : 'follow'}
-                      </button>
+                      {res?.userDetails._id !== user.user?._id && (
+                        <button
+                          onClick={() => FollowUser(res)}
+                          className={
+                            res?.userDetails?.followers.includes(user.user?._id)
+                              ? 'bg-slate-200 text-black px-3 py-2 rounded-full'
+                              : 'bg-blue-500 text-white px-4 py-2 rounded-full'
+                          }
+                        >
+                          {res?.userDetails?.followers.includes(user.user?._id)
+                            ? 'Following'
+                            : 'Follow'}
+                        </button>
+                      )}
                     </li>
                     // < hr className="border-black" />
                   )
@@ -441,9 +447,4 @@ function LikedUser({ ShowLikers, singlePost }: any) {
     </>
   )
 }
-
-
-
-
-
 

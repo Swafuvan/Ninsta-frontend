@@ -1,6 +1,6 @@
 'use client'
 import { FollowUsers, FriendSuggession, UserNotification } from '@/lib/functions/user/route';
-import {  store } from '@/redux/store'
+import { store } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
 
 function Notifications() {
@@ -10,7 +10,7 @@ function Notifications() {
   const [suggession, setSuggession] = useState([]);
 
   useEffect(() => {
-    if (user.user?._id) {
+    if (user) {
       console.log(user.user?._id)
       UserNotification(user.user?._id + '').then((res) => {
         console.log(res);
@@ -24,7 +24,9 @@ function Notifications() {
         })
       })
     }
-  }, [user.user?._id]);
+  }, [user])
+
+
 
   function handleSuggession(user: any) {
     window.location.href = `/profile?Values=${user._id}`
