@@ -71,6 +71,7 @@ function MessagesPage() {
                         array.push(data)
                     }
                 }
+                console.log(array,"this is the data ")
                 setNoMessaged(array)
             });
         }
@@ -105,7 +106,7 @@ function MessagesPage() {
                     </div>
                     {/* Chats */}
                     <ul className="py-1 overflow-auto flex-grow">
-                        {noMessaged.map((val, index) => {
+                        {noMessaged?.map((val, index) => {
                             return (
                                 <li key={index} onClick={() => {
                                     setMessageSide(val);
