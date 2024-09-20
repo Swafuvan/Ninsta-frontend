@@ -431,7 +431,6 @@ function LikedUser({ ShowLikers, singlePost }: any) {
                         </button>
                       )}
                     </li>
-                    // < hr className="border-black" />
                   )
                 })
                   :

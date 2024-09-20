@@ -1,21 +1,21 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { store } from '@/redux/store';
+import { RootState, store } from '@/redux/store';
 import { UserPosts } from '@/lib/functions/Posts/route';
 import { useSearchParams } from 'next/navigation';
 import { BlockUsers, FollowUsers, UserfindById, UserReports } from '@/lib/functions/user/route';
 import { User } from '@/type/users';
 import MoreIcon from '@mui/icons-material/MoreHoriz';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button} from "@nextui-org/react";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
 import toast from 'react-hot-toast';
 import CommentsPage from '@/pages/user/commentPage';
+import { useSelector } from 'react-redux';
 
 
 function ProfilePage() {
 
   const searchParams = useSearchParams();
-  const user = store.getState()?.auth
   const [followers, setFollowers] = useState(false);
   const [followerData, setFollowerData] = useState<String[] | undefined>([]);
   const [followingData, setFollowingData] = useState<String[] | undefined>([]);
@@ -27,31 +27,68 @@ function ProfilePage() {
   const [reels, setReels] = useState(false);
   const [posts, setPosts] = useState([]);
   const [proUser, setProUser] = useState<User>()
+  // const user = store.getState()?.auth
+  const user = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
-      const userData = searchParams?.get('Values');
-      setMessageUserData(userData + '')
-      if (userData) {
-        UserfindById(userData).then((response) => {
-          if (response) {
-            UserPosts(response.userDetail._id).then((res) => {
-              console.log(res);
-              setPosts(res.UserPostData ?? []);
-              console.log(res.UserPostData[0]?.userId);
-              setProUser(response?.userDetail)
-            })
-          }
+    const userData = searchParams?.get('Values');
+    setMessageUserData(userData + '')
+    if (!userData) {
+      if (user.user) {
+        setProUser(user?.user as User)
+        UserPosts(user?.user?._id).then((res)=>{
+          console.log(res)
+          setPosts(res.UserPostData)
         })
-      } else {
-        if (user.user?._id) {
-          UserPosts(user?.user?._id).then((Userpost) => {
-            setPosts(Userpost?.UserPostData ?? [])
-            setProUser(user.user as User)
+
+      }
+    } else {
+      UserfindById(userData).then((response) => {
+        if (response) {
+          UserPosts(response.userDetail._id).then((res) => {
+            console.log(res);
+            setPosts(res.UserPostData ?? []);
+            console.log(res.UserPostData[0]?.userId);
+            setProUser(response?.userDetail)
           })
         }
-      }
+      })
+    }
+  }, [user.user])
 
-  }, [searchParams, user.user?._id]);
+  // useEffect(() => {
+  //   const userData = searchParams?.get('Values');
+  //   setMessageUserData(userData + '')
+  //   if (userData) {
+  //     UserfindById(userData).then((response) => {
+  //       if (response) {
+  //         UserPosts(response.userDetail._id).then((res) => {
+  //           console.log(res);
+  //           setPosts(res.UserPostData ?? []);
+  //           console.log(res.UserPostData[0]?.userId);
+  //           setProUser(response?.userDetail)
+  //         })
+  //       }
+  //     })
+  //   } else {
+  //     if (user) {
+  //       // alert(user.user?._id)
+  //       getUserDetails(user?.user?._id + '')
+  //       // (async () => {
+  //       // const Userpost = await UserPosts(user?.user?._id)
+
+  //       // })()
+  //     }
+  //   }
+  // }, [user])
+
+  function getUserDetails(userId: string) {
+    UserPosts(userId).then((Userpost) => {
+      // alert('thoooothiooootiini')
+      setPosts(Userpost?.UserPostData ?? [])
+      setProUser(user.user as User)
+    })
+  }
 
   async function followTheUser() {
     const following = await FollowUsers(user.user?._id + '', proUser);
