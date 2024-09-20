@@ -18,9 +18,9 @@ function MessagesPage() {
 
 
     useEffect(() => {
-
-        getUserMessage()
-
+        if(user.user?._id){
+            getUserMessage()
+        }
         if (searchParams) {
             const userId = searchParams.get('userId');
             UserfindById(userId).then((res) => {
@@ -53,8 +53,8 @@ function MessagesPage() {
     };
 
     function getUserMessage() {
-        AllUserMessage(user.user?._id + '').then(async (datas) => {
-            if (user.user && user.user._id) {
+        if (user.user && user.user._id) {
+            AllUserMessage(user.user?._id + '').then(async (datas) => {
                 const sortedMessages = datas?.allmessages.sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
                 const userDetails = await Promise.all(sortedMessages.map(async (item: messages) => {
                     return (await UserfindById(item.from === user?.user?._id ? item.to : item.from)).userDetail
@@ -62,18 +62,18 @@ function MessagesPage() {
                 const array: any[] = []
                 for (const item of userDetails) {
                     if (!array.find(arrItem => arrItem._id === item._id)) {
-                        const message1:messages | undefined = sortedMessages.find((arrItem: messages) => arrItem.from === item._id)
-                        const message2:messages | undefined = sortedMessages.find((arrItem: messages) => arrItem.to === item._id)
+                        const message1: messages | undefined = sortedMessages.find((arrItem: messages) => arrItem.from === item._id)
+                        const message2: messages | undefined = sortedMessages.find((arrItem: messages) => arrItem.to === item._id)
                         const data = {
                             ...item,
-                            message: new Date(message1?.createdAt+"").getTime() > new Date(message2?.createdAt+"").getTime() ? "from : " + message1?.message : "you : " + message2?.message,
+                            message: new Date(message1?.createdAt + "").getTime() > new Date(message2?.createdAt + "").getTime() ? "from : " + message1?.message : "you : " + message2?.message,
                         }
                         array.push(data)
                     }
                 }
                 setNoMessaged(array)
-            }
-        });
+            });
+        }
     }
 
     return (
