@@ -64,6 +64,8 @@ const HomePage = () => {
       } else {
         router.push('/Login')
       }
+    }else{
+      router.push('/Login');
     }
   }, [])
 

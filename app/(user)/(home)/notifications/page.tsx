@@ -58,9 +58,9 @@ function Notifications() {
                     <div className='ml-2 '>
                       {
                         data.type === 'message' ?
-                          <span className="font-mono">{data?.senderId?.username === user?.user?.username ? `You ${data.content}` : `${data?.senderId?.username} send message *${data.content}*`}</span>
+                          <span className="font-mono">{data?.senderId?.username === user?.user?.username ? `You ${data?.content}` : `${data?.senderId?.username} send message *${data?.content}*`}</span>
                           :
-                          <span className="font-mono"> {data?.senderId?.username === user?.user?.username ? `You ${data.content}` : `${data?.senderId?.username} ${data.content}`}</span>
+                          <span className="font-mono"> {data?.senderId?.username === user?.user?.username ? `You ${data?.content}` : `${data?.senderId?.username} ${data?.content}`}</span>
                       }
                     </div>
                     {data.postId ?
