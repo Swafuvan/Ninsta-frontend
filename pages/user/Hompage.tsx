@@ -59,11 +59,7 @@ const HomePage = () => {
             await setPosts(allPost);
           }
         })
-        console.log(user)
-
-      } else {
-        router.push('/Login')
-      }
+      } 
     } else {
       router.push('/Login');
     }
