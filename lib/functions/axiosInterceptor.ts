@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const getUserToken = () => {
-    return "Bearer " + Cookies.get('userToken')
+    return "Bearer " + Cookies.get('userToken');
 }
 
 const axiosInstance = axios.create({
@@ -15,7 +15,6 @@ const axiosInstance = axios.create({
         "Authorization": getUserToken()
     }
 });
-
 
 axiosInstance.interceptors.request.use(
     config => {
@@ -30,7 +29,6 @@ axiosInstance.interceptors.request.use(
         return error.response;
     }
 );
-
 
 axiosInstance.interceptors.response.use(
     response => {

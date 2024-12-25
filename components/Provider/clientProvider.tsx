@@ -186,8 +186,6 @@ const Notification = ({ notification, Close }: { notification: any, Close: () =>
 };
 
 
-
-
 export const LiveContext = createContext<any>({
   zg: null,
   setZg: () => { }
@@ -217,7 +215,6 @@ export const ZegoCloudProvider = ({ children }: ContentProps) => {
           } else {
             console.warn("setLogConfig is not available. Check the ZegoExpressEngine documentation for log configuration.");
           }
-
           setZg(zgInstance);
 
 

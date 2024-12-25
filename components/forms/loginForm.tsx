@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react"
+
+import React, { useState, useLayoutEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import NinstaLogo from '../../public/Ninsta Logo.png'
@@ -11,11 +12,11 @@ import { userLogin } from "@/lib/functions/user/route";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie'
-import { googleUser } from "@/type/users";
 import { useRouter } from "next/navigation";
-import { UseSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
-import { FaEye,FaEyeSlash } from 'react-icons/fa'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Loader2 } from 'lucide-react';
 
 interface LoginFormValues {
     email: string;
@@ -23,20 +24,23 @@ interface LoginFormValues {
 }
 
 export function LoginForm() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
-    const [passwordVisible, setPasswordVisible] = useState(false); 
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [error, setError] = useState('');
 
-    React.useLayoutEffect(() => {
+    useLayoutEffect(() => {
         const token = Cookies.get('userToken');
         if (token) {
             router.push('/');
         }
     }, [router]);
 
-    const [Error, setError] = React.useState('');
     const handleSubmit = async (values: LoginFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+        setLoading(true);
+        setError('');
         try {
             const user = await userLogin(values);
             if (user.userDetails && user.JWTtoken) {
@@ -48,7 +52,9 @@ export function LoginForm() {
             }
         } catch (error) {
             console.error('Login failed', error);
+            setError('Login failed. Please try again.');
         } finally {
+            setLoading(false);
             setSubmitting(false);
         }
     };
@@ -58,20 +64,32 @@ export function LoginForm() {
     };
 
     const googleSuccess = async (response: any) => {
+        setGoogleLoading(true);
+        setError('');
         if (response.credential) {
-            const usersResult = JSON.parse(JSON.stringify(jwtDecode(response.credential)));
-            let data = { email: usersResult?.email, password: usersResult?.sub };
-            const UserResult = await userLogin(data);
-            if (UserResult) {
-                Cookies.set('userToken', UserResult.JWTtoken);
-                dispatch(setUser(UserResult.userDetails));
-                router.push('/');
+            try {
+                const usersResult = JSON.parse(JSON.stringify(jwtDecode(response.credential)));
+                let data = { email: usersResult?.email, password: usersResult?.sub };
+                const UserResult = await userLogin(data);
+                if (UserResult.userDetails && UserResult.JWTtoken) {
+                    Cookies.set('userToken', UserResult.JWTtoken);
+                    dispatch(setUser(UserResult.userDetails));
+                    router.push('/');
+                } else {
+                    setError(UserResult.message || 'Google login failed');
+                }
+            } catch (error) {
+                console.error('Google login failed', error);
+                setError('Google login failed. Please try again.');
+            } finally {
+                setGoogleLoading(false);
             }
         }
     };
 
     const errorGoogle = () => {
         console.log('Google login failed');
+        setError('Google login failed. Please try again.');
     };
 
     return (
@@ -88,7 +106,7 @@ export function LoginForm() {
                     <Form className="sm:w-380 flex-col">
                         <Image src={NinstaLogo} height={70} className="ml-24" alt="Logo" />
                         <p className="pb-2 pl-14">Log in and enjoy with friends</p>
-                        <span className="text-red-600 flex justify-center">{Error}</span>
+                        {error && <span className="text-red-600 flex justify-center">{error}</span>}
                         <div className="flex flex-col w-full mt-4 gap-5">
                             <div>
                                 <Field type="email" id="email" name="email" placeholder="sample@gmail.com" as={Input} />
@@ -96,7 +114,7 @@ export function LoginForm() {
                             </div>
                             <div className="relative">
                                 <Field
-                                    type={passwordVisible ? "text" : "password"} 
+                                    type={passwordVisible ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     placeholder="Password"
@@ -108,15 +126,22 @@ export function LoginForm() {
                                     onClick={togglePasswordVisibility}
                                     className="absolute right-3 top-2 text-gray-500"
                                 >
-                                    {passwordVisible ? ( 
+                                    {passwordVisible ? (
                                         <FaEyeSlash className="h-5 w-5" aria-hidden="true" />
                                     ) : (
                                         <FaEye className="h-5 w-5" aria-hidden="true" />
                                     )}
                                 </button>
                             </div>
-                            <Button type="submit" className="bg-slate-300 hover:bg-slate-500 rounded-md" disabled={isSubmitting}>
-                                Login
+                            <Button type="submit" className="bg-slate-300 hover:bg-slate-500 rounded-md" disabled={isSubmitting || loading}>
+                                {loading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Logging in...
+                                    </>
+                                ) : (
+                                    'Login'
+                                )}
                             </Button>
                         </div>
                         <p className="text-small-regular text-light-2 text-center mt-2">
@@ -131,17 +156,24 @@ export function LoginForm() {
                 )}
             </Formik>
             <div className="ml-16 mt-4">
-                <GoogleLogin
-                    onSuccess={googleSuccess}
-                    onError={errorGoogle}
-                    size='large'
-                    theme='filled_black'
-                    logo_alignment='center'
-                    ux_mode='popup'
-                    text="signin_with"
-                    shape="circle"
-                />
+                {googleLoading ? (
+                    <div className="flex items-center justify-center">
+                        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                    </div>
+                ) : (
+                    <GoogleLogin
+                        onSuccess={googleSuccess}
+                        onError={errorGoogle}
+                        size='large'
+                        theme='filled_black'
+                        logo_alignment='center'
+                        ux_mode='popup'
+                        text="signin_with"
+                        shape="circle"
+                    />
+                )}
             </div>
         </div>
     );
 }
+

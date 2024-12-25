@@ -39,7 +39,7 @@ function SearchBarPage({ handleSearchClick }: any) {
             <div className="flex absolute z-50 w-full" />
 
             {/* Search Bar Container */}
-            <div className="absolute md: top-0 h-full left-16 w-96 bg-white shadow-lg p-4">
+            <div className="absolute md:top-0 h-full left-14 w-96 bg-white shadow-lg p-2">
                 <div className='mt-3'>
                     <h2 className="text-2xl font-bold text-gray-800">Search</h2>
                     <hr className='border-b-black' />

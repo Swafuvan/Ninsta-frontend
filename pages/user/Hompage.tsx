@@ -1,7 +1,7 @@
 "use client";
 import { AllUserData, FriendSuggession, UserfindById, FollowUsers, AllUsersStory, OwnStory } from '@/lib/functions/user/route';
 import { Modal, ModalContent, ModalHeader, ModalBody, } from "@nextui-org/react";
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import Cookies from 'js-cookie'
 import { store } from '@/redux/store';
@@ -30,53 +30,60 @@ const HomePage = () => {
   const [showStory, setShowStory] = useState(false);
   const [storyUser, setStoryUser] = useState('');
   const [ownStoryData, setOwnStoryData] = useState<userStory>()
+  const [deviceType, setDeviceType] = useState("desktop");
 
-  let isMobile = false
-  let isTablet = false
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      isMobile = window.innerWidth <= 680;
-      isTablet = window.innerWidth > 680 && window.innerWidth <= 900;
-    }
-  }, [])
+    const handleResize = () => {
+      if (window.innerWidth <= 680) setDeviceType("mobile");
+      else if (window.innerWidth <= 900) setDeviceType("tablet");
+      else setDeviceType("desktop");
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial call
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  
+  const maxStories = deviceType === "mobile" ? 3 : deviceType === "tablet" ? 4 : 7 ;
 
   const router = useRouter();
-
-
   // @ts-ignore
   const user = store.getState().auth
 
+  const fetchPosts = useCallback(async () => {
+    if (user?.user?._id) {
+      const response = await getPosts();
+      if (response) {
+        const { allPost } = response;
+        const updatedPosts = await Promise.all(
+          allPost.map(async (data:any) => {
+            data.userDetails = (await UserfindById(data.userId))?.userDetail;
+            return data;
+          })
+        );
+        setPosts(updatedPosts);
+      }
+    }
+  }, [user?.user?._id]);
+
   useEffect(() => {
     if (Cookies.get('userToken')) {
-      if (user?.user?._id) {
-        getPosts().then(async (response) => {
-          if (response) {
-            console.log(response)
-            const { allPost } = response
-            for (const data of allPost) {
-              data.userDetails = (await UserfindById(data.userId))?.userDetail
-            }
-            await setPosts(allPost);
-          }
-        })
-      } 
+      fetchPosts();
     } else {
       router.push('/Login');
     }
-  }, [])
+  }, [fetchPosts, router]);
 
   useEffect(() => {
     if (user?.user?._id) {
       FriendSuggession(user.user?._id + '').then((datas) => {
-        console.log(datas)
         setSuggession(datas.suggessions);
       })
       AllUserData(user.user._id).then((dataa) => {
-        console.log(dataa)
         setAllUsersData(dataa.UserDetails);
       })
     }
-  }, [, user?.user?._id]);
+  }, [user?.user?._id]);
 
   useEffect(() => {
     if (Cookies.get('userToken')) {
@@ -91,6 +98,7 @@ const HomePage = () => {
       }
     }
   }, [user?.user?._id])
+
 
   const handleClickOpen = () => {
     setOpen(false);
@@ -203,7 +211,7 @@ const HomePage = () => {
                   <a href="#">{user.user?.username}</a>
                 </li>
                 {UserStory.length > 0 ? (
-                  UserStory.slice(0, isMobile ? 3 : isTablet ? 4 : 7).map((story: any, index: number) => {
+                  UserStory.slice(0, maxStories ).map((story: any, index: number) => {
                     return (
                       <li key={index} className="flex flex-col items-center space-y-1 ">
                         <div className={UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>
@@ -219,7 +227,7 @@ const HomePage = () => {
                   })
                 ) : (
                   allUsersData &&
-                  allUsersData.slice(0, isMobile ? 4 : 7).map((data: any, index: number) => {
+                  allUsersData.slice(0, maxStories).map((data: any, index: number) => {
                     return (
                       <li key={index} className="flex flex-col items-center space-y-1 ">
                         <div className={UserStory.length > 0 ? "relative  bg-gradient-to-tr from-yellow-400 to-purple-600 z-0 p-1 rounded-full" : 'relative  bg-gradient-to-tr from-gray-400 to-white z-0 p-1 rounded-full'}>

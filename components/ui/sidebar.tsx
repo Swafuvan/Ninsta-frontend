@@ -101,7 +101,7 @@ export default function TemporaryDrawer() {
                                             {!isMobile && !isTablet && (
                                                 <ListItemText
                                                     primary={location === '/messages' || location === '/search' ? "" : text}
-                                                    className={location === '/messages' || location === '/search' ? 'p-3 hidden md:inline ms-3' : 'hidden md:inline ms-3'}
+                                                    className={location === '/messages' || location === '/search' ? 'p-1 hidden md:inline ms-3' : 'hidden md:inline ms-3'}
                                                 />
                                             )}
                                         </ListItemButton>
@@ -138,10 +138,6 @@ function MoreDiv({ handleMoreClick }: any) {
                 <a href='/saved'>
                     <li className='mb-2 cursor-pointer' >Saved</li>
                 </a>
-                <hr />
-                <li className='mb-2 cursor-pointer' >Your Activity</li>
-                <hr />
-                <li className='mb-2 cursor-pointer' >Settings</li>
                 <hr />
                 <li className='cursor-pointer' onClick={handleMoreClick}>Close</li>
             </ul>

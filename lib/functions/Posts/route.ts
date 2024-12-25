@@ -18,9 +18,9 @@ export const postUpload = async (file: any, text: string) => {
     }
 }
 
-export const VideoUpload = async (data:string,text:string) => {
+export const VideoUpload = async (data: string, text: string) => {
     try {
-        const UploadedRes = await axiosInstance.post('/uploadVideos',{data,text});
+        const UploadedRes = await axiosInstance.post('/uploadVideos', { data, text });
         if (UploadedRes) {
             return UploadedRes
         }
@@ -40,7 +40,7 @@ export const ExplorePosts = async () => {
     }
 }
 
-export const likePost = async (post: any, userId:string) => {
+export const likePost = async (post: any, userId: string) => {
     try {
         const response = await axiosInstance.post('/likePost', { post, userId })
         if (response) {
@@ -51,9 +51,9 @@ export const likePost = async (post: any, userId:string) => {
     }
 }
 
-export const CommentLike = async (comment:any,userId:string) =>{
+export const CommentLike = async (comment: any, userId: string) => {
     try {
-        const CommentLikeResponse = await axiosInstance.post('/commentLike',{comment,userId});
+        const CommentLikeResponse = await axiosInstance.post('/commentLike', { comment, userId });
         if (CommentLikeResponse) {
             return CommentLikeResponse.data
         }
@@ -86,10 +86,10 @@ export const CommentPost = async (PostDetails: any, comment: any, userId: any) =
     }
 }
 
-export const deletePost = async (postData:string) => {
+export const deletePost = async (postData: string) => {
     try {
-        const deletedPost = await axiosInstance.delete('/deletePost',{
-            params:{postData}
+        const deletedPost = await axiosInstance.delete('/deletePost', {
+            params: { postData }
         });
         if (deletedPost) {
             return deletedPost
@@ -99,9 +99,9 @@ export const deletePost = async (postData:string) => {
     }
 }
 
-export const editPostData = async (postData:any,Changed:string) => {
+export const editPostData = async (postData: any, Changed: string) => {
     try {
-        const editedPost = await axiosInstance.put('/editPost',{postData,Changed});
+        const editedPost = await axiosInstance.put('/editPost', { postData, Changed });
         if (editedPost) {
             return editedPost.data
         }
@@ -112,13 +112,14 @@ export const editPostData = async (postData:any,Changed:string) => {
 
 export const getPosts = async () => {
     try {
-        const PostDetails = await axiosInstance.get('/allPosts')
-        if (PostDetails) { return PostDetails.data }
-        return { allPost: [] }
+        const response = await axiosInstance.get('/allPosts');
+        return response.data;
     } catch (error) {
-        console.log(error)
+        console.error('Failed to fetch posts:', error);
+        return { allPost: [] }; // Return empty posts on error
     }
-}
+};
+
 
 export const UserPosts = async (userId: any) => {
     try {
@@ -132,9 +133,9 @@ export const UserPosts = async (userId: any) => {
     }
 }
 
-export const CommentReplies = async (data:any,userId:string,reply:string) =>{
+export const CommentReplies = async (data: any, userId: string, reply: string) => {
     try {
-        const CommentResponse = await axiosInstance.post('/commentReply',{data,userId,reply});
+        const CommentResponse = await axiosInstance.post('/commentReply', { data, userId, reply });
         if (CommentResponse) {
             return CommentResponse.data
         }

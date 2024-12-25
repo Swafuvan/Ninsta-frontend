@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -19,6 +18,7 @@ import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Loader2 } from 'lucide-react';
 
 interface SignupFormValues {
     email: string;
@@ -35,7 +35,11 @@ export function SignupRoute() {
     const [timer, setTimer] = useState(0);
     const [error, setError] = useState('');
     const [resend, setResend] = useState('');
-    const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+    const [verifyLoading, setVerifyLoading] = useState(false);
+    const [resendLoading, setResendLoading] = useState(false);
     const router = useRouter();
     const dispatch = useDispatch();
 
@@ -68,6 +72,7 @@ export function SignupRoute() {
     }, [isOtpSent, timer]);
 
     const handleSubmit = async (values: SignupFormValues, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+        setLoading(true);
         try {
             const response = await createUserAccount(values);
             if (response) {
@@ -80,11 +85,13 @@ export function SignupRoute() {
             console.error('Signup failed', error);
         } finally {
             setSubmitting(false);
+            setLoading(false);
         }
     };
 
     const handleOtpSubmit = async () => {
         setIsSubmitting(true);
+        setVerifyLoading(true);
         try {
             const response = await verifyOtp(signupData?.email!, Number(otp));
             if (response?.data?.message) {
@@ -102,10 +109,12 @@ export function SignupRoute() {
             console.error('OTP verification failed', error);
         } finally {
             setIsSubmitting(false);
+            setVerifyLoading(false);
         }
     };
 
     const handleResendOtp = async () => {
+        setResendLoading(true);
         try {
             if (signupData?.email) {
                 const resended = await ResendOtp(signupData.email);
@@ -118,10 +127,13 @@ export function SignupRoute() {
             }
         } catch (error) {
             console.error('Resending OTP failed', error);
+        } finally {
+            setResendLoading(false);
         }
     };
 
     const googleSuccess = async (response: any) => {
+        setGoogleLoading(true);
         if (response.credential) {
             const { email, given_name, name, picture, sub } = jwtDecode(response.credential) as JwtPayload & {
                 email: string;
@@ -137,17 +149,23 @@ export function SignupRoute() {
                 username: given_name,
                 password: sub,
             };
-            const UserResult = await googleSignup(data);
-            if (UserResult) {
-                Cookies.set('userToken', UserResult.JWTtoken);
-                dispatch(setUser(UserResult.userData));
-                router.push('/');
+            try {
+                const UserResult = await googleSignup(data);
+                if (UserResult) {
+                    Cookies.set('userToken', UserResult.JWTtoken);
+                    dispatch(setUser(UserResult.userData));
+                    router.push('/');
+                }
+            } catch (error) {
+                console.error('Google Sign-In failed', error);
+            } finally {
+                setGoogleLoading(false);
             }
         }
     };
 
     const errorGoogle = () => {
-        alert('Google Sign-In failed');
+        console.error('Google Sign-In failed');
     };
 
     const togglePasswordVisibility = () => {
@@ -200,7 +218,16 @@ export function SignupRoute() {
                                         </div>
                                     </div>
 
-                                    <Button type="submit" className='hover:bg-slate-500 bg-slate-300' disabled={isSubmitting}>Create account</Button>
+                                    <Button type="submit" className='hover:bg-slate-500 bg-slate-300' disabled={isSubmitting || loading}>
+                                        {loading ? (
+                                            <>
+                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                Creating account...
+                                            </>
+                                        ) : (
+                                            'Create account'
+                                        )}
+                                    </Button>
                                 </div>
 
                                 <p className="text-small-regular text-light-2 text-center mt-2">
@@ -212,16 +239,22 @@ export function SignupRoute() {
                     </Formik>
 
                     <div className='ml-16 mt-4'>
-                        <GoogleLogin
-                            onSuccess={googleSuccess}
-                            onError={errorGoogle}
-                            size='large'
-                            theme='filled_black'
-                            logo_alignment='center'
-                            ux_mode='popup'
-                            text='signup_with'
-                            shape='circle'
-                        />
+                        {googleLoading ? (
+                            <div className="flex items-center justify-center">
+                                <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+                            </div>
+                        ) : (
+                            <GoogleLogin
+                                onSuccess={googleSuccess}
+                                onError={errorGoogle}
+                                size='large'
+                                theme='filled_black'
+                                logo_alignment='center'
+                                ux_mode='popup'
+                                text='signup_with'
+                                shape='circle'
+                            />
+                        )}
                     </div>
                 </div>
             ) : (
@@ -266,11 +299,38 @@ export function SignupRoute() {
                         )}
                     />
                     <div className='flex justify-around pl-3 w-60'>
-                        <Button className='bg-slate-300 cursor-pointer hover:bg-slate-500' onClick={handleOtpSubmit} disabled={isSubmitting || otp.length < 6}>Verify OTP</Button>
-                        <Button onClick={handleResendOtp} className='bg-black hover:bg-black text-white' disabled={!resendEnabled}>Resend OTP </Button>
+                        <Button 
+                            className='bg-slate-300 cursor-pointer hover:bg-slate-500' 
+                            onClick={handleOtpSubmit} 
+                            disabled={isSubmitting || otp.length < 6 || verifyLoading}
+                        >
+                            {verifyLoading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Verifying...
+                                </>
+                            ) : (
+                                'Verify OTP'
+                            )}
+                        </Button>
+                        <Button 
+                            onClick={handleResendOtp} 
+                            className='bg-black hover:bg-black text-white' 
+                            disabled={!resendEnabled || resendLoading}
+                        >
+                            {resendLoading ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Resending...
+                                </>
+                            ) : (
+                                'Resend OTP'
+                            )}
+                        </Button>
                     </div>
                 </div>
             )}
         </div>
     );
 }
+
