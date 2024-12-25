@@ -1,6 +1,6 @@
 'use client'
-import TemporaryDrawer from "@/components/ui/sidebar"; 
-import HomePage from "@/pages/user/Hompage"; 
+import TemporaryDrawer from "@/components/ui/sidebar";
+import HomePage from "@/pages/user/Hompage";
 import { useEffect, useState } from "react";
 import Cookies from 'js-cookie'
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const router = useRouter();
   // const user = store.getState().auth
-  const user = useSelector((state:RootState)=> state.auth)
+  const user = useSelector((state: RootState) => state.auth)
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -37,7 +37,9 @@ export default function Home() {
         {user ?
           <>
             <TemporaryDrawer />
-            <HomePage />
+            <div className="ml-3">
+              <HomePage />
+            </div>
           </> :
           <>loading...</>
         }
